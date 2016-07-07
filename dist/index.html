@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cloud Explorer</title>
+    <style type="text/css">
+      /* basic style for demo */
+      #cloud-explorer li {
+        cursor: pointer;
+      }
+      #cloud-explorer .services {
+        color: blue;
+      }
+      #cloud-explorer .services .selected {
+        color: lightblue;
+      }
+      #cloud-explorer .files {
+        color: blue;
+      }
+      #cloud-explorer .files .selected {
+        color: lightblue;
+      }
+      #cloud-explorer .button-confirm .disabled,
+      #cloud-explorer .button-bar .disabled {
+        color: grey;
+        list-style: circle;
+      }
+      #cloud-explorer .button-confirm .enabled,
+      #cloud-explorer .button-bar .enabled {
+        color: blue;
+        list-style: disc;
+      }
+      #cloud-explorer .files .file {
+        list-style: url('https://cdn3.iconfinder.com/data/icons/brands-applications/512/File-16.png');
+      }
+      #cloud-explorer .files .folder {
+        list-style: url('https://cdn4.iconfinder.com/data/icons/linecon/512/folder-16.png');
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <header>
+        <div id="logo"></div>
+      </header>
+      <div id="cloud-explorer"></div>
+      <footer></footer>
+    </section>
+    <script src="./cloud-explorer.js"></script>
+  </body>
+</html>
