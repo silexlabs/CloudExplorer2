@@ -35,8 +35,8 @@ export default class CloudExplorer extends React.Component {
       files: [],
     }, () => this.reload());
   }
-  cd(path) {
-    this.srv.cd(this.state.service, path)
+  cd(path, relative=false) {
+    this.srv.cd(this.state.service, path, relative)
     .then(path => {
       this.setState({
         path: path,
@@ -75,7 +75,7 @@ export default class CloudExplorer extends React.Component {
         selection={this.state.selection}
         pickFolder={this.state.pickFolder}
         onPick={() => this.props.onPick(this.state.selection)}
-        onEnter={folder => this.cd(this.state.path.concat(folder.name))}
+        onEnter={folder => this.cd([folder.name], true)}
         onCancel={() => this.cancel()}
       />
       <h2>Breadcrumbs:</h2>
@@ -90,6 +90,8 @@ export default class CloudExplorer extends React.Component {
         selection={this.state.selection}
         files={this.state.files}
         onChange={(selection) => this.setState({selection: selection})}
+        onEnter={folder => this.cd([folder.name], true)}
+        onPick={(file) => this.props.onPick(file)}
       />
       <h2>Dialogs:</h2>
       <ModalDialog />

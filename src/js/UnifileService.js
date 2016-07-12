@@ -15,7 +15,6 @@ export default class UnifileService {
   }
   cd(service, path, relative=false) {
     return new Promise((resolve, reject) => {
-      console.log('cd', service, this.currentPath.join('/'), path.join('/'));
       if(relative) this.currentPath.push(path);
       else this.currentPath = path;
       resolve(this.currentPath);

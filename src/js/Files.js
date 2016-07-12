@@ -2,10 +2,29 @@ import React from 'react';
 import ReactDom from 'react-dom';
 
 export default class Files extends React.Component {
+  static DBLCLICK_DELAY_MS = 300;
+  lastClickedEl = null
+  lastClickedTime = Date.now();
+  isDoubleClick(element) {
+    const now = Date.now();
+    if(element === this.lastClickedEl && now - this.lastClickedTime < Files.DBLCLICK_DELAY_MS) {
+      this.lastClickedEl = null;
+      return true;
+    }
+    this.lastClickedEl = element;
+    this.lastClickedTime = now;
+    return false;
+  }
   select(e) {
-    const selection = e.ctrlKey ? this.props.selection : [];
     const file = this.props.files[parseInt(e.target.getAttribute('data-idx'))];
-    this.props.onChange(selection.concat(file));
+    if(this.isDoubleClick(e.target)) {
+      if(file.is_dir) this.props.onEnter(file);
+      else this.props.onPick(file);
+    }
+    else {
+      const selection = e.ctrlKey ? this.props.selection : [];
+      this.props.onChange(selection.concat(file));
+    }
     e.preventDefault();
     e.stopPropagation();
   }
