@@ -10,7 +10,7 @@ export default class UnifileService {
   ls(service, path = null) {
     return new Promise((resolve, reject) => {
       let pathToLs = path || this.currentPath;
-      this.call(`ls.json?${service}/ls${pathToLs.join('/')}`, (res) => resolve(res), (e) => reject(e));
+      this.call(`${service}/ls/${pathToLs.join('/')}`, (res) => resolve(res), (e) => reject(e));
     });
   }
   cd(service, path, relative=false) {

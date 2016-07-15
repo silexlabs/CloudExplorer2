@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import CloudExplorer from './CloudExplorer';
 
-const SERVICES = ['Cozycloud', 'Owncloud', 'FTP', 'Dropbox', 'Github'];
+const SERVICES = ['FTP', 'Dropbox', 'GitHub'];
 
 ReactDom.render(
   <CloudExplorer
