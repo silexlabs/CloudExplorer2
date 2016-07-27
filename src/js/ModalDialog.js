@@ -9,7 +9,7 @@ export default class ModalDialog extends React.Component {
   }
   state = {
     mode: 'hidden', // hidden, prompt
-    message: <p></p>,
+    message: <h2></h2>,
     inputText: '',
   }
   cbk: null

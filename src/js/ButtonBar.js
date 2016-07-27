@@ -5,16 +5,16 @@ import ModalDialog from './ModalDialog';
 export default class ButtonBar extends React.Component {
   delete() {
     ModalDialog.getInstance().confirm(<section>
-        <p>Are you sure you want to delete these files?</p>
+        <h2>Are you sure you want to delete these files?</h2>
         <ul>{this.props.selection.map((file, idx) => <li key={ idx }>{ file.name }</li>)}</ul>
       </section>,
       this.props.onDelete);
   }
   rename() {
-    ModalDialog.getInstance().prompt(<p>Name:</p>, this.props.selection[0].name, this.props.onRename);
+    ModalDialog.getInstance().prompt(<h2>Name</h2>, this.props.selection[0].name, this.props.onRename);
   }
   createFolder() {
-    ModalDialog.getInstance().prompt(<p>Name:</p>, '', this.props.onCreateFolder);
+    ModalDialog.getInstance().prompt(<h2>Name</h2>, '', this.props.onCreateFolder);
   }
   render() {
     this.allowDownload = this.props.service && this.props.selection.length === 1 && !this.props.selection[0].is_dir;
