@@ -10,7 +10,7 @@ export default class UnifileService {
   ls(service, path = null) {
     return new Promise((resolve, reject) => {
       let pathToLs = path || this.currentPath;
-      this.call(`ls.json?${service}/ls${pathToLs.join('/')}`, (res) => resolve(res), (e) => reject(e));
+      this.call(`${service}/ls/${pathToLs.join('/')}`, (res) => resolve(res), (e) => reject(e));
     });
   }
   cd(service, path, relative=false) {
@@ -19,6 +19,9 @@ export default class UnifileService {
       else this.currentPath = path;
       resolve(this.currentPath);
     });
+  }
+  getUrl(service, path) {
+    return `${service}/get/${path.join('/')}`;
   }
   call(route, cbk, err) {
     const oReq = new XMLHttpRequest();
@@ -40,7 +43,6 @@ export default class UnifileService {
       err(e);
     };
     const url = `${this.rootUrl}${route}`;
-    console.log('GET', url);
     oReq.open('GET', url);
     oReq.send();
   }

@@ -8,24 +8,29 @@ import Breadcrumbs from './Breadcrumbs';
 import ServiceSelector from './ServiceSelector';
 import UnifileService from './UnifileService';
 
+/**
+ * @class which binds the UI and the Unifile service all together
+ */
 export default class CloudExplorer extends React.Component {
   INITIAL_STATE = {
-    services: this.props.services,
     service: null,
     path: [],
     selection: [],
     files: [],
     pickFolder: false,
   };
-  srv = new UnifileService('./')
+  srv = new UnifileService('./', this.props.service, this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
   reload() {
-    this.srv.ls(this.state.service).then((files) => {
+    this.srv.ls(this.state.service, this.state.path).then((files) => {
       this.setState({
         files: files,
         selection: [],
       });
     });
+  }
+  download() {
+    window.open(this.srv.getUrl(this.state.service, this.state.path.concat([this.state.selection[0].name])));
   }
   setService(service) {
     this.setState({
@@ -33,7 +38,10 @@ export default class CloudExplorer extends React.Component {
       path: [],
       selection: [],
       files: [],
-    }, () => this.reload());
+    }, () => {
+      this.reload();
+      this.props.onService(this.state.service);
+    });
   }
   cd(path, relative=false) {
     this.srv.cd(this.state.service, path, relative)
@@ -42,14 +50,37 @@ export default class CloudExplorer extends React.Component {
         path: path,
         files: [],
         selection: [],
-      }, () => this.reload());
+      }, () => {
+        this.reload();
+        this.props.onCd(this.state.path);
+      });
     })
-    .catch(e => {
-      console.error('ERROR:', e);
-    });
+    .catch(e => console.error('ERROR:', e));
   }
   cancel() {
     this.setState(JSON.parse(JSON.stringify(this.INITIAL_STATE)), () => this.props.onCancel());
+  }
+  componentDidMount() {
+    this.initInputProps(this.props);
+  }
+  componentWillReceiveProps(newProps) {
+    // check if the new props are different from the state
+    // this will be false when the parent component changes
+    // the props because we called onService or onCd
+    if(newProps.path.join('/') !== this.state.path.join('/') ||
+      newProps.service !== this.state.service) {
+      this.initInputProps(newProps);
+    }
+  }
+  initInputProps(newProps) {
+    this.setState({
+      service: newProps.service,
+      path: newProps.path,
+      selection: [],
+      files: [],
+    }, () => {
+      this.reload();
+    });
   }
   render() {
     return <div>
@@ -57,7 +88,7 @@ export default class CloudExplorer extends React.Component {
         <h2>Services</h2>
         <ServiceSelector
           service={this.state.service}
-          services={this.state.services}
+          services={this.props.services}
           onChange={(selection) => this.setService(selection)}
         />
       </div>
@@ -69,16 +100,18 @@ export default class CloudExplorer extends React.Component {
           onRename={(newName) => console.dir(`rename "${this.state.selection[0].name}" to "${newName}"`)}
           onCreateFolder={(newName) => console.log(`create the folder "${newName}" in "${this.state.path.join('/')}"`)}
           onReload={() => this.reload()}
-          onDownload={() => console.log(`Download`, this.state.selection)}
+          onDownload={() => this.download()}
           onUpload={() => console.log('Upload', this.state.selection, this.state.path.join('/'))}
           onDelete={() => console.log('Delete', this.state.selection)}
         />
         <ButtonConfirm
           service={this.state.service}
           selection={this.state.selection}
+          path={this.state.path}
           pickFolder={this.state.pickFolder}
           onPick={() => this.props.onPick(this.state.selection)}
           onEnter={folder => this.cd([folder.name], true)}
+          onUp={() => this.cd(this.state.path.slice(0, -1), false)}
           onCancel={() => this.cancel()}
         />
       </div>
