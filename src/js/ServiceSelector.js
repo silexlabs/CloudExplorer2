@@ -8,11 +8,21 @@ export default class ServiceSelector extends React.Component {
     req.open('POST', '/' + e.target.getAttribute('data-name') + '/authorize', false);
     req.send();
     let win = window.open(req.responseText);
-    win.onunload = () => {
+    win.addEventListener('unload', () => {
+      console.log('closed?', win.closed);
       win.onunload = null;
+      this.startPolling(win, service);
+    });
+  }
+  startPolling(win, service) {
+    console.log('closed?', win.closed);
+    if(win.closed) {
       // FIXME: check if we are connected to `service`
       this.props.onChange(service);
     }
+    else setTimeout(() => {
+      this.startPolling(win, service);
+    }, 200);
   }
   render() {
     let list = this.props.services.map(service => <li

@@ -20,6 +20,9 @@ export default class UnifileService {
       resolve(this.currentPath);
     });
   }
+  getUrl(service, path) {
+    return `${service}/get/${path.join('/')}`;
+  }
   call(route, cbk, err) {
     const oReq = new XMLHttpRequest();
     let isErr = false;
@@ -40,7 +43,6 @@ export default class UnifileService {
       err(e);
     };
     const url = `${this.rootUrl}${route}`;
-    console.log('GET', url);
     oReq.open('GET', url);
     oReq.send();
   }
