@@ -32,6 +32,18 @@ export default class CloudExplorer extends React.Component {
   download() {
     window.open(this.srv.getUrl(this.state.service, this.state.path.concat([this.state.selection[0].name])));
   }
+  delete() {
+    Promise.all(this.state.selection.map(file => {
+      return this.srv.rm(this.state.service, this.state.path.concat([file.name]));
+    })).then(results => {
+      // FIXME: prompt the result here
+      this.reload();
+    }).catch(e => {
+      // FIXME: prompt the result here
+      console.error('Delete error:', e);
+      this.reload();
+    });
+  }
   setService(service) {
     this.setState({
       service: service,
@@ -102,7 +114,7 @@ export default class CloudExplorer extends React.Component {
           onReload={() => this.reload()}
           onDownload={() => this.download()}
           onUpload={() => console.log('Upload', this.state.selection, this.state.path.join('/'))}
-          onDelete={() => console.log('Delete', this.state.selection)}
+          onDelete={() => this.delete()}
         />
         <ButtonConfirm
           service={this.state.service}

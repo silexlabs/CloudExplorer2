@@ -13,6 +13,12 @@ export default class UnifileService {
       this.call(`${service}/ls/${pathToLs.join('/')}`, (res) => resolve(res), (e) => reject(e));
     });
   }
+  rm(service, path, relative=false) {
+    return new Promise((resolve, reject) => {
+      const absPath = relative ? this.currentPath.concat(path) : path;
+      this.call(`${service}/rm/${absPath.join('/')}`, (res) => resolve(res), (e) => reject(e), 'DELETE');
+    });
+  }
   cd(service, path, relative=false) {
     return new Promise((resolve, reject) => {
       if(relative) this.currentPath.push(path);
@@ -23,7 +29,7 @@ export default class UnifileService {
   getUrl(service, path) {
     return `${service}/get/${path.join('/')}`;
   }
-  call(route, cbk, err) {
+  call(route, cbk, err, method = 'GET') {
     const oReq = new XMLHttpRequest();
     let isErr = false;
     oReq.onload = function(e) {
@@ -43,7 +49,7 @@ export default class UnifileService {
       err(e);
     };
     const url = `${this.rootUrl}${route}`;
-    oReq.open('GET', url);
+    oReq.open(method, url);
     oReq.send();
   }
 }
