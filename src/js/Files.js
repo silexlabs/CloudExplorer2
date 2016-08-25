@@ -36,7 +36,7 @@ export default class Files extends React.Component {
       data-idx={idx++}
       key={file.name}
       onClick={(e) => this.select(e)}
-      className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.is_dir ? 'folder' : 'file') + ' ' + (dotIdx = file.name.lastIndexOf('.') > 0 ? file.name.substr(dotIdx + 1) : 'no-ext')}>
+      className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.is_dir ? 'folder' : 'file') + ' ' + ((dotIdx = file.name.lastIndexOf('.')) > 0 ? file.name.substr(dotIdx + 1) : 'no-ext')}>
       {file.name}
     </li>);
     return <section><ul className="files">{list}</ul></section>;
