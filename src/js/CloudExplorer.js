@@ -38,11 +38,8 @@ export default class CloudExplorer extends React.Component {
     })).then(results => {
       // FIXME: prompt the result here
       this.reload();
-    }).catch(e => {
-      // FIXME: prompt the result here
-      console.error('Delete error:', e);
-      this.reload();
-    });
+    })
+    .catch(e => console.error('ERROR:', e));
   }
   setService(service) {
     this.setState({
@@ -66,6 +63,16 @@ export default class CloudExplorer extends React.Component {
         this.reload();
         this.props.onCd(this.state.path);
       });
+    })
+    .catch(e => console.error('ERROR:', e));
+  }
+  rename(name, newName) {
+    console.log('ccccc');
+    this.srv.rename(this.state.service, name, newName)
+    .then(res => {
+      console.log('reloaded', res);
+      // FIXME: prompt the result here
+      this.reload();
     })
     .catch(e => console.error('ERROR:', e));
   }
@@ -109,7 +116,7 @@ export default class CloudExplorer extends React.Component {
         <ButtonBar
           service={this.state.service}
           selection={this.state.selection}
-          onRename={(newName) => console.dir(`rename "${this.state.selection[0].name}" to "${newName}"`)}
+          onRename={(newName) => this.rename(this.state.selection[0].name, newName)}
           onCreateFolder={(newName) => console.log(`create the folder "${newName}" in "${this.state.path.join('/')}"`)}
           onReload={() => this.reload()}
           onDownload={() => this.download()}

@@ -19,6 +19,20 @@ export default class UnifileService {
       this.call(`${service}/rm/${absPath.join('/')}`, (res) => resolve(res), (e) => reject(e), 'DELETE');
     });
   }
+  rename(service, name, newName) {
+    return new Promise((resolve, reject) => {
+      const absPath = this.currentPath.concat([name]);
+      const absNewPath = this.currentPath.concat([newName]);
+      this.call(
+        `${service}/mv/${absPath.join('/')}`,
+        (res) => resolve(res), (e) => reject(e),
+        'PATCH',
+        JSON.stringify({
+          'destination': absNewPath.join('/'),
+        })
+      );
+    });
+  }
   cd(service, path, relative=false) {
     return new Promise((resolve, reject) => {
       if(relative) this.currentPath.push(path);
@@ -29,7 +43,7 @@ export default class UnifileService {
   getUrl(service, path) {
     return `${service}/get/${path.join('/')}`;
   }
-  call(route, cbk, err, method = 'GET') {
+  call(route, cbk, err, method = 'GET', body = '') {
     const oReq = new XMLHttpRequest();
     let isErr = false;
     oReq.onload = function(e) {
@@ -50,6 +64,6 @@ export default class UnifileService {
     };
     const url = `${this.rootUrl}${route}`;
     oReq.open(method, url);
-    oReq.send();
+    oReq.send(body);
   }
 }
