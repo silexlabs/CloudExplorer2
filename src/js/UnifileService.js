@@ -33,10 +33,9 @@ export default class UnifileService {
       );
     });
   }
-  cd(service, path, relative=false) {
+  cd(path) {
     return new Promise((resolve, reject) => {
-      if(relative) this.currentPath.push(path);
-      else this.currentPath = path;
+      this.currentPath = path;
       resolve(this.currentPath);
     });
   }

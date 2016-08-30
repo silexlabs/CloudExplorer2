@@ -3,6 +3,8 @@ import ReactDom from 'react-dom';
 import CloudExplorer from './CloudExplorer';
 
 const SERVICES = ['FTP', 'Dropbox', 'GitHub'];
+const LS_KEY_SERVICE = 'CloudExplorer.service';
+const LS_KEY_PATH = 'CloudExplorer.path';
 
 /**
  * @class in charge of the history and init of the main CloudExplorer component
@@ -13,38 +15,44 @@ class App extends React.Component {
     service: null,
     path: [],
   }
-  loadHistory(hash) {
-    if(hash === this.hash) return;
-    this.hash = hash;
-    var hashArr = hash.substring(1).split('/');
-    this.setState({
-      service: hashArr.length > 0 ? hashArr.shift() : '',
-      path: hashArr.length && hashArr[0] != '' ? hashArr : [],
-    });
+  loadHistory() {
+    const service = localStorage.getItem(LS_KEY_SERVICE);
+    const path = localStorage.getItem(LS_KEY_PATH);
+    console.log('loadHistory', this.state.service, this.state.path, service, path);
+    if(service && path
+      && (service !== this.state.service || path !== this.state.path)) {
+      this.setState({
+        service: service,
+        path: JSON.parse(path),
+      });
+    }
   }
-  saveHistory(service, path) {
-    this.hash = '#' + service + '/' + path.join('/');
-    window.location.hash = this.hash;
-    this.setState({
-      service: service,
-      path: path,
-    });
+  onChange(service, path) {
+    if(service !== this.state.service || path !== this.state.path) {
+      console.log('onChange', this.state.service, this.state.path, service, path);
+      this.setState({
+        service: service,
+        path: path,
+      });
+    }
+    localStorage.setItem(LS_KEY_SERVICE, service);
+    localStorage.setItem(LS_KEY_PATH, JSON.stringify(path));
   }
   componentWillMount() {
-    window.addEventListener('hashchange', (event) => {
-      this.loadHistory(event.newURL.substring(event.newURL.indexOf('#')));
-    });
-    this.loadHistory(window.location.hash);
+    console.log('mounting');
+    this.loadHistory();
   }
   render() {
+    console.log('render', this.state.service, this.state.path);
     return <CloudExplorer
       services={SERVICES}
       service={this.state.service}
       path={this.state.path}
       onCancel={() => console.log('CloudExplorer: Canceled')}
       onPick={(selection) => console.log('CloudExplorer: Picked', selection)}
-      onCd={(path) => this.saveHistory(this.state.service, path)}
-      onService={(service) => this.saveHistory(service, this.state.path)}
+      onCd={(path) => this.onChange(this.state.service, path)}
+      onService={(service) => this.onChange(service, this.state.path)}
+      pickFolder={false}
     />;
   }
 }
