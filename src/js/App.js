@@ -3,8 +3,8 @@ import ReactDom from 'react-dom';
 import CloudExplorer from './CloudExplorer';
 
 const SERVICES = ['FTP', 'Dropbox', 'GitHub'];
-const LS_KEY_SERVICE = 'CloudExplorer.service';
-const LS_KEY_PATH = 'CloudExplorer.path';
+const STORAGE_KEY_SERVICE = 'CloudExplorer.service';
+const STORAGE_KEY_PATH = 'CloudExplorer.path';
 
 /**
  * @class in charge of the history and init of the main CloudExplorer component
@@ -16,8 +16,8 @@ class App extends React.Component {
     path: [],
   }
   loadHistory() {
-    const service = localStorage.getItem(LS_KEY_SERVICE);
-    const path = localStorage.getItem(LS_KEY_PATH);
+    const service = localStorage.getItem(STORAGE_KEY_SERVICE);
+    const path = localStorage.getItem(STORAGE_KEY_PATH);
     console.log('loadHistory', this.state.service, this.state.path, service, path);
     if(service && path
       && (service !== this.state.service || path !== this.state.path)) {
@@ -35,8 +35,8 @@ class App extends React.Component {
         path: path,
       });
     }
-    localStorage.setItem(LS_KEY_SERVICE, service);
-    localStorage.setItem(LS_KEY_PATH, JSON.stringify(path));
+    localStorage.setItem(STORAGE_KEY_SERVICE, service);
+    localStorage.setItem(STORAGE_KEY_PATH, JSON.stringify(path));
   }
   componentWillMount() {
     console.log('mounting');

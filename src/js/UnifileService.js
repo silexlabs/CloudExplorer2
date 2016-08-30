@@ -1,17 +1,35 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
+const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
+
 export default class UnifileService {
   currentPath = [];
   rootUrl = null;
   constructor(rootUrl) {
     this.rootUrl = rootUrl;
   }
+  getStorageKey(service, path) {
+    return `${STORAGE_KEY_LS_CACHE}('${service}', '${path}')`;
+  }
   ls(service, path = null) {
     return new Promise((resolve, reject) => {
       let pathToLs = path || this.currentPath;
-      this.call(`${service}/ls/${pathToLs.join('/')}`, (res) => resolve(res), (e) => reject(e));
+      this.call(`${service}/ls/${pathToLs.join('/')}`, (res) => {
+        sessionStorage.setItem(this.getStorageKey(service, path), JSON.stringify(res));
+        resolve(res);
+      }, (e) => reject(e));
     });
+  }
+  lsCache(service, path = null) {
+    try {
+      const cached = sessionStorage.getItem(this.getStorageKey(service, path));
+      if(cached) {
+        return JSON.parse(cached);
+      }
+    }
+    catch(e) {}
+    return [];
   }
   rm(service, path, relative=false) {
     return new Promise((resolve, reject) => {

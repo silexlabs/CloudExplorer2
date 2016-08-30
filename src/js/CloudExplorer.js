@@ -21,13 +21,18 @@ export default class CloudExplorer extends React.Component {
   ls() {
     this.setState({
       selection: [],
-      files: [],
+      files: this.srv.lsGetCache(this.props.service, this.props.path),
     });
-    this.srv.ls(this.props.service, this.props.path).then((files) => {
-      this.setState({
-        files: files,
-        selection: [],
-      });
+    const service = this.props.service;
+    const path = this.props.path;
+    this.srv.ls(service, path).then((files) => {
+      // check that we did not CD during loading
+      if(this.props.service === service && this.props.path === path) {
+        this.setState({
+          files: files,
+          selection: [],
+        });
+      }
     });
   }
   download() {
