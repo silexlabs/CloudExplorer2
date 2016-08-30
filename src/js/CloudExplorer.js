@@ -19,8 +19,8 @@ export default class CloudExplorer extends React.Component {
   };
   srv = new UnifileService('./', this.props.service, this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
-  ls() {
-    const hasCache = this.srv.lsHasCache(this.props.service, this.props.path);
+  ls(disableCache=false) {
+    const hasCache = disableCache ? false : this.srv.lsHasCache(this.props.service, this.props.path);
     const cache = this.srv.lsGetCache(this.props.service, this.props.path);
     this.setState({
       selection: [],
@@ -64,8 +64,17 @@ export default class CloudExplorer extends React.Component {
       relative ? this.props.path.concat(path) : path
     );
   }
+  mkdir() {
+    this.filesComponent.getNewDirName().then(name => {
+      this.setState({
+        selection: [],
+        loading: true,
+      }, () => {
+        this.srv.mkdir(this.props.service, name, true).then(() => this.ls(true));
+      });
+    });
+  }
   rename(name, newName) {
-    console.log('ccccc');
     this.srv.rename(this.props.service, name, newName)
     .then(res => {
       console.log('renamed', res);
@@ -119,7 +128,7 @@ export default class CloudExplorer extends React.Component {
           service={this.props.service}
           selection={this.state.selection}
           onRename={(newName) => this.rename(this.state.selection[0].name, newName)}
-          onCreateFolder={(newName) => console.log(`create the folder "${newName}" in "${this.props.path.join('/')}"`)}
+          onCreateFolder={() => this.mkdir()}
           onReload={() => this.ls()}
           onDownload={() => this.download()}
           onUpload={() => console.log('Upload', this.state.selection, this.props.path.join('/'))}
@@ -147,6 +156,7 @@ export default class CloudExplorer extends React.Component {
       <div className="files panel">
         <h2>Files</h2>
         <Files
+          ref={c => this.filesComponent = c}
           path={this.props.path}
           selection={this.state.selection}
           files={this.state.files}

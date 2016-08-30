@@ -13,9 +13,6 @@ export default class ButtonBar extends React.Component {
   rename() {
     ModalDialog.getInstance().prompt(<h2>Name</h2>, this.props.selection[0].name, this.props.onRename);
   }
-  createFolder() {
-    ModalDialog.getInstance().prompt(<h2>Name</h2>, '', this.props.onCreateFolder);
-  }
   render() {
     this.allowDownload = this.props.service && this.props.selection.length === 1 && !this.props.selection[0].is_dir;
     this.allowDelete = this.props.service && this.props.selection.length > 0;
@@ -30,7 +27,7 @@ export default class ButtonBar extends React.Component {
         <li onClick={() => this.allowDownload && this.props.onDownload()} className={this.allowDownload ? "enabled" : "disabled"}>Download</li>
         <li onClick={() => this.allowDelete && this.delete()} className={this.allowDelete ? "enabled" : "disabled"}>Delete</li>
         <li onClick={() => this.allowRename && this.rename()} className={this.allowRename ? "enabled" : "disabled"}>Rename</li>
-        <li onClick={() => this.allowCreateFolder && this.createFolder()} className={this.allowCreateFolder ? "enabled" : "disabled" }>Create Folder</li>
+        <li onClick={() => this.allowCreateFolder && this.props.onCreateFolder()} className={this.allowCreateFolder ? "enabled" : "disabled" }>Create Folder</li>
         <li onClick={() => this.allowReload && this.props.onReload()} className={this.allowReload ? "enabled" : "disabled" }>Reload</li>
       </ul>
     </section>;

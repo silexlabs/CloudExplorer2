@@ -2,9 +2,28 @@ import React from 'react';
 import ReactDom from 'react-dom';
 
 export default class Files extends React.Component {
+  state = {
+    createFolderMode: false,
+  }
   static DBLCLICK_DELAY_MS = 300;
   lastClickedEl = null
   lastClickedTime = Date.now();
+  /**
+   * called directly by owner class
+   */
+  getNewDirName() {
+    return new Promise((resolve, reject) => {
+      this.setState({
+        createFolderMode: true,
+      });
+      this.onGetNewFolderName = name => {
+        this.setState({
+          createFolderMode: false,
+        });
+        resolve(name);
+      };
+    });
+  }
   isDoubleClick(element) {
     const now = Date.now();
     if(element === this.lastClickedEl && now - this.lastClickedTime < Files.DBLCLICK_DELAY_MS) {
@@ -39,6 +58,22 @@ export default class Files extends React.Component {
       className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.is_dir ? 'folder' : 'file') + ' ' + ((dotIdx = file.name.lastIndexOf('.')) > 0 ? file.name.substr(dotIdx + 1) : 'no-ext')}>
       {file.name}
     </li>);
+    if(this.state.createFolderMode) {
+      list.push(<li
+        data-idx={idx++}
+        key="newFolder"
+        className="selected folder"
+      >
+        <input type="text"
+          onBlur={(e) => this.onGetNewFolderName(e.target.value)}
+          onKeyPress={(e) => {
+            if(e.key === 'Enter') this.onGetNewFolderName(e.target.value)
+          }}
+          placeholder="New Folder Name"
+          autoFocus
+        />
+      </li>);
+    }
     return <section><ul className="files">{list}</ul></section>;
   }
 }

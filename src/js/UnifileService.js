@@ -40,6 +40,12 @@ export default class UnifileService {
       this.call(`${service}/rm/${absPath.join('/')}`, (res) => resolve(res), (e) => reject(e), 'DELETE');
     });
   }
+  mkdir(service, path, relative=false) {
+    return new Promise((resolve, reject) => {
+      const absPath = relative ? this.currentPath.concat(path) : path;
+      this.call(`${service}/mkdir/${absPath.join('/')}`, (res) => resolve(res), (e) => reject(e), 'PUT');
+    });
+  }
   rename(service, name, newName) {
     return new Promise((resolve, reject) => {
       const absPath = this.currentPath.concat([name]);
