@@ -20,22 +20,25 @@ export default class CloudExplorer extends React.Component {
   srv = new UnifileService('./', this.props.service, this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
   ls() {
+    const hasCache = this.srv.lsHasCache(this.props.service, this.props.path);
+    const cache = this.srv.lsGetCache(this.props.service, this.props.path);
     this.setState({
       selection: [],
-      files: this.srv.lsGetCache(this.props.service, this.props.path),
-      loading: !this.srv.lsHasCache(this.props.service, this.props.path),
-    });
-    const service = this.props.service;
-    const path = this.props.path;
-    this.srv.ls(service, path).then((files) => {
-      // check that we did not CD during loading
-      if(this.props.service === service && this.props.path === path) {
-        this.setState({
-          files: files,
-          selection: [],
-          loading: false,
-        });
-      }
+      files: hasCache ? cache : this.state.files,
+      loading: !hasCache,
+    }, () => {
+      const service = this.props.service;
+      const path = this.props.path;
+      this.srv.ls(service, path).then((files) => {
+        // check that we did not CD during loading
+        if(this.props.service === service && this.props.path === path) {
+          this.setState({
+            files: files,
+            selection: [],
+            loading: false,
+          });
+        }
+      });
     });
   }
   download() {
@@ -92,7 +95,6 @@ export default class CloudExplorer extends React.Component {
   initInputProps(newProps) {
     this.setState({
       selection: [],
-      files: [],
       loading: true,
     });
     this.srv.cd(newProps.path)
