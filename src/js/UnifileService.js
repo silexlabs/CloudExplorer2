@@ -10,7 +10,7 @@ export default class UnifileService {
     this.rootUrl = rootUrl;
   }
   getStorageKey(service, path) {
-    return `${STORAGE_KEY_LS_CACHE}('${service}', '${path}')`;
+    return `${STORAGE_KEY_LS_CACHE}('${service}', '${path.join('/')}')`;
   }
   ls(service, path = null) {
     return new Promise((resolve, reject) => {
@@ -21,7 +21,10 @@ export default class UnifileService {
       }, (e) => reject(e));
     });
   }
-  lsCache(service, path = null) {
+  lsHasCache(service, path = null) {
+    return !!sessionStorage.getItem(this.getStorageKey(service, path));
+  }
+  lsGetCache(service, path = null) {
     try {
       const cached = sessionStorage.getItem(this.getStorageKey(service, path));
       if(cached) {

@@ -15,6 +15,7 @@ export default class CloudExplorer extends React.Component {
   INITIAL_STATE = {
     selection: [],
     files: [],
+    loading: false,
   };
   srv = new UnifileService('./', this.props.service, this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
@@ -22,6 +23,7 @@ export default class CloudExplorer extends React.Component {
     this.setState({
       selection: [],
       files: this.srv.lsGetCache(this.props.service, this.props.path),
+      loading: !this.srv.lsHasCache(this.props.service, this.props.path),
     });
     const service = this.props.service;
     const path = this.props.path;
@@ -31,6 +33,7 @@ export default class CloudExplorer extends React.Component {
         this.setState({
           files: files,
           selection: [],
+          loading: false,
         });
       }
     });
@@ -69,7 +72,10 @@ export default class CloudExplorer extends React.Component {
     .catch(e => console.error('ERROR:', e));
   }
   cancel() {
-    this.setState(JSON.parse(JSON.stringify(this.INITIAL_STATE)), () => this.props.onCancel());
+    this.setState(
+      JSON.parse(JSON.stringify(this.INITIAL_STATE)),
+      () => this.props.onCancel()
+    );
   }
   componentDidMount() {
     this.initInputProps(this.props);
@@ -87,6 +93,7 @@ export default class CloudExplorer extends React.Component {
     this.setState({
       selection: [],
       files: [],
+      loading: true,
     });
     this.srv.cd(newProps.path)
     .then(path => {
@@ -95,7 +102,7 @@ export default class CloudExplorer extends React.Component {
     .catch(e => console.error('ERROR:', e));
   }
   render() {
-    return <div>
+    return <div className={this.state.loading ? 'loading' : ''}>
       <div className="services panel">
         <h2>Services</h2>
         <ServiceSelector
