@@ -11,7 +11,7 @@ export default class ButtonBar extends React.Component {
       this.props.onDelete);
   }
   rename() {
-    ModalDialog.getInstance().prompt(<h2>Name</h2>, this.props.selection[0].name, this.props.onRename);
+    this.props.onRename(this.props.selection[0].name);
   }
   render() {
     this.allowDownload = this.props.service && this.props.selection.length === 1 && !this.props.selection[0].is_dir;

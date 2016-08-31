@@ -4,6 +4,8 @@ import ReactDom from 'react-dom';
 export default class Files extends React.Component {
   state = {
     createFolderMode: false,
+    renameFileMode: false,
+    renameFileData: {},
   }
   static DBLCLICK_DELAY_MS = 300;
   lastClickedEl = null
@@ -15,12 +17,34 @@ export default class Files extends React.Component {
     return new Promise((resolve, reject) => {
       this.setState({
         createFolderMode: true,
+        renameFileMode: false,
       });
       this.onGetNewFolderName = name => {
         this.setState({
           createFolderMode: false,
         });
         resolve(name);
+      };
+    });
+  }
+  /**
+   * called directly by owner class
+   */
+  getNewName(name) {
+    return new Promise((resolve, reject) => {
+      this.setState({
+        createFolderMode: false,
+        renameFileMode: true,
+        renameFileData: {
+          name: name,
+          newName: name,
+        }
+      });
+      this.onGetNewFileName = newName => {
+        this.setState({
+          renameFileMode: false,
+        });
+        resolve(newName);
       };
     });
   }
@@ -54,9 +78,24 @@ export default class Files extends React.Component {
     const list = this.props.files.map(file => <li
       data-idx={idx++}
       key={file.name}
-      onClick={(e) => this.select(e)}
+      onClick={e => this.select(e)}
       className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.is_dir ? 'folder' : 'file') + ' ' + ((dotIdx = file.name.lastIndexOf('.')) > 0 ? file.name.substr(dotIdx + 1) : 'no-ext')}>
-      {file.name}
+      {
+        this.state.renameFileMode && file.name === this.state.renameFileData.name ?
+          <input type="text"
+            onBlur={e => this.onGetNewFileName(e.target.value)}
+            onKeyPress={e => {
+              if(e.key === 'Enter') this.onGetNewFileName(e.target.value)
+            }}
+            value={this.state.renameFileData.newName}
+            onChange={e => this.setState({renameFileData: {
+              name: file.name,
+              newName: e.target.value,
+            }})}
+            autoFocus
+          />
+        : file.name
+      }
     </li>);
     if(this.state.createFolderMode) {
       list.push(<li
@@ -65,8 +104,8 @@ export default class Files extends React.Component {
         className="selected folder"
       >
         <input type="text"
-          onBlur={(e) => this.onGetNewFolderName(e.target.value)}
-          onKeyPress={(e) => {
+          onBlur={e => this.onGetNewFolderName(e.target.value)}
+          onKeyPress={e => {
             if(e.key === 'Enter') this.onGetNewFolderName(e.target.value)
           }}
           placeholder="New Folder Name"

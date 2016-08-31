@@ -51,7 +51,6 @@ export default class CloudExplorer extends React.Component {
     Promise.all(this.state.selection.map(file => {
       return this.srv.rm(this.props.service, this.props.path.concat([file.name]));
     })).then(results => {
-      // FIXME: prompt the result here
       this.ls();
     })
     .catch(e => console.error('ERROR:', e));
@@ -74,14 +73,22 @@ export default class CloudExplorer extends React.Component {
       });
     });
   }
-  rename(name, newName) {
-    this.srv.rename(this.props.service, name, newName)
-    .then(res => {
-      console.log('renamed', res);
-      // FIXME: prompt the result here
-      this.ls();
-    })
-    .catch(e => console.error('ERROR:', e));
+  rename(name) {
+    this.filesComponent.getNewName(name).then(newName => {
+      if(newName !== name) {
+        this.setState({
+          selection: [],
+          loading: true,
+        }, () => {
+          this.srv.rename(this.props.service, name, newName)
+          .then(res => {
+            console.log('renamed', res);
+            this.ls();
+          })
+          .catch(e => console.error('ERROR:', e));
+        });
+      }
+    });
   }
   cancel() {
     this.setState(
@@ -127,7 +134,7 @@ export default class CloudExplorer extends React.Component {
         <ButtonBar
           service={this.props.service}
           selection={this.state.selection}
-          onRename={(newName) => this.rename(this.state.selection[0].name, newName)}
+          onRename={() => this.rename(this.state.selection[0].name)}
           onCreateFolder={() => this.mkdir()}
           onReload={() => this.ls()}
           onDownload={() => this.download()}
