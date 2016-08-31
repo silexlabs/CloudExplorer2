@@ -66,6 +66,34 @@ export default class UnifileService {
       resolve(this.currentPath);
     });
   }
+  upload(service, file, onProgress) {
+      console.log('aaa', this.currentPath)
+    return new Promise((resolve, reject) => {
+      const absPath = this.currentPath.concat([file.name]);
+      const reader = new FileReader();
+      const xhr = new XMLHttpRequest();
+      xhr.upload.addEventListener("progress", (e) => {
+        if (e.lengthComputable) {
+          const percentage = Math.round((e.loaded * 100) / e.total);
+          onProgress(percentage);
+        }
+      }, false);
+      xhr.upload.addEventListener("load", (e) =>{
+        onProgress(100);
+        resolve();
+      }, false);
+      xhr.upload.addEventListener("error", (e) =>{
+        onProgress(0);
+        reject(e);
+      }, false);
+      xhr.open("PUT", `${this.rootUrl}${service}/put/${absPath.join('/')}`);
+      xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+      reader.onload = (evt) => {
+        xhr.send(evt.target.result);
+      };
+      reader.readAsBinaryString(file);
+    });
+  }
   getUrl(service, path) {
     return `${service}/get/${path.join('/')}`;
   }
@@ -90,6 +118,7 @@ export default class UnifileService {
     };
     const url = `${this.rootUrl}${route}`;
     oReq.open(method, url);
+    oReq.setRequestHeader('Content-Type', 'application/json');
     oReq.send(body);
   }
 }

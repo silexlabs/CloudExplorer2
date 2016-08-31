@@ -4,6 +4,8 @@ import ModalDialog from './ModalDialog';
 import ButtonBar from './ButtonBar';
 import ButtonConfirm from './ButtonConfirm';
 import Files from './Files';
+import FilesDropZone from './FilesDropZone';
+import FilesUploader from './FilesUploader';
 import Breadcrumbs from './Breadcrumbs';
 import ServiceSelector from './ServiceSelector';
 import UnifileService from './UnifileService';
@@ -16,6 +18,7 @@ export default class CloudExplorer extends React.Component {
     selection: [],
     files: [],
     loading: false,
+    uploadingFiles: [],
   };
   srv = new UnifileService('./', this.props.service, this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
@@ -82,7 +85,6 @@ export default class CloudExplorer extends React.Component {
         }, () => {
           this.srv.rename(this.props.service, name, newName)
           .then(res => {
-            console.log('renamed', res);
             this.ls();
           })
           .catch(e => console.error('ERROR:', e));
@@ -138,7 +140,6 @@ export default class CloudExplorer extends React.Component {
           onCreateFolder={() => this.mkdir()}
           onReload={() => this.ls()}
           onDownload={() => this.download()}
-          onUpload={() => console.log('Upload', this.state.selection, this.props.path.join('/'))}
           onDelete={() => this.delete()}
         />
         <ButtonConfirm
@@ -172,6 +173,16 @@ export default class CloudExplorer extends React.Component {
           onPick={(file) => this.props.onPick(file)}
         />
       </div>
+      <div className="upload">
+        <FilesDropZone
+          onDrop={files => this.setState({uploadingFiles: this.state.uploadingFiles.concat(files)})}
+        />
+        <FilesUploader
+          files={this.state.uploadingFiles}
+          upload={(file, onProgress, onSuccess, onError) => this.srv.upload(this.props.service, file, onProgress).then(onSuccess).catch(onError)}
+        />
+      </div>
+
       <div className="dialogs panel">
         <h2>Dialogs</h2>
         <ModalDialog />

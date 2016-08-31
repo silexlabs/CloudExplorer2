@@ -17,13 +17,11 @@ export default class ButtonBar extends React.Component {
     this.allowDownload = this.props.service && this.props.selection.length === 1 && !this.props.selection[0].is_dir;
     this.allowDelete = this.props.service && this.props.selection.length > 0;
     this.allowRename = this.props.service && this.props.selection.length === 1;
-    this.allowUpload = this.props.service;
     this.allowCreateFolder = this.props.service;
     this.allowReload = this.props.service;
 
     return <section className="button-bar">
       <ul>
-        <li onClick={() => this.allowUpload && this.props.onUpload()} className={this.allowUpload ? "enabled" : "disabled" }>Upload</li>
         <li onClick={() => this.allowDownload && this.props.onDownload()} className={this.allowDownload ? "enabled" : "disabled"}>Download</li>
         <li onClick={() => this.allowDelete && this.delete()} className={this.allowDelete ? "enabled" : "disabled"}>Delete</li>
         <li onClick={() => this.allowRename && this.rename()} className={this.allowRename ? "enabled" : "disabled"}>Rename</li>

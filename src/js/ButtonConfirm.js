@@ -9,7 +9,7 @@ export default class ButtonConfirm extends React.Component {
     this.allowUp = this.props.service && this.props.path.length > 0;
     return <section className="button-confirm">
       <ul>
-        <li onClick={(e) => this.allowPick && this.props.onPick(this.props.selection[0])} className={this.allowPick ? "enabled" : "disabled"}>Pick</li>
+        <li onClick={(e) => this.allowPick && this.props.onPick(this.props.selection[0])} className={this.allowPick ? "enabled" : "disabled"}>Ok</li>
         <li onClick={(e) => this.allowEnter && this.props.onEnter(this.props.selection[0])} className={this.allowEnter ? "enabled" : "disabled"}>Enter</li>
         <li onClick={(e) => this.allowUp && this.props.onUp(this.props.selection[0])} className={this.allowUp ? "enabled" : "disabled"}>Up</li>
         <li onClick={(e) => this.props.onCancel()} className="enabled">Cancel</li>

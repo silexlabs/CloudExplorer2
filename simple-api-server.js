@@ -83,7 +83,6 @@ app.put(/\/(.*)\/mkdir\/(.*)/, function(req, res) {
 app.put(/\/(.*)\/put\/(.*)/, function(req, res) {
   unifile.writeFile(req.session.unifile, req.params[0], req.params[1], req.body.content)
   .then(function(result){
-    console.log('res', result);
     res.send(result);
   })
   .catch(function(err){

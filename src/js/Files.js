@@ -72,10 +72,27 @@ export default class Files extends React.Component {
     e.stopPropagation();
   }
   render() {
+    let list = [];
+    if(this.state.createFolderMode) {
+      list.push(<li
+        data-idx={idx++}
+        key="newFolder"
+        className="selected folder"
+      >
+        <input type="text"
+          onBlur={e => this.onGetNewFolderName(e.target.value)}
+          onKeyPress={e => {
+            if(e.key === 'Enter') this.onGetNewFolderName(e.target.value)
+          }}
+          placeholder="New Folder Name"
+          autoFocus
+        />
+      </li>);
+    }
     // each file has the extension in its export default class name
     let idx = 0;
     let dotIdx;
-    const list = this.props.files.map(file => <li
+    list = list.concat(this.props.files.map(file => <li
       data-idx={idx++}
       key={file.name}
       onClick={e => this.select(e)}
@@ -96,23 +113,7 @@ export default class Files extends React.Component {
           />
         : file.name
       }
-    </li>);
-    if(this.state.createFolderMode) {
-      list.push(<li
-        data-idx={idx++}
-        key="newFolder"
-        className="selected folder"
-      >
-        <input type="text"
-          onBlur={e => this.onGetNewFolderName(e.target.value)}
-          onKeyPress={e => {
-            if(e.key === 'Enter') this.onGetNewFolderName(e.target.value)
-          }}
-          placeholder="New Folder Name"
-          autoFocus
-        />
-      </li>);
-    }
+    </li>));
     return <section><ul className="files">{list}</ul></section>;
   }
 }
