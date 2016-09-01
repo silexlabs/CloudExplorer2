@@ -14,6 +14,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const serveStatic = require('serve-static');
 const session = require('express-session');
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
 
 app.use( bodyParser.json() );
 app.use(cookieParser());
@@ -80,8 +82,8 @@ app.put(/\/(.*)\/mkdir\/(.*)/, function(req, res) {
   });
 });
 
-app.put(/\/(.*)\/put\/(.*)/, function(req, res) {
-  unifile.writeFile(req.session.unifile, req.params[0], req.params[1], req.body.content)
+app.put(/\/(.*)\/put\/(.*)/, multipartMiddleware, function(req, res) {
+  unifile.writeFile(req.session.unifile, req.params[0], req.params[1], req.body.uploads)
   .then(function(result){
     res.send(result);
   })

@@ -67,10 +67,10 @@ export default class UnifileService {
     });
   }
   upload(service, file, onProgress) {
-      console.log('aaa', this.currentPath)
     return new Promise((resolve, reject) => {
       const absPath = this.currentPath.concat([file.name]);
-      const reader = new FileReader();
+      const formData = new FormData();
+      const fileReader = new FileReader();
       const xhr = new XMLHttpRequest();
       xhr.upload.addEventListener("progress", (e) => {
         if (e.lengthComputable) {
@@ -87,11 +87,12 @@ export default class UnifileService {
         reject(e);
       }, false);
       xhr.open("PUT", `${this.rootUrl}${service}/put/${absPath.join('/')}`);
-      xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-      reader.onload = (evt) => {
-        xhr.send(evt.target.result);
+      xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+      fileReader.onload = (evt) => {
+        formData.append("uploads", evt.target.result);
+        xhr.send(formData);
       };
-      reader.readAsBinaryString(file);
+      fileReader.readAsBinaryString(file);
     });
   }
   getUrl(service, path) {
