@@ -61,7 +61,7 @@ export default class Files extends React.Component {
   select(e) {
     const file = this.props.files[parseInt(e.target.getAttribute('data-idx'))];
     if(this.isDoubleClick(e.target)) {
-      if(file.is_dir) this.props.onEnter(file);
+      if(file.isDir) this.props.onEnter(file);
       else this.props.onPick(file);
     }
     else {
@@ -96,7 +96,7 @@ export default class Files extends React.Component {
       data-idx={idx++}
       key={file.name}
       onClick={e => this.select(e)}
-      className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.is_dir ? 'folder' : 'file') + ' ' + ((dotIdx = file.name.lastIndexOf('.')) > 0 ? file.name.substr(dotIdx + 1) : 'no-ext')}>
+      className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.isDir ? 'folder' : 'file') + ' ' + file.mime.replace(/\//g, '_')}>
       {
         this.state.renameFileMode && file.name === this.state.renameFileData.name ?
           <input type="text"

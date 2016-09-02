@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import CloudExplorer from './CloudExplorer';
 
-const SERVICES = ['FTP', 'Dropbox', 'GitHub'];
+// TODO Call a list route of the server
+const SERVICES = ['FTP', 'Dropbox', 'GitHub', 'RemoteStorage'];
 const STORAGE_KEY_SERVICE = 'CloudExplorer.service';
 const STORAGE_KEY_PATH = 'CloudExplorer.path';
 
