@@ -28,9 +28,11 @@ app.use(session({
 const GitHubConnector = require('unifile/lib/unifile-github.js');
 const DropboxConnector = require('unifile/lib/unifile-dropbox.js');
 const FtpConnector = require('unifile/lib/unifile-ftp.js');
+const RemoteConnector = require('unifile/lib/unifile-remoteStorage.js');
 const ghconnector = new GitHubConnector({clientId: process.env.GitHubClientId || 'b4e46028bf36d871f68d', clientSecret: process.env.GitHubClientSecret || 'c39806c4d0906cfeaac932012996a1919475cc78', state: process.env.GitHubState || 'aaathub'});
 const dbxconnector = new DropboxConnector({clientId: process.env.DropboxClientId || '37mo489tld3rdi2', clientSecret: process.env.DropboxClientSecret || 'kqfzd11vamre6xr', state: process.env.DropboxState || 'aaathub', redirectUri: process.env.DropboxRedirectUri || 'http://localhost:6805/dropbox/oauth-callback'});
 const ftpconnector = new FtpConnector({redirectUri: process.env.FtpRedirectUri || 'http://localhost:6805/ftp/signin'});
+const rsconnector = new RemoteConnector({redirectUri: 'http://localhost:6805/remotestorage/callback'});
 // Register connector
 unifile.use(ghconnector);
 unifile.use(dbxconnector);
@@ -38,8 +40,8 @@ unifile.use(ftpconnector);
 
 // Register connector methods
 app.post('/:connector/authorize', function(req, res) {
-  let result = unifile.getAuthorizeURL(req.session.unifile, req.params.connector);
-  res.end(result);
+  unifile.getAuthorizeURL(req.session.unifile, req.params.connector)
+  .then(res.end);
 });
 
 // Search for a old session token in the cookies
@@ -143,6 +145,11 @@ app.get('/:connector/oauth-callback', function(req, res) {
     console.error(err);
     res.status(500).send(err);
   });
+});
+
+app.get('/remotestorage/callback', function(req, res){
+  // Return a script that get the hash and redirect to oauth-callback
+  res.end('<script>var token = location.hash.substr(1).split("=")[1];location="/remotestorage/oauth-callback?token="+token</script>');
 });
 
 app.get('/ftp/signin', function(req, res){
