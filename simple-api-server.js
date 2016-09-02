@@ -134,6 +134,15 @@ app.post(/\/(.*)\/cp\/(.*)/, function(req, res) {
   read.pipe(write).pipe(res);
 });
 
+app.post('/:connector/batch', function(req, res){
+  unifile.batch(req.session.unifile, req.params.connector, req.body)
+  .then(res.send)
+  .catch(err => {
+    console.error(err);
+    res.status(400).send(err);
+  });
+});
+
 // register callback url
 app.get('/:connector/oauth-callback', function(req, res) {
   unifile.login(req.session.unifile, req.params.connector, req.query)

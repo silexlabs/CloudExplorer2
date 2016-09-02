@@ -51,9 +51,11 @@ export default class CloudExplorer extends React.Component {
     );
   }
   delete() {
-    Promise.all(this.state.selection.map(file => {
-      return this.srv.rm(this.props.service, this.props.path.concat([file.name]));
-    })).then(results => {
+    let batch = this.state.selection.map(file => {
+      return {name: 'unlink', path: this.props.path.concat([file.name]).join('/')}
+    });
+    return this.srv.batch(this.props.service, batch)
+    .then(results => {
       this.ls();
     })
     .catch(e => console.error('ERROR:', e));
