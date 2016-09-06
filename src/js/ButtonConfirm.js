@@ -4,9 +4,9 @@ import ModalDialog from './ModalDialog';
 
 export default class ButtonConfirm extends React.Component {
   render() {
-    this.allowPick = this.props.service && this.props.selection.length === 1 && this.props.pickFolder === this.props.selection[0].is_dir;
-    this.allowEnter = this.props.service && this.props.selection.length === 1 && this.props.selection[0].is_dir;
-    this.allowUp = this.props.service && this.props.path.length > 0;
+    this.allowPick = this.props.path.length > 0 && this.props.selection.length === 1 && this.props.pickFolder === this.props.selection[0].is_dir;
+    this.allowEnter = this.props.path.length > 0 && this.props.selection.length === 1 && this.props.selection[0].is_dir;
+    this.allowUp = this.props.path.length > 0 && this.props.path.length > 0;
     return <section className="button-confirm">
       <ul>
         <li onClick={(e) => this.allowPick && this.props.onPick(this.props.selection[0])} className={this.allowPick ? "enabled" : "disabled"}>Ok</li>

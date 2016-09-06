@@ -6,27 +6,34 @@ const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 export default class UnifileService {
   currentPath = [];
   rootUrl = null;
-  constructor(rootUrl) {
+  constructor(rootUrl, services, path) {
     this.rootUrl = rootUrl;
+    this.services = services;
+    this.currentPath = path;
   }
-  getStorageKey(service, path) {
-    return `${STORAGE_KEY_LS_CACHE}('${service}', '${path.join('/')}')`;
+  getStorageKey(path) {
+    return `${STORAGE_KEY_LS_CACHE}('${path.join('/')}')`;
   }
-  ls(service, path = null) {
+  ls(path = null) {
     return new Promise((resolve, reject) => {
       let pathToLs = path || this.currentPath;
-      this.call(`${service}/ls/${pathToLs.join('/')}`, (res) => {
-        sessionStorage.setItem(this.getStorageKey(service, path), JSON.stringify(res));
-        resolve(res);
-      }, (e) => reject(e));
+      if(pathToLs.length > 0) {
+        this.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}`, (res) => {
+          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
+          resolve(res);
+        }, (e) => reject(e));
+      }
+      else {
+        resolve(this.services);
+      }
     });
   }
-  lsHasCache(service, path = null) {
-    return !!sessionStorage.getItem(this.getStorageKey(service, path));
+  lsHasCache(path = null) {
+    return !!sessionStorage.getItem(this.getStorageKey(path));
   }
-  lsGetCache(service, path = null) {
+  lsGetCache(path = null) {
     try {
-      const cached = sessionStorage.getItem(this.getStorageKey(service, path));
+      const cached = sessionStorage.getItem(this.getStorageKey(path));
       if(cached) {
         return JSON.parse(cached);
       }
@@ -34,29 +41,29 @@ export default class UnifileService {
     catch(e) {}
     return [];
   }
-  rm(service, path, relative=false) {
+  rm(path, relative=false) {
     return new Promise((resolve, reject) => {
       const absPath = relative ? this.currentPath.concat(path) : path;
-      this.call(`${service}/rm/${absPath.join('/')}`, (res) => resolve(res), (e) => reject(e), 'DELETE');
+      this.call(`${absPath[0]}/rm/${absPath.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'DELETE');
     });
   }
-  batch(service, actions){
+  batch(path, actions){
     return new Promise((resolve, reject) => {
-      this.call(`${service}/batch/`, resolve, reject, 'POST', JSON.stringify(actions))
+      this.call(`${path[0]}/batch/`, resolve, reject, 'POST', JSON.stringify(actions))
     });
   }
-  mkdir(service, path, relative=false) {
+  mkdir(path, relative=false) {
     return new Promise((resolve, reject) => {
       const absPath = relative ? this.currentPath.concat(path) : path;
-      this.call(`${service}/mkdir/${absPath.join('/')}`, (res) => resolve(res), (e) => reject(e), 'PUT');
+      this.call(`${absPath[0]}/mkdir/${absPath.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'PUT');
     });
   }
-  rename(service, name, newName) {
+  rename(name, newName) {
     return new Promise((resolve, reject) => {
       const absPath = this.currentPath.concat([name]);
       const absNewPath = this.currentPath.concat([newName]);
       this.call(
-        `${service}/mv/${absPath.join('/')}`,
+        `${absPath[0]}/mv/${absPath.slice(1).join('/')}`,
         (res) => resolve(res), (e) => reject(e),
         'PATCH',
         JSON.stringify({
@@ -67,31 +74,49 @@ export default class UnifileService {
   }
   cd(path) {
     return new Promise((resolve, reject) => {
-      this.currentPath = path;
-      resolve(this.currentPath);
+      if(path.length === 1 && path[0] !== this.currentPath[0]) {
+        this.auth(path[0])
+          .then(service => {
+            console.log('success', service);
+            this.currentPath = path;
+            resolve(this.currentPath);
+          })
+          .catch(e => {
+            console.log('error', e);
+            reject(e);
+          });
+      }
+      else {
+        console.log('change path', path)
+        this.currentPath = path;
+        resolve(this.currentPath);
+      }
     });
   }
-  upload(service, file, onProgress) {
+  upload(file, onProgress) {
     return new Promise((resolve, reject) => {
       const absPath = this.currentPath.concat([file.name]);
       const formData = new FormData();
       const fileReader = new FileReader();
       const xhr = new XMLHttpRequest();
       xhr.upload.addEventListener("progress", (e) => {
+        console.log('progress');
         if (e.lengthComputable) {
           const percentage = Math.round((e.loaded * 100) / e.total);
           onProgress(percentage);
         }
       }, false);
-      xhr.upload.addEventListener("load", (e) =>{
+      xhr.upload.addEventListener("load", (e) => {
+        console.log('load');
         onProgress(100);
         resolve();
       }, false);
-      xhr.upload.addEventListener("error", (e) =>{
+      xhr.upload.addEventListener("error", (e) => {
+        console.log('error');
         onProgress(0);
         reject(e);
       }, false);
-      xhr.open("PUT", `${this.rootUrl}${service}/put/${absPath.join('/')}`);
+      xhr.open("PUT", `${this.rootUrl}${absPath[0]}/put/${absPath.slice(1).join('/')}`);
       xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
       fileReader.onload = (evt) => {
         formData.append("uploads", evt.target.result);
@@ -100,8 +125,32 @@ export default class UnifileService {
       fileReader.readAsBinaryString(file);
     });
   }
-  getUrl(service, path) {
-    return `${service}/get/${path.join('/')}`;
+  auth(service) {
+    return new Promise((resolve, reject) => {
+      let req = new XMLHttpRequest();
+      req.open('POST', '/' + service + '/authorize', false);
+      req.send();
+      let win = window.open(req.responseText);
+      win.addEventListener('unload', () => {
+        console.log('closed?', win.closed);
+        win.onunload = null;
+        this.startPollingAuthWin(win, service, resolve, reject);
+      });
+    });
+  }
+  startPollingAuthWin(win, service, resolve, reject) {
+    console.log('closed?', win.closed);
+    if(win.closed) {
+      this.ls([service])
+        .then(res => resolve(service))
+        .catch(e => reject(e));
+    }
+    else setTimeout(() => {
+      this.startPollingAuthWin(win, service, resolve, reject);
+    }, 200);
+  }
+  getUrl(path) {
+    return `${path[0]}/get/${path.slice(1).join('/')}`;
   }
   call(route, cbk, err, method = 'GET', body = '') {
     const oReq = new XMLHttpRequest();

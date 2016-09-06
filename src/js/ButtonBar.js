@@ -14,11 +14,11 @@ export default class ButtonBar extends React.Component {
     this.props.onRename(this.props.selection[0].name);
   }
   render() {
-    this.allowDownload = this.props.service && this.props.selection.length === 1 && !this.props.selection[0].is_dir;
-    this.allowDelete = this.props.service && this.props.selection.length > 0;
-    this.allowRename = this.props.service && this.props.selection.length === 1;
-    this.allowCreateFolder = this.props.service;
-    this.allowReload = this.props.service;
+    this.allowDownload = this.props.path.length > 0 && this.props.selection.length === 1 && !this.props.selection[0].is_dir;
+    this.allowDelete = this.props.path.length > 0 && this.props.selection.length > 0;
+    this.allowRename = this.props.path.length > 0 && this.props.selection.length === 1;
+    this.allowCreateFolder = this.props.path.length > 0;
+    this.allowReload = this.props.path.length > 0;
 
     return <section className="button-bar">
       <ul>
