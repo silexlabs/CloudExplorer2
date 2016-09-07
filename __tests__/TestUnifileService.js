@@ -11,11 +11,11 @@ describe('UnifileService', () => {
       "bytes": 1234,
       "modified": "2016-05-07T22:10:31",
       "name": "README.md",
-      "is_dir": false
+      "isDir": false
     }, {
       "modified": "2016-05-07T22:10:31",
       "name": "test",
-      "is_dir": true
+      "isDir": true
     }];
     Object.defineProperty(XMLHttpRequest.prototype, 'responseText', {
       get: function() {

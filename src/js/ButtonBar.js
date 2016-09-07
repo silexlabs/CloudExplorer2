@@ -14,7 +14,7 @@ export default class ButtonBar extends React.Component {
     this.props.onRename(this.props.selection[0].name);
   }
   render() {
-    this.allowDownload = this.props.path.length > 0 && this.props.selection.length === 1 && !this.props.selection[0].is_dir;
+    this.allowDownload = this.props.path.length > 0 && this.props.selection.length === 1 && !this.props.selection[0].isDir;
     this.allowDelete = this.props.path.length > 0 && this.props.selection.length > 0;
     this.allowRename = this.props.path.length > 0 && this.props.selection.length === 1;
     this.allowCreateFolder = this.props.path.length > 0;
