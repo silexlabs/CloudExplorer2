@@ -87,7 +87,6 @@ export default class UnifileService {
           });
       }
       else {
-        console.log('change path', path)
         this.currentPath = path;
         resolve(this.currentPath);
       }

@@ -4,6 +4,7 @@ import ModalDialog from './ModalDialog';
 import ButtonBar from './ButtonBar';
 import ButtonConfirm from './ButtonConfirm';
 import Files from './Files';
+import KeyboardNav from './KeyboardNav';
 import FilesDropZone from './FilesDropZone';
 import FilesUploader from './FilesUploader';
 import Breadcrumbs from './Breadcrumbs';
@@ -163,6 +164,14 @@ export default class CloudExplorer extends React.Component {
           onChange={(selection) => this.setState({selection: selection})}
           onEnter={folder => this.cd([folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
+        />
+        <KeyboardNav
+          selection={this.state.selection}
+          files={this.state.files}
+          onChange={(selection) => this.setState({selection: selection})}
+          onEnter={folder => this.cd([folder.name], true)}
+          onPick={(file) => this.props.onPick(file)}
+          onCancel={() => this.cancel()}
         />
       </div>
       <div className="upload">
