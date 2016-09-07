@@ -56,7 +56,10 @@ export default class CloudExplorer extends React.Component {
     .then(results => {
       this.ls();
     })
-    .catch(e => console.error('ERROR:', e));
+    .catch(e => {
+      console.error('ERROR:', e);
+      if(this.props.onError) this.props.onError(e);
+    });
   }
   cd(path, relative = false) {
     this.props.onCd(
@@ -84,7 +87,10 @@ export default class CloudExplorer extends React.Component {
           .then(res => {
             this.ls();
           })
-          .catch(e => console.error('ERROR:', e));
+          .catch(e => {
+            console.error('ERROR:', e);
+            if(this.props.onError) this.props.onError(e);
+          });
         });
       }
     });
@@ -118,6 +124,7 @@ export default class CloudExplorer extends React.Component {
     .catch(e => {
       console.error('ERROR:', e);
       if(opt_oldProps && opt_oldProps.path) this.props.onCd(opt_oldProps.path);
+      if(this.props.onError) this.props.onError(e);
     });
   }
   render() {
@@ -140,6 +147,9 @@ export default class CloudExplorer extends React.Component {
           selection={this.state.selection}
           path={this.props.path}
           pickFolder={this.props.pickFolder}
+          inputName={this.props.inputName}
+          defaultFileName={this.props.defaultFileName}
+          onSave={fileName => this.props.onSave(fileName)}
           onPick={() => this.props.onPick(this.state.selection)}
           onEnter={folder => this.cd([folder.name], true)}
           onUp={() => this.cd(this.props.path.slice(0, -1), false)}
@@ -161,6 +171,7 @@ export default class CloudExplorer extends React.Component {
           services={this.props.services}
           selection={this.state.selection}
           files={this.state.files}
+          multiple={this.props.multiple}
           onChange={(selection) => this.setState({selection: selection})}
           onEnter={folder => this.cd([folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
@@ -185,7 +196,12 @@ export default class CloudExplorer extends React.Component {
               onSuccess();
               this.ls();
             })
-            .catch(onError)}
+            .catch(e => {
+              console.error('Error while uploading', e);
+              onError(e);
+              if(this.props.onError) this.props.onError(e);
+            })
+          }
         />
       </div>
 

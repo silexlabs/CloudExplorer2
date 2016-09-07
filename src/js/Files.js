@@ -65,7 +65,7 @@ export default class Files extends React.Component {
       else this.props.onPick(file);
     }
     else {
-      const selection = e.ctrlKey ? this.props.selection : [];
+      const selection = e.ctrlKey && this.props.multiple ? this.props.selection : [];
       this.props.onChange(selection.concat(file));
     }
     e.preventDefault();

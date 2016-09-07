@@ -3,17 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>Cloud Explorer</title>
-    <link href='./style.css' rel='stylesheet' type='text/css'>
+    <link href='./demo-page.css' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="./demo-page.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'>
   </head>
   <body>
-    <section>
-      <header>
-        <div id="logo"></div>
-      </header>
-      <div id="cloud-explorer"></div>
-      <footer></footer>
-    </section>
-    <script src="./cloud-explorer.js"></script>
+    <header>
+      Cloud Explorer demo page
+    </header>
+    <section class="button-bar"><ul>
+      <li id="ce-open-file">Select one HTML file</li>
+      <li id="ce-open-files">Select multiple HTML files</li>
+      <li id="ce-open-folder">Select a folder</li>
+      <li id="ce-save-file">Save</li>
+      <li id="ce-saveas-file">Save as</li>
+    </ul></section>
+    <section id="selection"></section>
+    <iframe id="ceIFrame" class="container" src="./cloud-explorer.html" />
+    <footer></footer>
   </body>
 </html>
