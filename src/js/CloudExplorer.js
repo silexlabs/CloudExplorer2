@@ -128,10 +128,7 @@ export default class CloudExplorer extends React.Component {
     });
   }
   render() {
-    return <div className={this.state.loading ? 'loading' : ''}>
-      <div className="services panel">
-        <h2>Services</h2>
-      </div>
+    return <div className={"root " + (this.state.loading ? 'loading' : '')}>
       <div className="buttons panel">
         <h2>Buttons</h2>
         <ButtonBar
