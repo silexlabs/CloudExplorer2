@@ -1,0 +1,210 @@
+body, html {
+	font-family: 'Open Sans', sans-serif;
+	margin:0;
+	padding:0;
+}
+body {
+	font-size:1em;
+	line-height:1.5em;
+}
+
+ul, li {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+
+#cloud-explorer .root {
+	display:flex;
+	flex-direction:column;
+	flex-wrap:nowrap;
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+}
+
+#cloud-explorer .files {
+	flex-grow:10;
+	display:flex;
+	flex-direction:column;
+}
+
+#cloud-explorer .files section {
+	flex-grow:10;
+	overflow-y:scroll;
+}
+
+/* basic style for demo */
+#cloud-explorer li {
+	cursor: pointer;
+	transition: all .25s;
+	border-radius:.25em;
+}
+
+.files li:hover,
+.breadcrumbs li:hover {
+	text-decoration:underline;
+	color: #111;
+}
+
+#cloud-explorer li.disabled {
+	cursor: default;
+	color: lightgrey;
+}
+
+#cloud-explorer li.disabled:hover {
+	text-decoration:none;
+	color: lightgrey;
+}
+
+#cloud-explorer li.selected {
+	cursor: default;
+	background-color:darkblue;
+	color:white;
+}
+#cloud-explorer li.selected:hover {
+	text-decoration:none;
+}
+
+#cloud-explorer .button-confirm .enabled,
+#cloud-explorer .button-bar .enabled {
+	/*color: blue;*/
+}
+#cloud-explorer .files li {
+	padding-left:32px;
+	background: transparent none no-repeat 8px 50%;
+}
+#cloud-explorer .files li.selected {
+	background-color:darkblue;
+}
+#cloud-explorer .files .file {
+	background-image: url('https://cdn3.iconfinder.com/data/icons/brands-applications/512/File-16.png');
+}
+#cloud-explorer .files .folder {
+	background-image: url('https://cdn4.iconfinder.com/data/icons/linecon/512/folder-16.png');
+}
+
+.panel {
+	padding:0 1em;
+}
+
+.panel h2 {
+	text-transform: uppercase;
+	color:lightgrey;
+	font-size:1em;
+	margin:0 0 .5em 0;
+	border-top: 1px solid transparent;
+	border-bottom:1px solid lightgrey;
+	padding:.5em 1em;
+}
+
+.panel li {
+	padding:.5em 1em;
+}
+
+.buttons h2,
+.breadcrumbs h2,
+.dialogs h2 {
+	display:none;
+}
+
+.modal-dialog h2 {
+	display:block;
+}
+
+
+.buttons.panel,
+.breadcrumbs.panel,
+.files.panel {
+	padding:0;
+	clear:right;
+	zoom:1;
+}
+
+.buttons ul {
+	border: 1px solid lightgrey;
+	float:left;
+	margin-right:.5em;
+	border-radius:.25em;
+	margin:0 .5em .5em 0;
+}
+
+input, button {
+	border-color:transparent;
+	padding:.5em;
+	background:transparent;
+	color:inherit;
+	font-size:inherit;
+	font-family:inherit;
+	display:inline-block;
+	margin:0 .5em .5em .5em;
+}
+
+input {
+	border-color:transparent;
+	border-width:1px;
+	border-bottom: 1px solid lightgrey;
+}
+
+button {
+	color:lightgrey;
+	border-radius:.5em;
+	cursor:pointer;
+	font-weight:600;
+	text-transform:uppercase;
+	transition:all .25s;
+	padding:.5em 1em;
+}
+
+button:hover {
+	background-color:darkblue;
+	color:white;
+}
+
+#cloud-explorer .buttons li {
+	padding:.5em 1em;
+	display:inline-block;
+	border-right:1px solid lightgrey;
+	border-radius:0;
+}
+
+#cloud-explorer .buttons li.enabled:hover {
+	text-decoration:none;
+}
+
+#cloud-explorer .buttons li:nth-last-child(1) {
+	border-right:0;
+}
+
+.breadcrumbs li {
+	display:inline-block;
+}
+
+.dialogs {
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+}
+
+.modal-dialog {
+	border-radius:.25em;
+	margin:1em auto;
+	max-width:320px;
+	background-color:rgba(0,0,0,.8);
+	color:white;
+    box-shadow: 0 0 .5em grey;
+
+    clear:both;
+	overflow:auto;
+	zoom:1;
+}
+
+.modal-dialog button {
+	float:right;
+	clear:both;
+}
+
+
