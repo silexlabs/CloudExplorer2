@@ -1,3 +1,8 @@
+$active-bg: #339;
+
+$fa-font-path: "/node_modules/font-awesome/fonts";
+@import "font-awesome";
+
 body, html {
 	font-family: 'Open Sans', sans-serif;
 	margin:0;
@@ -61,7 +66,7 @@ ul, li {
 
 #cloud-explorer li.selected {
 	cursor: default;
-	background-color:darkblue;
+	background-color:$active-bg;
 	color:white;
 }
 #cloud-explorer li.selected:hover {
@@ -72,18 +77,28 @@ ul, li {
 #cloud-explorer .button-bar .enabled {
 	/*color: blue;*/
 }
-#cloud-explorer .files li {
-	padding-left:32px;
-	background: transparent none no-repeat 8px 50%;
-}
 #cloud-explorer .files li.selected {
-	background-color:darkblue;
+	background-color:$active-bg;
 }
-#cloud-explorer .files .file {
-	background-image: url('https://cdn3.iconfinder.com/data/icons/brands-applications/512/File-16.png');
-}
+
 #cloud-explorer .files .folder {
-	background-image: url('https://cdn4.iconfinder.com/data/icons/linecon/512/folder-16.png');
+	//background-image: url('https://cdn4.iconfinder.com/data/icons/linecon/512/folder-16.png');
+}
+
+
+#cloud-explorer .files .icon {
+	display:inline-block;
+	margin-right:.5em;
+}
+
+#cloud-explorer .folder.icon {
+	@extend .fa;
+	@extend .fa-folder-o;
+}
+
+#cloud-explorer .file.icon {
+	@extend .fa;
+	@extend .fa-file-o;
 }
 
 .panel {
@@ -159,7 +174,7 @@ button {
 }
 
 button:hover {
-	background-color:darkblue;
+	background-color:$active-bg;
 	color:white;
 }
 

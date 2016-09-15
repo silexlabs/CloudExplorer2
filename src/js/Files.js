@@ -97,6 +97,7 @@ export default class Files extends React.Component {
       key={file.name}
       onClick={e => this.select(e)}
       className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.isDir ? 'folder' : 'file') + ' ' + file.mime.replace(/\//g, '_')}>
+      <i className={"icon " + (file.isDir ? 'folder' : 'file') + ' ' + file.mime.replace(/\//g, '_')}></i>
       {
         this.state.renameFileMode && file.name === this.state.renameFileData.name ?
           <input type="text"

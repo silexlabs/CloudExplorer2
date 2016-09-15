@@ -14,8 +14,8 @@
     "test:watch": "watch 'npm test' src/ __tests__/",
     "build": "npm run build:js && npm run build:sass",
     "build:js": "browserify src/js/App.js -d -o dist/cloud-explorer.js -t [ babelify ]",
-    "build:sass": "node-sass --include-path src/sass src/sass/style.scss dist/style.css",
-    "watch": "live-reload dist/ --port 35729 & watch 'npm run build' src/"
+    "build:sass": "node-sass --include-path src/sass --include-path node_modules/font-awesome/scss src/sass/style.scss dist/style.css",
+    "watch": "live-reload dist/ --port 35729 & watch 'npm run build:js' src/js & watch 'npm run build:sass' src/sass"
   },
   "author": "",
   "license": "ISC",
@@ -33,6 +33,7 @@
     "dropbox": "^2.0.0",
     "express": "^4.0.0",
     "express-session": "^1.13.0",
+    "font-awesome": "^4.6.3",
     "ftp": "^0.3.10",
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
