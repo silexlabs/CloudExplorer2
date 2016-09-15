@@ -4,7 +4,6 @@ body, html {
 	padding:0;
 }
 body {
-	padding:1em;
 	font-size:1em;
 	line-height:1.5em;
 }
@@ -15,6 +14,27 @@ ul, li {
 	list-style:none;
 }
 
+#cloud-explorer .root {
+	display:flex;
+	flex-direction:column;
+	flex-wrap:nowrap;
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+}
+
+#cloud-explorer .files {
+	flex-grow:10;
+	display:flex;
+	flex-direction:column;
+}
+
+#cloud-explorer .files section {
+	flex-grow:10;
+	overflow-y:scroll;
+}
 
 /* basic style for demo */
 #cloud-explorer li {
@@ -24,7 +44,6 @@ ul, li {
 }
 
 .files li:hover,
-.services li:hover,
 .breadcrumbs li:hover {
 	text-decoration:underline;
 	color: #111;
@@ -95,17 +114,12 @@ ul, li {
 	display:block;
 }
 
-.services.panel {
-	float:left;
-	padding-left:0;
-}
 
 .buttons.panel,
 .breadcrumbs.panel,
 .files.panel {
 	padding:0;
 	clear:right;
-	overflow:auto;
 	zoom:1;
 }
 
