@@ -43,13 +43,14 @@ export default class CloudExplorer extends React.Component {
       });
     });
   }
-  download() {
+  download(file) {
     window.open(this.srv.getUrl(
-      this.props.path.concat([this.state.selection[0].name]))
+      this.props.path.concat([file.name]))
     );
   }
-  delete() {
-    let batch = this.state.selection.map(file => {
+  delete(opt_file) {
+    const files = opt_file ? [opt_file] : this.state.selection;
+    let batch = files.map(file => {
       return {name: 'unlink', path: this.props.path.concat([file.name]).join('/')}
     });
     return this.srv.batch(this.props.path, batch)
@@ -134,11 +135,7 @@ export default class CloudExplorer extends React.Component {
         <ButtonBar
           selection={this.state.selection}
           path={this.props.path}
-          onRename={() => this.rename(this.state.selection[0].name)}
           onCreateFolder={() => this.mkdir()}
-          onReload={() => this.ls()}
-          onDownload={() => this.download()}
-          onDelete={() => this.delete()}
         />
         <ButtonConfirm
           selection={this.state.selection}
@@ -146,10 +143,9 @@ export default class CloudExplorer extends React.Component {
           pickFolder={this.props.pickFolder}
           inputName={this.props.inputName}
           defaultFileName={this.props.defaultFileName}
+          onReload={() => this.ls()}
           onSave={fileName => this.props.onSave(fileName)}
           onPick={() => this.props.onPick(this.state.selection)}
-          onEnter={folder => this.cd([folder.name], true)}
-          onUp={() => this.cd(this.props.path.slice(0, -1), false)}
           onCancel={() => this.cancel()}
         />
       </div>
@@ -168,6 +164,9 @@ export default class CloudExplorer extends React.Component {
           selection={this.state.selection}
           files={this.state.files}
           multiple={this.props.multiple}
+          onDownload={file => this.download(file)}
+          onDelete={file => this.delete(file)}
+          onRename={file => this.rename(file.name)}
           onChange={(selection) => this.setState({selection: selection})}
           onEnter={folder => this.cd([folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
