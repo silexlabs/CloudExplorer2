@@ -12,10 +12,13 @@ export default class Breadcrumbs extends React.Component {
       key={ idx++ }
       onClick={e => this.goto(parseInt(e.target.getAttribute('data-idx')))}
       className="folder">
+      <i className="icon"></i>
       {folderName}
     </li>);
     return <section><ul className="breadcrumbs">
-      <li onClick={e => this.goto(0) }>/</li>
+      <li className="home" onClick={e => this.goto(0) }>
+        <i className="icon"></i>
+      </li>
       {markup}
     </ul></section>;
   }

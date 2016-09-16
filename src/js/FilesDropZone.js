@@ -37,6 +37,7 @@ export default class FilesDropZone extends React.Component {
   }
   render() {
     return <div
+      className="upload button"
       ref={c => this.div = c}
       onClick={e => this.input.click()}
     >
