@@ -4,11 +4,12 @@
 
 ```
 $ npm i
+$ npm run build
 ```
 
 This will compile the JS files from `src/` with [ReactJS](https://facebook.github.io/react/) and [Babel](https://babeljs.io/). The generated files will go in `dist/`.
 
-You can serve `dist` on `http://localhost:8080` with 
+You can serve `dist` on `http://localhost:8080` with
 
 ```
 $ npm start

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import FileListItem  from './FileListItem';
 
 export default class Files extends React.Component {
   state = {
@@ -58,18 +59,15 @@ export default class Files extends React.Component {
     this.lastClickedTime = now;
     return false;
   }
-  select(e) {
-    const file = this.props.files[parseInt(e.target.getAttribute('data-idx'))];
-    if(this.isDoubleClick(e.target)) {
+  select(file, multiple) {
+    if(this.isDoubleClick(file)) {
       if(file.isDir) this.props.onEnter(file);
       else this.props.onPick(file);
     }
     else {
-      const selection = e.ctrlKey && this.props.multiple ? this.props.selection : [];
+      const selection = multiple && this.props.multiple ? this.props.selection : [];
       this.props.onChange(selection.concat(file));
     }
-    e.preventDefault();
-    e.stopPropagation();
   }
   render() {
     let list = [];
@@ -90,12 +88,9 @@ export default class Files extends React.Component {
       </li>);
     }
     // each file has the extension in its export default class name
-    let idx = 0;
     let dotIdx;
     list = list.concat(this.props.files.map(file => <li
-      data-idx={idx++}
       key={file.name}
-      onClick={e => this.select(e)}
       className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.isDir ? 'folder' : 'file') + ' ' + file.mime.replace(/\//g, ' ')}>
       <i className={"icon " + (file.isDir ? 'folder' : 'file') + ' ' + file.mime.replace(/\//g, ' ')}></i>
       {
@@ -112,7 +107,14 @@ export default class Files extends React.Component {
             }})}
             autoFocus
           />
-        : file.name
+        : <FileListItem
+            onSelect={multiple => this.select(file, multiple)}
+            file={file}
+            path={this.props.path}
+            onRename={() => this.props.onRename(file)}
+            onDelete={() => this.props.onDelete(file)}
+            onDownload={() => this.props.onDownload(file)}
+          >{file.name}</FileListItem>
       }
     </li>));
     return <section><ul className="files">{list}</ul></section>;
