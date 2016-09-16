@@ -71,39 +71,77 @@ ul, li {
 	padding:0;
 }
 
-#cloud-explorer .files section {
+#cloud-explorer .files > section {
 	flex-grow:10;
 	overflow-y:scroll;
 	border: $thick-border;
 	border-radius: $border-radius;
 }
 
-#cloud-explorer .files li {
+#cloud-explorer .files > li {
 	@extend .noselect;
 	border-bottom: $thin-border;
-	font-weight:700;
+	
+
+	& label {
+		flex-grow:10;
+		font-weight:700;
+	}
+
+}
+
+#cloud-explorer ul.inline-button-bar {
+	opacity:0;
+	display:flex;
+	flex-direction:row;
+	& li {
+		@extend .highlight;
+		padding:0 1em;
+	}
+}
+
+#cloud-explorer ul.files > li:hover .inline-button-bar,
+#cloud-explorer ul.files > li.selected .inline-button-bar {
+	opacity:1;
+}
+
+#cloud-explorer .files .file-list-item {
+	display:flex;
+	flex-direction:row;
+	justify-content:space-between;
+
+	& > .inline-button-bar {
+		& .disabled {
+			display: none;
+		}
+	}
 }
 
 /* basic style for demo */
-#cloud-explorer li,
+/*#cloud-explorer li,*/
+#cloud-explorer .buttons.panel li,
+#cloud-explorer .breadcrumbs.panel li,
 #cloud-explorer .upload.button {
 	@extend .highlight;
+
+	&.disabled {
+		cursor: default;
+		color: $lightgrey;
+		&:hover  {
+			text-decoration:none;
+			color: lightgrey;	
+		}
+	}
 }
 
-#cloud-explorer li.disabled {
-	cursor: default;
-	color: $lightgrey;
-}
-
-#cloud-explorer li.disabled:hover {
-	text-decoration:none;
-	color: lightgrey;
-}
 
 #cloud-explorer li.selected {
 	cursor: default;
 	background-color:$active-bg;
 	color:white;
+	& .inline-button-bar li {
+		color:white;
+	}
 }
 #cloud-explorer li.selected:hover {
 	text-decoration:none;
@@ -286,7 +324,9 @@ button:hover {
 	}
 }
 
-#cloud-explorer .breadcrumbs li:hover {
+#cloud-explorer .breadcrumbs li:hover,
+#cloud-explorer .upload.panel:hover
+ {
 	color:#0e70a0;
 }
 .breadcrumbs .icon {
