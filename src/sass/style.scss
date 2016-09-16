@@ -1,10 +1,21 @@
+$active-bg: #0781bd;
+$thick-border: 1px solid #ccc;
+$thin-border: 1px solid #eee;
+$border-radius: .25em;
+$grey: #999;
+$lightgrey: #ccc;
+$button-hover: $active-bg; //#31bbff;
+
+$fa-font-path: "/node_modules/font-awesome/fonts";
+@import "font-awesome";
+
 body, html {
 	font-family: 'Open Sans', sans-serif;
 	margin:0;
 	padding:0;
 }
 body {
-	font-size:1em;
+	font-size:80%;
 	line-height:1.5em;
 }
 
@@ -23,6 +34,7 @@ ul, li {
 	left:0;
 	bottom:0;
 	right:0;
+	padding:1em;
 }
 
 #cloud-explorer .files {
@@ -34,13 +46,18 @@ ul, li {
 #cloud-explorer .files section {
 	flex-grow:10;
 	overflow-y:scroll;
+	border: $thick-border;
+	border-radius: $border-radius;
+}
+
+#cloud-explorer .files li {
+	border-bottom: $thin-border;
 }
 
 /* basic style for demo */
 #cloud-explorer li {
 	cursor: pointer;
 	transition: all .25s;
-	border-radius:.25em;
 }
 
 .files li:hover,
@@ -51,7 +68,7 @@ ul, li {
 
 #cloud-explorer li.disabled {
 	cursor: default;
-	color: lightgrey;
+	color: $lightgrey;
 }
 
 #cloud-explorer li.disabled:hover {
@@ -61,7 +78,7 @@ ul, li {
 
 #cloud-explorer li.selected {
 	cursor: default;
-	background-color:darkblue;
+	background-color:$active-bg;
 	color:white;
 }
 #cloud-explorer li.selected:hover {
@@ -72,18 +89,68 @@ ul, li {
 #cloud-explorer .button-bar .enabled {
 	/*color: blue;*/
 }
-#cloud-explorer .files li {
-	padding-left:32px;
-	background: transparent none no-repeat 8px 50%;
+
+#cloud-explorer .buttons.panel {
+	display:flex;
+	flex-direction:row;
+	justify-content: space-between;
+	flex-wrap:wrap;
+	margin-bottom:-1em;
 }
+
+#cloud-explorer .buttons.panel > section {
+	/*flex-grow:1;*/
+}
+
+#cloud-explorer .buttons ul {
+	display:flex;
+	flex-direction:row;
+	flex-wrap:nowrap;
+	justify-content: center;
+	margin-bottom:1em;
+}
+
+#cloud-explorer .buttons li {
+	flex-grow:1;
+	margin-left:-1px;
+	padding:.5em 1em;
+	border: $thin-border;
+}
+#cloud-explorer .buttons li:first-child {
+	margin-left:0;
+}
+
+#cloud-explorer .buttons li.enabled:hover {
+	text-decoration:none;
+	background-color:$button-hover;
+	border-color:#fff;
+	color:#fff;
+}
+
+#cloud-explorer .buttons li:nth-last-child(1) {
+	border-radius:0 $border-radius $border-radius 0;
+}
+#cloud-explorer .buttons li:nth-child(1){
+	border-radius:$border-radius 0 0 $border-radius;
+}
+
 #cloud-explorer .files li.selected {
-	background-color:darkblue;
+	background-color:$active-bg;
 }
-#cloud-explorer .files .file {
-	background-image: url('https://cdn3.iconfinder.com/data/icons/brands-applications/512/File-16.png');
+
+#cloud-explorer .files .icon {
+	display:inline-block;
+	margin-right:.5em;
 }
-#cloud-explorer .files .folder {
-	background-image: url('https://cdn4.iconfinder.com/data/icons/linecon/512/folder-16.png');
+
+#cloud-explorer .folder.icon {
+	@extend .fa;
+	@extend .fa-folder-o;
+}
+
+#cloud-explorer .file.icon {
+	@extend .fa;
+	@extend .fa-file-o;
 }
 
 .panel {
@@ -123,13 +190,13 @@ ul, li {
 	zoom:1;
 }
 
-.buttons ul {
+/*.buttons ul {
 	border: 1px solid lightgrey;
 	float:left;
 	margin-right:.5em;
 	border-radius:.25em;
 	margin:0 .5em .5em 0;
-}
+}*/
 
 input, button {
 	border-color:transparent;
@@ -159,27 +226,15 @@ button {
 }
 
 button:hover {
-	background-color:darkblue;
+	background-color:$active-bg;
 	color:white;
 }
 
-#cloud-explorer .buttons li {
-	padding:.5em 1em;
-	display:inline-block;
-	border-right:1px solid lightgrey;
-	border-radius:0;
-}
 
-#cloud-explorer .buttons li.enabled:hover {
-	text-decoration:none;
-}
-
-#cloud-explorer .buttons li:nth-last-child(1) {
-	border-right:0;
-}
 
 .breadcrumbs li {
 	display:inline-block;
+	color:$grey;
 }
 
 .dialogs {
@@ -207,4 +262,8 @@ button:hover {
 	clear:both;
 }
 
-
+.upload.panel {
+	padding:1em 0;
+	text-align:center;
+	color:$grey;
+}

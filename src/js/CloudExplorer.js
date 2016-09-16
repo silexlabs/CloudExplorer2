@@ -161,7 +161,6 @@ export default class CloudExplorer extends React.Component {
         />
       </div>
       <div className="files panel">
-        <h2>Files</h2>
         <Files
           ref={c => this.filesComponent = c}
           path={this.props.path}
@@ -182,7 +181,7 @@ export default class CloudExplorer extends React.Component {
           onCancel={() => this.cancel()}
         />
       </div>
-      <div className="upload">
+      <div className="upload panel">
         <FilesDropZone
           onDrop={files => this.setState({uploadingFiles: this.state.uploadingFiles.concat(files)})}
         />
