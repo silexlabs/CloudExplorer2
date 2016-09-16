@@ -6,8 +6,29 @@ $grey: #999;
 $lightgrey: #ccc;
 $button-hover: $active-bg; //#31bbff;
 
-$fa-font-path: "/node_modules/font-awesome/fonts";
+$fa-font-path: "fonts";
 @import "font-awesome";
+
+.highlight {
+	color: #666;
+	cursor:pointer;
+	transition: all .25s;
+}
+
+.highlight:hover {
+	text-decoration:underline;
+	color: #111;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
 
 body, html {
 	font-family: 'Open Sans', sans-serif;
@@ -43,6 +64,13 @@ ul, li {
 	flex-direction:column;
 }
 
+#cloud-explorer .files input {
+	border:0;
+	outline:0;
+	margin:0;
+	padding:0;
+}
+
 #cloud-explorer .files section {
 	flex-grow:10;
 	overflow-y:scroll;
@@ -51,19 +79,15 @@ ul, li {
 }
 
 #cloud-explorer .files li {
+	@extend .noselect;
 	border-bottom: $thin-border;
+	font-weight:700;
 }
 
 /* basic style for demo */
-#cloud-explorer li {
-	cursor: pointer;
-	transition: all .25s;
-}
-
-.files li:hover,
-.breadcrumbs li:hover {
-	text-decoration:underline;
-	color: #111;
+#cloud-explorer li,
+#cloud-explorer .upload.button {
+	@extend .highlight;
 }
 
 #cloud-explorer li.disabled {
@@ -96,6 +120,7 @@ ul, li {
 	justify-content: space-between;
 	flex-wrap:wrap;
 	margin-bottom:-1em;
+	min-height:4em;
 }
 
 #cloud-explorer .buttons.panel > section {
@@ -139,18 +164,30 @@ ul, li {
 }
 
 #cloud-explorer .files .icon {
+	@extend .fa;
 	display:inline-block;
-	margin-right:.5em;
+	margin-right:1em;
 }
 
-#cloud-explorer .folder.icon {
-	@extend .fa;
+#cloud-explorer .application.json.folder.icon {
+	// service, really
+	@extend .fa-plug;
+}
+
+#cloud-explorer .folder.icon {	
 	@extend .fa-folder-o;
 }
 
 #cloud-explorer .file.icon {
-	@extend .fa;
 	@extend .fa-file-o;
+}
+
+#cloud-explorer .application.git-repo.icon {
+	@extend .fa-github;
+}
+
+#cloud-explorer .application.git-branch.icon {
+	@extend .fa-github-square;
 }
 
 .panel {
@@ -231,10 +268,49 @@ button:hover {
 }
 
 
+#cloud-explorer .breadcrumbs {
+	border:1px solid transparent;
+}
 
-.breadcrumbs li {
+#cloud-explorer .breadcrumbs li {
 	display:inline-block;
+	padding:.5em .5em;
 	color:$grey;
+}
+#cloud-explorer .breadcrumbs li:last-child {
+	color:#111;
+	cursor:default;
+	&:hover {
+		color:#111;
+		text-decoration:none;
+	}
+}
+
+#cloud-explorer .breadcrumbs li:hover {
+	color:#0e70a0;
+}
+.breadcrumbs .icon {
+	@extend .fa;
+	margin-right:1em;
+}
+.breadcrumbs .home .icon {
+	@extend .fa-home;
+	margin-right:0;
+	margin-left:.5em;
+}
+
+.loading .breadcrumbs .home .icon {
+	@extend .fa-spin;
+	@extend .fa-gear;
+	color:orange;
+}
+
+.loading .files {
+	opacity:0.5;
+}
+
+.breadcrumbs .folder .icon {
+	@extend .fa-angle-right;
 }
 
 .dialogs {
@@ -262,8 +338,8 @@ button:hover {
 	clear:both;
 }
 
-.upload.panel {
-	padding:1em 0;
+.upload.button {
+	padding:1em;
 	text-align:center;
-	color:$grey;
 }
+
