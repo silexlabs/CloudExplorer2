@@ -177,7 +177,17 @@ export default class CloudExplorer extends React.Component {
           onChange={(selection) => this.setState({selection: selection})}
           onEnter={folder => this.cd([folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
-          onCancel={() => this.cancel()}
+          onCancel={() => {
+            if(this.dialog.isOpened()) {
+              this.dialog.cancel();
+            }
+            else if (this.filesComponent.isInputMode()) {
+              this.filesComponent.cancelInputMode();
+            }
+            else {
+              this.cancel();
+            }
+          }}
         />
       </div>
       <div className="upload panel">
@@ -202,7 +212,9 @@ export default class CloudExplorer extends React.Component {
 
       <div className="dialogs panel">
         <h2>Dialogs</h2>
-        <ModalDialog />
+        <ModalDialog
+          ref={c => this.dialog = c}
+        />
       </div>
     </div>;
   }

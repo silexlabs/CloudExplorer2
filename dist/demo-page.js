@@ -26,7 +26,12 @@ window.onload = function() {
     selectTab(e.target);
     ce.openFile().then(result => {
       console.log('result from ce', result);
-      setSelection([result]);
+      if(result) {
+        setSelection([result]);
+      }
+      else {
+        console.info('user canceled action');
+      }
       unselectTab();
     })
     .catch(e => {
@@ -37,7 +42,12 @@ window.onload = function() {
     selectTab(e.target);
     ce.openFiles().then(result => {
       console.log('result from ce', result);
-      setSelection(result);
+      if(result) {
+        setSelection(result);
+      }
+      else {
+        console.info('user canceled action');
+      }
       unselectTab();
     })
     .catch(e => {
@@ -48,7 +58,12 @@ window.onload = function() {
     selectTab(e.target);
     ce.openFolder().then(result => {
       console.log('result from ce', result);
-      setSelection([result]);
+      if(result) {
+        setSelection([result]);
+      }
+      else {
+        console.info('user canceled action');
+      }
       unselectTab();
     })
     .catch(e => {

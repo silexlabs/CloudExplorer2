@@ -36,6 +36,13 @@ export default class ModalDialog extends React.Component {
     this.cbk(this.state.inputText);
     this.cbk = null;
   }
+  cancel() {
+    this.setState({mode: 'hidden'});
+    this.cbk = null;
+  }
+  isOpened() {
+    return this.state.mode !== 'hidden';
+  }
   render() {
     if(this.state.mode != 'hidden') {
       var markup = null;
@@ -46,6 +53,7 @@ export default class ModalDialog extends React.Component {
         {this.state.message}
         {markup}
         <button onClick={() => this.ok()}>Ok</button>
+        <button onClick={() => this.cancel()}>Cancel</button>
       </section>;
     }
     return null;

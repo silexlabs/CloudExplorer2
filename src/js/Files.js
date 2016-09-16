@@ -14,6 +14,21 @@ export default class Files extends React.Component {
   /**
    * called directly by owner class
    */
+  isInputMode() {
+    return this.state.createFolderMode || this.state.renameFileMode;
+  }
+  /**
+   * called directly by owner class
+   */
+  cancelInputMode() {
+    this.setState({
+      createFolderMode: false,
+      renameFileMode: false,
+    });
+  }
+  /**
+   * called directly by owner class
+   */
   getNewDirName() {
     return new Promise((resolve, reject) => {
       this.setState({

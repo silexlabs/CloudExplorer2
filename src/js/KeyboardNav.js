@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import ModalDialog from './ModalDialog';
 
 export default class KeyboardNav extends React.Component {
   constructor() {
