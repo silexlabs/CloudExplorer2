@@ -109,6 +109,7 @@ ul, li {
 	display:flex;
 	flex-direction:row;
 	justify-content:space-between;
+	align-items:baseline;
 
 	& > .inline-button-bar {
 		& .disabled {
