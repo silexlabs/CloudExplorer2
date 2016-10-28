@@ -46,7 +46,7 @@
     "babel-jest": "^13.2.2",
     "jest-cli": "^13.2.3",
     "live-reload": "^1.1.0",
-    "node-sass": "^3.10.0",
+    "node-sass": "^3.10.1",
     "react-addons-test-utils": "^15.2.0",
     "watch": "^0.19.1"
   }
