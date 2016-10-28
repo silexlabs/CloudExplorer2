@@ -23,14 +23,18 @@ export default class FileListItem extends React.Component {
     this.allowDelete = this.props.path.length > 0;
     this.allowRename = this.props.path.length > 0;
     var file = this.props.file;
-
     return <section className="file-list-item">
       <i className={"icon " + (file.isDir ? 'folder' : 'file') + ' ' + file.mime.replace(/\//g, ' ')}></i>
       <label
         onClick={e => this.select(e)}
       >{this.props.children}</label>
       <ul className="inline-button-bar">
-        <li onClick={() => this.allowDownload && this.props.onDownload()} className={this.allowDownload ? "enabled" : "disabled"}>Download</li>
+        <li>{
+          this.allowDownload ? <a
+          download={file.name}
+          href={file.name + this.props.path.join('/')}
+          className={this.allowDelete ? "enabled" : "disabled"}>Downoad</a> : ""
+        }</li>
         <li onClick={() => this.allowDelete && this.delete()} className={this.allowDelete ? "enabled" : "disabled"}>Delete</li>
         <li onClick={() => this.allowRename && this.rename()} className={this.allowRename ? "enabled" : "disabled"}>Rename</li>
       </ul>

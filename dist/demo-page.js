@@ -1,5 +1,5 @@
-let selectedBtn = null;
-let selection = [];
+var selectedBtn = null;
+var selection = [];
 
 function setSelection(sel) {
   selection = sel;

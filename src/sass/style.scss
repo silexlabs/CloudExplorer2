@@ -13,6 +13,7 @@ $fa-font-path: "fonts";
 	color: #666;
 	cursor:pointer;
 	transition: all .25s;
+	text-decoration:none;
 }
 
 .highlight:hover {
@@ -81,7 +82,7 @@ ul, li {
 #cloud-explorer .files > li {
 	@extend .noselect;
 	border-bottom: $thin-border;
-	
+
 
 	& label {
 		flex-grow:10;
@@ -97,6 +98,9 @@ ul, li {
 	& li {
 		@extend .highlight;
 		padding:0 1em;
+		a:link {
+			@extend .highlight;
+		}
 	}
 }
 
@@ -130,7 +134,7 @@ ul, li {
 		color: $lightgrey;
 		&:hover  {
 			text-decoration:none;
-			color: lightgrey;	
+			color: lightgrey;
 		}
 	}
 }
@@ -140,8 +144,10 @@ ul, li {
 	cursor: default;
 	background-color:$active-bg;
 	color:white;
+	& .inline-button-bar li a:link,
 	& .inline-button-bar li {
 		color:white;
+		text-decoration: none;
 	}
 }
 #cloud-explorer li.selected:hover {
@@ -213,7 +219,7 @@ ul, li {
 	@extend .fa-plug;
 }
 
-#cloud-explorer .folder.icon {	
+#cloud-explorer .folder.icon {
 	@extend .fa-folder-o;
 }
 
