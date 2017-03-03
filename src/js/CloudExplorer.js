@@ -6,7 +6,6 @@ import ButtonConfirm from './ButtonConfirm';
 import Files from './Files';
 import KeyboardNav from './KeyboardNav';
 import FilesDropZone from './FilesDropZone';
-import FilesUploader from './FilesUploader';
 import Breadcrumbs from './Breadcrumbs';
 import UnifileService from './UnifileService';
 
