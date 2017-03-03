@@ -19,12 +19,13 @@ export default class FileListItem extends React.Component {
     e.stopPropagation();
   }
   render() {
-    this.allowDownload = this.props.path.length > 0 && !this.props.file.isDir;
-    this.allowDelete = this.props.path.length > 0;
-    this.allowRename = this.props.path.length > 0;
+    this.allowDownload = (!this.props.file.upload) && this.props.path.length > 0 && !this.props.file.isDir;
+    this.allowDelete = (!this.props.file.upload) && this.props.path.length > 0;
+    this.allowRename = (!this.props.file.upload) && this.props.path.length > 0;
     var file = this.props.file;
+    var mime = file.mime && file.mime.replace(/\//g, ' ')
     return <section className="file-list-item">
-      <i className={"icon " + (file.isDir ? 'folder' : 'file') + ' ' + file.mime.replace(/\//g, ' ')}></i>
+      <i className={"icon " + (file.isDir ? 'folder' : 'file') + ' ' + mime}></i>
       <label
         onClick={e => this.select(e)}
       >{this.props.children}</label>

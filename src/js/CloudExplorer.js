@@ -128,6 +128,37 @@ export default class CloudExplorer extends React.Component {
       if(this.props.onError) this.props.onError(e);
     });
   }
+  upload(files) {
+    var i = 0;
+    var uploads = files.map(file => {
+      file.upload = {
+        error: null,
+        progress: 0
+      };
+      this.srv.upload(file, progress => {
+        console.log('progress', progress);
+        file.upload.progress = progress;
+        this.forceUpdate();
+      })
+      .then( () => {
+        console.log('done uploading file', file);
+        file.upload.progress = 1;
+        var deleted = file;
+        this.setState({uploadingFiles: this.state.uploadingFiles.filter(file=>{file != deleted;})});
+        this.ls();
+      })
+      .catch( e => {
+        console.log('error uploading file', e);
+        file.upload.error = e;
+        this.forceUpdate();
+      });
+      i++;
+      return file;
+    });
+
+    this.setState({uploadingFiles: this.state.uploadingFiles.concat(uploads)});
+
+  }
   render() {
     return <div className={"root " + (this.state.loading ? 'loading' : '')}>
       <div className="buttons panel">
@@ -136,6 +167,7 @@ export default class CloudExplorer extends React.Component {
           selection={this.state.selection}
           path={this.props.path}
           onCreateFolder={() => this.mkdir()}
+          onReload={() => this.ls()}
         />
         <ButtonConfirm
           selection={this.state.selection}
@@ -143,7 +175,6 @@ export default class CloudExplorer extends React.Component {
           pickFolder={this.props.pickFolder}
           inputName={this.props.inputName}
           defaultFileName={this.props.defaultFileName}
-          onReload={() => this.ls()}
           onSave={fileName => this.props.onSave(fileName)}
           onPick={() => this.props.onPick(this.state.selection)}
           onCancel={() => this.cancel()}
@@ -162,7 +193,7 @@ export default class CloudExplorer extends React.Component {
           path={this.props.path}
           services={this.props.services}
           selection={this.state.selection}
-          files={this.state.files}
+          files={this.state.files.concat(this.state.uploadingFiles)}
           multiple={this.props.multiple}
           onDownload={file => this.download(file)}
           onDelete={file => this.delete(file)}
@@ -192,21 +223,7 @@ export default class CloudExplorer extends React.Component {
       </div>
       <div className="upload panel">
         <FilesDropZone
-          onDrop={files => this.setState({uploadingFiles: this.state.uploadingFiles.concat(files)})}
-        />
-        <FilesUploader
-          files={this.state.uploadingFiles}
-          upload={(file, onProgress, onSuccess, onError) => this.srv.upload(file, onProgress)
-            .then(() => {
-              onSuccess();
-              this.ls();
-            })
-            .catch(e => {
-              console.error('Error while uploading', e);
-              onError(e);
-              if(this.props.onError) this.props.onError(e);
-            })
-          }
+          onDrop={files => this.upload(files)}
         />
       </div>
 
