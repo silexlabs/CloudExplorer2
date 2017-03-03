@@ -108,13 +108,19 @@ export default class UnifileService {
       xhr.upload.addEventListener("load", (e) => {
         console.log('load');
         onProgress(100);
-        resolve();
       }, false);
       xhr.upload.addEventListener("error", (e) => {
         console.log('error');
         onProgress(0);
         reject(e);
       }, false);
+
+      xhr.addEventListener('readystatechange',(e) => {
+        // FIXME handle error cases
+        if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
+          resolve();
+        }
+      });
       xhr.open("PUT", `${this.rootUrl}${absPath[0]}/put/${absPath.slice(1).join('/')}`);
       xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
       fileReader.onload = (evt) => {
