@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import ModalDialog from './ModalDialog';
+import UnifileService from './UnifileService';
 
 export default class FileListItem extends React.Component {
   delete() {
@@ -19,13 +20,20 @@ export default class FileListItem extends React.Component {
     e.stopPropagation();
   }
   render() {
-    this.allowDownload = (!this.props.file.upload) && this.props.path.length > 0 && !this.props.file.isDir;
-    this.allowDelete = (!this.props.file.upload) && this.props.path.length > 0;
-    this.allowRename = (!this.props.file.upload) && this.props.path.length > 0;
-    var file = this.props.file;
-    var mime = file.mime && file.mime.replace(/\//g, ' ')
+    const file = this.props.file;
+    const isService = UnifileService.isService(file);
+    this.allowDownload = (!this.props.file.upload) && this.props.path.length > 0 && !this.props.file.isDir && !isService;
+    this.allowDelete = (!this.props.file.upload) && this.props.path.length > 0 && !isService;
+    this.allowRename = (!this.props.file.upload) && this.props.path.length > 0 && !isService;
+    const mime = isService ? ' application json' : 
+      file.mime && file.mime.replace(/\//g, ' ');
     return <section className="file-list-item">
-      <i className={"icon " + (file.isDir ? 'folder' : 'file') + ' ' + mime}></i>
+      <i className={
+	      "icon" + 
+	      (file.isDir || isService ? ' folder' : ' file') + 
+	      (file.isLoggedIn ? ' loggedin' : '') + // for services only
+	      (mime ? ' ' + mime : '')
+      }></i>
       <label
         onClick={e => this.select(e)}
       >{this.props.children}</label>

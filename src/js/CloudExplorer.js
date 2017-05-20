@@ -19,7 +19,7 @@ export default class CloudExplorer extends React.Component {
     loading: false,
     uploadingFiles: [],
   };
-  srv = new UnifileService('./', this.props.services, this.props.path)
+  srv = new UnifileService('/', this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
   ls(disableCache=false) {
     const hasCache = disableCache ? false : this.srv.lsHasCache(this.props.path);
@@ -190,7 +190,6 @@ export default class CloudExplorer extends React.Component {
         <Files
           ref={c => this.filesComponent = c}
           path={this.props.path}
-          services={this.props.services}
           selection={this.state.selection}
           files={this.state.files.concat(this.state.uploadingFiles)}
           multiple={this.props.multiple}

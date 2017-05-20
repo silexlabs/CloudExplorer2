@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import CloudExplorer from './CloudExplorer';
 
-// TODO Call a list route of the server
-const SERVICES = ['FTP', 'Dropbox', 'GitHub', 'RemoteStorage'];
 const STORAGE_KEY_PATH = 'CloudExplorer.path';
 
 /**
@@ -104,13 +102,6 @@ class App extends React.Component {
   }
   render() {
     return <CloudExplorer
-      services={SERVICES.map(service => {
-        return {
-          name: service,
-          mime: 'application/json',
-          isDir: true,
-        }
-      })}
       path={this.state.path}
       onCancel={() => this.state.onCancel ? this.state.onCancel() : ''}
       onError={(e) => this.state.onError ? this.state.onError(e) : ''}

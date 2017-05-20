@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import FileListItem  from './FileListItem';
+import UnifileService from './UnifileService';
 
 export default class Files extends React.Component {
   state = {
@@ -76,8 +77,8 @@ export default class Files extends React.Component {
   }
   select(file, multiple) {
     if(this.isDoubleClick(file)) {
-      if(file.isDir) this.props.onEnter(file);
-      else this.props.onPick(file);
+      if(file.isDir || UnifileService.isService(file)) this.props.onEnter(file);
+      else this.props.onPick(this.props.selection);
     }
     else {
       const selection = multiple && this.props.multiple ? this.props.selection : [];
@@ -106,7 +107,7 @@ export default class Files extends React.Component {
     let dotIdx;
     list = list.concat(this.props.files.map(file => <li
       key={file.name}
-      className={(this.props.selection.includes(file) ? 'selected' : '') + ' ' + (file.isDir ? 'folder' : 'file') + ' ' + (file.mime && file.mime.replace(/\//g, ' '))}>
+      className={this.props.selection.includes(file) ? 'selected' : ''}>
       {
         this.state.renameFileMode && file.name === this.state.renameFileData.name ?
           <input type="text"
@@ -128,7 +129,7 @@ export default class Files extends React.Component {
             onRename={() => this.props.onRename(file)}
             onDelete={() => this.props.onDelete(file)}
             onDownload={() => this.props.onDownload(file)}
-          >{file.name}</FileListItem>
+          >{file.displayName || file.name}</FileListItem>
       }
     </li>));
     return <section><ul className="files">{list}</ul></section>;

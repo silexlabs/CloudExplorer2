@@ -6,9 +6,8 @@ const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 export default class UnifileService {
   currentPath = [];
   rootUrl = null;
-  constructor(rootUrl, services, path) {
+  constructor(rootUrl, path) {
     this.rootUrl = rootUrl;
-    this.services = services;
     this.currentPath = path;
   }
   getStorageKey(path) {
@@ -24,7 +23,10 @@ export default class UnifileService {
         }, (e) => reject(e));
       }
       else {
-        resolve(this.services);
+        this.call(`services`, (res) => {
+          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
+          resolve(res);
+        }, (e) => reject(e));
       }
     });
   }
@@ -77,7 +79,7 @@ export default class UnifileService {
       if(path.length === 1 && path[0] !== this.currentPath[0]) {
         this.auth(path[0])
           .then(service => {
-            console.log('success', service);
+            console.log('success', path, service);
             this.currentPath = path;
             resolve(this.currentPath);
           })
@@ -135,20 +137,27 @@ export default class UnifileService {
       let req = new XMLHttpRequest();
       req.open('POST', '/' + service + '/authorize', false);
       req.send();
-      let win = window.open(req.responseText);
-      win.addEventListener('unload', () => {
-        console.log('closed?', win.closed);
-        win.onunload = null;
-        this.startPollingAuthWin(win, service, resolve, reject);
-      });
+      if(req.responseText) {
+        console.log('auth returned', req.responseText);
+        let win = window.open(req.responseText);
+        win.addEventListener('unload', () => {
+          console.log('closed?', win.closed);
+          win.onunload = null;
+          this.startPollingAuthWin(win, service, resolve, reject);
+        });
+      }
+      else this.authEnded(service, resolve, reject);
     });
+  }
+  authEnded(service, resolve, reject) {
+    this.ls([service])
+      .then(res => resolve(service))
+      .catch(e => reject(e));
   }
   startPollingAuthWin(win, service, resolve, reject) {
     console.log('closed?', win.closed);
     if(win.closed) {
-      this.ls([service])
-        .then(res => resolve(service))
-        .catch(e => reject(e));
+      this.authEnded(service, resolve, reject);
     }
     else setTimeout(() => {
       this.startPollingAuthWin(win, service, resolve, reject);
@@ -180,5 +189,8 @@ export default class UnifileService {
     oReq.open(method, url);
     oReq.setRequestHeader('Content-Type', 'application/json');
     oReq.send(body);
+  }
+  static isService(file) {
+    return typeof(file.isLoggedIn) != 'undefined';
   }
 }

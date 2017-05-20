@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import ModalDialog from './ModalDialog';
+import UnifileService from './UnifileService';
 
 export default class KeyboardNav extends React.Component {
   constructor() {
@@ -30,11 +31,12 @@ export default class KeyboardNav extends React.Component {
           }
         break;
         case "Enter":
-          if(this.props.selection.length === 1 && this.props.selection[0].isDir) {
+          const file = this.props.selection[0];
+          if(file && (file.isDir || UnifileService.isService(file))) {
             this.props.onEnter(this.props.selection[0]);
           }
           else if(this.props.selection.length > 0) {
-            this.props.onPick();
+            this.props.onPick(this.props.selection[0]);
           }
           else return; // do not handle the key event
         break;
