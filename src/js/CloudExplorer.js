@@ -175,7 +175,7 @@ export default class CloudExplorer extends React.Component {
           inputName={this.props.inputName}
           defaultFileName={this.props.defaultFileName}
           onSave={fileName => this.props.onSave(fileName)}
-          onPick={() => this.props.onPick(this.state.selection)}
+          onPick={(file) => this.props.onPick(file)}
           onCancel={() => this.cancel()}
         />
       </div>

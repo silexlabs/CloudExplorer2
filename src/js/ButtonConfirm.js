@@ -3,9 +3,15 @@ import ReactDom from 'react-dom';
 
 export default class ButtonConfirm extends React.Component {
   render() {
-    this.allowPick = (this.props.path.length > 0 &&
-      this.props.selection.length &&
+    this.allowPick = 
+      // select folder with click on the folder
+      (this.props.selection.length &&
       this.props.pickFolder === this.props.selection[0].isDir) ||
+      // select folder with enter the folder and click ok
+      (this.props.selection.length === 0 &&
+      this.props.pickFolder === true &&
+      this.props.path.length > 0) ||
+      // input file name / save as
       (this.props.inputName && this.props.defaultFileName && this.props.defaultFileName.length > 0);
     return <section className="button-confirm">
       {
@@ -35,7 +41,8 @@ export default class ButtonConfirm extends React.Component {
         <li ref={c=>this.pickBtn=c}
           onClick={(e) => {
             if(this.props.inputName) this.props.onSave(this.input.value);
-            else if(this.allowPick) this.props.onPick(this.props.selection[0])
+            // pick the selection or the current folder 
+            else if(this.allowPick) this.props.onPick(this.props.selection.length ? this.props.selection : [{name: this.props.path[this.props.path.length-1], isDir: true, mime: "application/octet-stream"}])
           }}
           className={
             this.allowPick || (this.props.inputName && this.input.value.length) ? "enabled" : "disabled"
