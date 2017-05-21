@@ -168,21 +168,23 @@ export default class UnifileService {
   }
   call(route, cbk, err, method = 'GET', body = '') {
     const oReq = new XMLHttpRequest();
-    let isErr = false;
     oReq.onload = function(e) {
-      if(!isErr) {
+      if(oReq.status === 200) {
         try {
           cbk(JSON.parse(this.responseText));
         }
         catch(e) {
-          console.error(e);
+          console.info('an error occured in the callback or while parsing JSON response', e);
           err(e);
         }
       }
+      else {
+        console.info('error in the request response with status', oReq.status, e);
+        err(e);
+      }
     };
     oReq.onerror = function(e) {
-      console.error('ERROR', e);
-      isErr = true;
+      console.info('error for the request', e);
       err(e);
     };
     const url = `${this.rootUrl}${route}`;
