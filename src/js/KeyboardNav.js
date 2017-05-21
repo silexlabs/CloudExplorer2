@@ -33,10 +33,10 @@ export default class KeyboardNav extends React.Component {
         case "Enter":
           const file = this.props.selection[0];
           if(file && (file.isDir || UnifileService.isService(file))) {
-            this.props.onEnter(this.props.selection[0]);
+            this.props.onEnter(file);
           }
           else if(this.props.selection.length > 0) {
-            this.props.onPick(this.props.selection[0]);
+            this.props.onPick(this.props.selection);
           }
           else return; // do not handle the key event
         break;
