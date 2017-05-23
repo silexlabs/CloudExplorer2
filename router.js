@@ -176,14 +176,7 @@ module.exports = class Router {
     
     app.post(/\/(.*)\/batch\/(.*)/, (req, res) => {
       const path = req.params[1];
-      const batch = [
-        {name: 'mkdir', path: path},
-        {name: 'writeFile', path: path + '/test.txt', content: 'Hello world'},
-        {name: 'writeFile', path: path + '/test2.txt', content: 'Hello world too'},
-        {name: 'rename', path: path + '/test.txt', destination: path + '/test_old.txt'},
-        {name: 'unlink', path: path + '/test2.txt'},
-        {name: 'rmdir', path: path}
-      ];
+      const batch = req.body;
       this.unifile.batch(req.session.unifile, req.params[0], batch)
       .then((result) => {
         res.send(result);

@@ -19,18 +19,18 @@ export default class CloudExplorer extends React.Component {
     loading: false,
     uploadingFiles: [],
   };
-  srv = new UnifileService('/', this.props.path)
+  unifile = new UnifileService(this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
   ls(disableCache=false) {
-    const hasCache = disableCache ? false : this.srv.lsHasCache(this.props.path);
-    const cache = this.srv.lsGetCache(this.props.path);
+    const hasCache = disableCache ? false : this.unifile.lsHasCache(this.props.path);
+    const cache = this.unifile.lsGetCache(this.props.path);
     this.setState({
       selection: [],
       files: hasCache ? cache : this.state.files,
       loading: !hasCache,
     }, () => {
       const path = this.props.path;
-      this.srv.ls(path).then((files) => {
+      this.unifile.ls(path).then((files) => {
         // check that we did not CD during loading
         if(this.props.path === path) {
           this.setState({
@@ -43,16 +43,19 @@ export default class CloudExplorer extends React.Component {
     });
   }
   download(file) {
-    window.open(this.srv.getUrl(
+    window.open(this.unifile.getUrl(
       this.props.path.concat([file.name]))
     );
   }
   delete(opt_file) {
     const files = opt_file ? [opt_file] : this.state.selection;
     let batch = files.map(file => {
-      return {name: 'unlink', path: this.props.path.concat([file.name]).join('/')}
+      return {
+        name: file.isDir ? 'rmdir' : 'unlink',
+        path: this.unifile.getPath(this.props.path.concat([file.name])),
+      }
     });
-    return this.srv.batch(this.props.path, batch)
+    return this.unifile.batch(this.props.path, batch)
     .then(results => {
       this.ls();
     })
@@ -72,7 +75,7 @@ export default class CloudExplorer extends React.Component {
         selection: [],
         loading: true,
       }, () => {
-        this.srv.mkdir(name, true).then(() => this.ls(true));
+        this.unifile.mkdir(name, true).then(() => this.ls(true));
       });
     });
   }
@@ -83,7 +86,7 @@ export default class CloudExplorer extends React.Component {
           selection: [],
           loading: true,
         }, () => {
-          this.srv.rename(name, newName)
+          this.unifile.rename(name, newName)
           .then(res => {
             this.ls();
           })
@@ -117,7 +120,7 @@ export default class CloudExplorer extends React.Component {
       selection: [],
       loading: true,
     });
-    this.srv.cd(newProps.path)
+    this.unifile.cd(newProps.path)
     .then(path => {
       this.ls();
     })
@@ -134,7 +137,7 @@ export default class CloudExplorer extends React.Component {
         error: null,
         progress: 0
       };
-      this.srv.upload(file, progress => {
+      this.unifile.upload(file, progress => {
         console.log('progress', progress);
         file.upload.progress = progress;
         this.forceUpdate();
