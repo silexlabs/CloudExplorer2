@@ -9,7 +9,7 @@
   },
   "scripts": {
     "postinstall": "npm run build",
-    "start": "node simple-api-server.js",
+    "start": "node .",
     "test": "jest",
     "test:watch": "watch 'npm test' src/ __tests__/",
     "build": "npm run build:fa && npm run build:js && npm run build:sass",
@@ -36,17 +36,17 @@
     "express-session": "^1.13.0",
     "font-awesome": "^4.6.3",
     "ftp": "^0.3.10",
+    "node-sass": "^3.10.1",
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
     "request": "^2.72.0",
     "serve-static": "^1.11.1",
-    "unifile": "silexlabs/unifile#1.0.0"
+    "unifile": "silexlabs/unifile"
   },
   "devDependencies": {
     "babel-jest": "^13.2.2",
     "jest-cli": "^13.2.3",
     "live-reload": "^1.1.0",
-    "node-sass": "^3.10.1",
     "react-addons-test-utils": "^15.2.0",
     "watch": "^0.19.1"
   }
