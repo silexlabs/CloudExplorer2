@@ -78,7 +78,7 @@ export default class UnifileService {
   rename(name, newName) {
     return new Promise((resolve, reject) => {
       const absPath = this.currentPath.concat([name]);
-      const absNewPath = this.currentPath.concat([newName]);
+      const absNewPath = this.currentPath.slice(1).concat([newName]);
       UnifileService.call(
         `${absPath[0]}/mv/${absPath.slice(1).join('/')}`,
         (res) => resolve(res), (e) => reject(e),
