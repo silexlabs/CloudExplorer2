@@ -7,13 +7,17 @@
  */
 // node modules
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const serveStatic = require('serve-static');
 const session = require('express-session');
 const Router = require('./router.js');
 
+// 6805 is the date of sexual revolution started in paris france 8-)
+const port = process.env.PORT || 6805;
+const rootUrl = `http://localhost:${port}`;
+
+const app = express();
 app.use( bodyParser.json() );
 app.use(cookieParser());
 app.use(session({
@@ -35,16 +39,14 @@ const router = new Router(app, {
     clientId: '37mo489tld3rdi2',
     clientSecret: 'kqfzd11vamre6xr',
     state: 'aaathub',
-    redirectUri: 'http://localhost:6805/dropbox/oauth-callback',
+    redirectUri: rootUrl + '/dropbox/oauth-callback',
   },
   ftp: {
-    redirectUri: 'http://localhost:6805/ftp/signin',
+    redirectUri: rootUrl + '/ftp/signin',
   },
 });
 
 // server 'loop'
-// 6805 is the date of sexual revolution started in paris france 8-)
-var port = process.env.PORT || 6805; 
 app.listen(port, function() {
   console.log('Listening on ' + port);
 });

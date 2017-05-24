@@ -222,7 +222,7 @@ module.exports = class Router {
     });
     
     app.get('/:connector/signin', (req, res) => {
-      res.sendFile(Path.join(__dirname, 'public', req.params.connector + '_login.html'));
+      res.sendFile(Path.join(__dirname, 'node_modules/unifile/samples/public', req.params.connector + '_login.html'));
     });
   }
 
