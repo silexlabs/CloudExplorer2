@@ -42,11 +42,6 @@ export default class CloudExplorer extends React.Component {
       });
     });
   }
-  download(file) {
-    window.open(this.unifile.getUrl(
-      this.props.path.concat([file.name]))
-    );
-  }
   delete(opt_file) {
     const files = opt_file ? [opt_file] : this.state.selection;
     let batch = files.map(file => {
@@ -196,7 +191,7 @@ export default class CloudExplorer extends React.Component {
           selection={this.state.selection}
           files={this.state.files.concat(this.state.uploadingFiles)}
           multiple={this.props.multiple}
-          onDownload={file => this.download(file)}
+          getDownloadUrl={file => this.unifile.getUrl(this.props.path.concat([file.name]))}
           onDelete={file => this.delete(file)}
           onRename={file => this.rename(file.name)}
           onChange={(selection) => this.setState({selection: selection})}

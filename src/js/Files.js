@@ -128,7 +128,7 @@ export default class Files extends React.Component {
             path={this.props.path}
             onRename={() => this.props.onRename(file)}
             onDelete={() => this.props.onDelete(file)}
-            onDownload={() => this.props.onDownload(file)}
+            downloadUrl={this.props.getDownloadUrl(file)}
           >{file.displayName || file.name}</FileListItem>
       }
     </li>));

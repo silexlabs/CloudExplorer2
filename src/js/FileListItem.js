@@ -22,9 +22,9 @@ export default class FileListItem extends React.Component {
   render() {
     const file = this.props.file;
     const isService = UnifileService.isService(file);
-    this.allowDownload = (!this.props.file.upload) && this.props.path.length > 0 && !this.props.file.isDir && !isService;
-    this.allowDelete = (!this.props.file.upload) && this.props.path.length > 0 && !isService;
-    this.allowRename = (!this.props.file.upload) && this.props.path.length > 0 && !isService;
+    this.allowDownload = (!file.upload) && this.props.path.length > 0 && !file.isDir && !isService;
+    this.allowDelete = (!file.upload) && this.props.path.length > 0 && !isService;
+    this.allowRename = (!file.upload) && this.props.path.length > 0 && !isService;
     const mime = isService ? ' application json' : 
       file.mime && file.mime.replace(/\//g, ' ');
     return <section className="file-list-item">
@@ -40,8 +40,8 @@ export default class FileListItem extends React.Component {
       <ul className="inline-button-bar">
         <li>{
           this.allowDownload ? <a
-          download={file.name}
-          href={file.name + this.props.path.join('/')}
+          target="_blank"
+          href={this.props.downloadUrl}
           className={this.allowDelete ? "enabled" : "disabled"}>Downoad</a> : ""
         }</li>
         <li onClick={() => this.allowDelete && this.delete()} className={this.allowDelete ? "enabled" : "disabled"}>Delete</li>
