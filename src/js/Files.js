@@ -107,7 +107,7 @@ export default class Files extends React.Component {
     let dotIdx;
     list = list.concat(this.props.files.map(file => <li
       key={file.name}
-      className={this.props.selection.includes(file) ? 'selected' : ''}>
+      className={this.props.selection.find(selected => selected.name === file.name) ? 'selected' : ''}>
       {
         this.state.renameFileMode && file.name === this.state.renameFileData.name ?
           <input type="text"

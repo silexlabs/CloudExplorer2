@@ -50,9 +50,9 @@ module.exports = class Router {
       req.session.unifile = req.session.unifile || {};
     
       let response;
-      if(req.cookies.unifile_github)
+      if(!!options.github && req.cookies.unifile_github)
         response = this.unifile.setAccessToken(req.session.unifile, 'github', req.cookies.unifile_github);
-      if(req.cookies.unifile_dropbox)
+      if(!!options.dropbox && req.cookies.unifile_dropbox)
         response = this.unifile.setAccessToken(req.session.unifile, 'dropbox', req.cookies.unifile_dropbox);
     
       if(response)

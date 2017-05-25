@@ -17,6 +17,7 @@ export default class CloudExplorer extends React.Component {
     selection: [],
     files: [],
     loading: false,
+    cached: false, // flag the current folder is was cached
     uploadingFiles: [],
   };
   unifile = new UnifileService(this.props.path)
@@ -25,9 +26,9 @@ export default class CloudExplorer extends React.Component {
     const hasCache = disableCache ? false : this.unifile.lsHasCache(this.props.path);
     const cache = this.unifile.lsGetCache(this.props.path);
     this.setState({
-      selection: [],
       files: hasCache ? cache : this.state.files,
-      loading: !hasCache,
+      loading: true,
+      cached: hasCache,
     }, () => {
       const path = this.props.path;
       this.unifile.ls(path).then((files) => {
@@ -35,8 +36,8 @@ export default class CloudExplorer extends React.Component {
         if(this.props.path === path) {
           this.setState({
             files: files,
-            selection: [],
             loading: false,
+            cached: false,
           });
         }
       });
@@ -60,6 +61,9 @@ export default class CloudExplorer extends React.Component {
     });
   }
   cd(path, relative = false) {
+    this.setState({
+      selection: [],
+    });
     this.props.onCd(
       relative ? this.props.path.concat(path) : path
     );
@@ -157,7 +161,7 @@ export default class CloudExplorer extends React.Component {
 
   }
   render() {
-    return <div className={"root " + (this.state.loading ? 'loading' : '')}>
+    return <div className={"root" + (this.state.loading ? ' loading' : '') + (this.state.cached ? ' cached' : '')}>
       <div className="buttons panel">
         <h2>Buttons</h2>
         <ButtonBar
@@ -199,6 +203,7 @@ export default class CloudExplorer extends React.Component {
           onPick={(file) => this.props.onPick(file)}
         />
         <KeyboardNav
+          focusElement={this.filesComponent}
           selection={this.state.selection}
           files={this.state.files}
           onChange={(selection) => this.setState({selection: selection})}

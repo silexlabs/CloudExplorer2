@@ -28,6 +28,11 @@ export default class UnifileService {
   getUrl(path) {
     return `${UnifileService.ROOT_URL}${path[0]}/get/${path.slice(1).join('/')}`;
   }
+  getServices() {
+    return new Promise((resolve, reject) => {
+      UnifileService.call(`services`, resolve, (e) => reject(e));
+    });
+  }
   ls(path = null) {
     return new Promise((resolve, reject) => {
       let pathToLs = path || this.currentPath;
@@ -38,10 +43,10 @@ export default class UnifileService {
         }, (e) => reject(e));
       }
       else {
-        UnifileService.call(`services`, (res) => {
+        this.getServices().then(res => {
           sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
           resolve(res);
-        }, (e) => reject(e));
+        });
       }
     });
   }

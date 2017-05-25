@@ -38,7 +38,7 @@ export default class KeyboardNav extends React.Component {
           else if(this.props.selection.length > 0) {
             this.props.onPick(this.props.selection);
           }
-          else return; // do not handle the key event
+          return; // do not handle the key event (it may be used by save as dialog)
         break;
         case "Escape":
           this.props.onCancel();

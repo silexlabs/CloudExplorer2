@@ -68,6 +68,7 @@ class App extends React.Component {
   openFile() {
     return new Promise((resolve, reject) => {
       this.setState({
+        selection: [],
         pickFolder: false,
         multiple: false,
         inputName: false,
@@ -76,11 +77,13 @@ class App extends React.Component {
         onSave: null,
         onError: e => reject(e),
       });
+      this.cloudExplorer.ls();
     });
   }
   openFiles() {
     return new Promise((resolve, reject) => {
       this.setState({
+        selection: [],
         pickFolder: false,
         multiple: true,
         inputName: false,
@@ -89,11 +92,13 @@ class App extends React.Component {
         onSave: null,
         onError: e => reject(e),
       });
+      this.cloudExplorer.ls();
     });
   }
   openFolder() {
     return new Promise((resolve, reject) => {
       this.setState({
+        selection: [],
         pickFolder: true,
         multiple: false,
         inputName: false,
@@ -102,11 +107,13 @@ class App extends React.Component {
         onSave: null,
         onError: e => reject(e),
       });
+      this.cloudExplorer.ls();
     });
   }
   saveAs(defaultFileName) {
     return new Promise((resolve, reject) => {
       this.setState({
+        selection: [],
         pickFolder: false,
         multiple: false,
         inputName: true,
@@ -116,7 +123,11 @@ class App extends React.Component {
         onSave: fileName => resolve(this.createBlob(this.state.path, {name: fileName})),
         onError: e => reject(e),
       });
+      this.cloudExplorer.ls();
     });
+  }
+  getServices() {
+    return this.cloudExplorer.unifile.getServices();
   }
   render() {
     return <CloudExplorer

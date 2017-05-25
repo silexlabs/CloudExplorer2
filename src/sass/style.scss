@@ -357,6 +357,10 @@ button:hover {
 	opacity:0.5;
 }
 
+.loading.cached .files {
+	opacity:1;
+}
+
 .breadcrumbs .folder .icon {
 	@extend .fa-angle-right;
 }
