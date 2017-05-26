@@ -342,8 +342,8 @@ button:hover {
 
 #cloud-explorer .breadcrumbs li:hover,
 #cloud-explorer .upload.panel:hover
- {
-	color:#0e70a0;
+{
+	@extend .highlight;
 }
 .breadcrumbs .icon {
 	@extend .fa;

@@ -14,11 +14,6 @@ export default class FileListItem extends React.Component {
   rename() {
     this.props.onRename();
   }
-  select(e) {
-    this.props.onSelect(e.ctrlKey || e.shiftKey);
-    e.preventDefault();
-    e.stopPropagation();
-  }
   render() {
     const file = this.props.file;
     const isService = UnifileService.isService(file);
@@ -34,9 +29,7 @@ export default class FileListItem extends React.Component {
 	      (file.isLoggedIn ? ' loggedin' : '') + // for services only
 	      (mime ? ' ' + mime : '')
       }></i>
-      <label
-        onClick={e => this.select(e)}
-      >{this.props.children}</label>
+      <label>{this.props.children}</label>
       <ul className="inline-button-bar">
         <li>{
           this.allowDownload ? <a

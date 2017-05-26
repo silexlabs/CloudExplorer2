@@ -75,7 +75,10 @@ export default class Files extends React.Component {
     this.lastClickedTime = now;
     return false;
   }
-  select(file, multiple) {
+  select(e, file) {
+    e.preventDefault();
+    e.stopPropagation();
+    const multiple = e.ctrlKey || e.shiftKey;
     if(this.isDoubleClick(file)) {
       if(file.isDir || UnifileService.isService(file)) this.props.onEnter(file);
       else this.props.onPick(this.props.selection);
@@ -106,6 +109,7 @@ export default class Files extends React.Component {
     // each file has the extension in its export default class name
     let dotIdx;
     list = list.concat(this.props.files.map(file => <li
+        onClick={e => this.select(e, file)}
       key={file.name}
       className={this.props.selection.find(selected => selected.name === file.name) ? 'selected' : ''}>
       {
@@ -123,7 +127,6 @@ export default class Files extends React.Component {
             autoFocus
           />
         : <FileListItem
-            onSelect={multiple => this.select(file, multiple)}
             file={file}
             path={this.props.path}
             onRename={() => this.props.onRename(file)}
