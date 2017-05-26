@@ -1,16 +1,20 @@
+$darker: #2F2F2F;
+$dark: #444;
+$medium: #535353;
+$light: #BBB;
+$lighter: white;
+
 $active-bg: #0781bd;
-$thick-border: 1px solid #ccc;
-$thin-border: 1px solid #eee;
+$thick-border: 1px solid $medium;
+$thin-border: 1px solid $medium;
 $border-radius: .25em;
-$grey: #999;
-$lightgrey: #ccc;
 $button-hover: $active-bg; //#31bbff;
 
 $fa-font-path: "fonts";
 @import "font-awesome";
 
 .highlight {
-	color: #666;
+	color: $light;
 	cursor:pointer;
 	transition: all .25s;
 	text-decoration:none;
@@ -18,7 +22,6 @@ $fa-font-path: "fonts";
 
 .highlight:hover {
 	text-decoration:underline;
-	color: #111;
 }
 
 .noselect {
@@ -39,6 +42,8 @@ body, html {
 body {
 	font-size:80%;
 	line-height:1.5em;
+	color: $lighter;
+	background-color: $darker;
 }
 
 ul, li {
@@ -63,6 +68,7 @@ ul, li {
 	flex-grow:10;
 	display:flex;
 	flex-direction:column;
+	background-color: $dark;
 }
 
 #cloud-explorer .files input {
@@ -86,7 +92,7 @@ ul, li {
 
 	& label {
 		flex-grow:10;
-		font-weight:700;
+		font-weight:400;
 	}
 
 }
@@ -131,10 +137,11 @@ ul, li {
 
 	&.disabled {
 		cursor: default;
-		color: $lightgrey;
+		color: $light;
+		opacity: .6;
 		&:hover  {
 			text-decoration:none;
-			color: lightgrey;
+			color: $light;
 		}
 	}
 }
@@ -143,10 +150,10 @@ ul, li {
 #cloud-explorer li.selected {
 	cursor: default;
 	background-color:$active-bg;
-	color:white;
+	color:$lighter;
 	& .inline-button-bar li a:link,
 	& .inline-button-bar li {
-		color:white;
+		color:$lighter;
 		text-decoration: none;
 	}
 }
@@ -194,8 +201,9 @@ ul, li {
 #cloud-explorer .buttons li.enabled:hover {
 	text-decoration:none;
 	background-color:$button-hover;
-	border-color:#fff;
-	color:#fff;
+	border-color:$lighter;
+	color:$lighter;
+	z-index: 1; /* the border of buttons must be over the other buttons */
 }
 
 #cloud-explorer .buttons li:nth-last-child(1) {
@@ -242,11 +250,11 @@ ul, li {
 
 .panel h2 {
 	text-transform: uppercase;
-	color:lightgrey;
+	color:$light;
 	font-size:1em;
 	margin:0 0 .5em 0;
 	border-top: 1px solid transparent;
-	border-bottom:1px solid lightgrey;
+	border-bottom:1px solid $light;
 	padding:.5em 1em;
 }
 
@@ -274,7 +282,7 @@ ul, li {
 }
 
 /*.buttons ul {
-	border: 1px solid lightgrey;
+	border: 1px solid $light;
 	float:left;
 	margin-right:.5em;
 	border-radius:.25em;
@@ -295,11 +303,11 @@ input, button {
 input {
 	border-color:transparent;
 	border-width:1px;
-	border-bottom: 1px solid lightgrey;
+	border-bottom: 1px solid $light;
 }
 
 button {
-	color:lightgrey;
+	color:$light;
 	border-radius:.5em;
 	cursor:pointer;
 	font-weight:600;
@@ -310,7 +318,7 @@ button {
 
 button:hover {
 	background-color:$active-bg;
-	color:white;
+	color:$lighter;
 }
 
 
@@ -321,13 +329,13 @@ button:hover {
 #cloud-explorer .breadcrumbs li {
 	display:inline-block;
 	padding:.5em .5em;
-	color:$grey;
+	color:$dark;
 }
 #cloud-explorer .breadcrumbs li:last-child {
-	color:#111;
+	color:$lighter;
 	cursor:default;
 	&:hover {
-		color:#111;
+		color:$lighter;
 		text-decoration:none;
 	}
 }
@@ -377,8 +385,8 @@ button:hover {
 	margin:1em auto;
 	max-width:320px;
 	background-color:rgba(0,0,0,.8);
-	color:white;
-    box-shadow: 0 0 .5em grey;
+	color:$lighter;
+    box-shadow: 0 0 .5em $dark;
 
     clear:both;
 	overflow:auto;
