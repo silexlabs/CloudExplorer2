@@ -48,16 +48,7 @@ module.exports = class Router {
     app.use((req, res) => {
       // Init unifile session in Express
       req.session.unifile = req.session.unifile || {};
-    
-      let response;
-      if(!!options.github && req.cookies.unifile_github)
-        response = this.unifile.setAccessToken(req.session.unifile, 'github', req.cookies.unifile_github);
-      if(!!options.dropbox && req.cookies.unifile_dropbox)
-        response = this.unifile.setAccessToken(req.session.unifile, 'dropbox', req.cookies.unifile_dropbox);
-    
-      if(response)
-        response.then(() => req.next());
-      else req.next();
+      req.next();
     });
     
     // list services 
@@ -198,7 +189,7 @@ module.exports = class Router {
     });
     
     // register callback url
-    app.get('/:connector/oauth-callback', (req, res) => {
+    app.get('/:connector/oauth_callback', (req, res) => {
       if('error' in req.query) {
         res.status(500).send(req.query);
       } else {
@@ -217,12 +208,12 @@ module.exports = class Router {
     app.get('/remotestorage/callback', (req, res) => {
       // Return a script that get the hash and redirect to oauth-callback
       res.end('<script>' +
-        'var token = location.hash.substr(1).split("=")[1];location="/remotestorage/oauth-callback?token="+token' +
+        'var token = location.hash.substr(1).split("=")[1];location="/remotestorage/oauth_callback?token="+token' +
         '</script>');
     });
     
     app.get('/:connector/signin', (req, res) => {
-      res.sendFile(Path.join(__dirname, 'node_modules/unifile/samples/public', req.params.connector + '_login.html'));
+      res.sendFile(Path.join(__dirname, 'dist/login', req.params.connector + '_login.html'));
     });
   }
 

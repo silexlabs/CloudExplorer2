@@ -1,3 +1,4 @@
+// variables
 $darker: #2F2F2F;
 $dark: #444;
 $medium: #535353;
@@ -10,8 +11,11 @@ $thin-border: 1px solid $medium;
 $border-radius: .25em;
 $button-hover: $active-bg; //#31bbff;
 
+// fonts
 $fa-font-path: "fonts";
 @import "font-awesome";
+$FontPathOpenSans: "fonts";
+@import "../../node_modules/npm-font-open-sans/open-sans.scss";
 
 .highlight {
 	color: $light;
