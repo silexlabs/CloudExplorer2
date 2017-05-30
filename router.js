@@ -55,16 +55,8 @@ module.exports = class Router {
     app.get('/services', (req, res) => {
       const services = [];
 
-      this.unifile.connectors
-      .forEach(connector => services.push(connector.getInfos(req.session.unifile)));
-/*
-      for(let key in this.options) services.push({
-        name: key,
-        displayName: this.options[key].displayName || key,
-        mime: 'application/json',
-        isDir: true,
-      });
-      */
+      Object.keys(this.options).forEach((connector) => services.push(this.unifile.getInfos(req.session.unifile, connector)));
+
       res.send(services);
     });
 
