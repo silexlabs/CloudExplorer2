@@ -199,7 +199,7 @@ export default class CloudExplorer extends React.Component {
           onDelete={file => this.delete(file)}
           onRename={file => this.rename(file.name)}
           onChange={(selection) => this.setState({selection: selection})}
-          onEnter={folder => this.cd([folder.name], true)}
+          onEnter={folder => this.cd([UnifileService.isService(folder) ? folder.displayName : folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
         />
         <KeyboardNav
@@ -207,7 +207,7 @@ export default class CloudExplorer extends React.Component {
           selection={this.state.selection}
           files={this.state.files}
           onChange={(selection) => this.setState({selection: selection})}
-          onEnter={folder => this.cd([folder.name], true)}
+          onEnter={folder => this.cd([UnifileService.isService(folder) ? folder.displayName : folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
           onCancel={() => {
             if(this.dialog.isOpened()) {

@@ -216,6 +216,6 @@ export default class UnifileService {
     oReq.send(body);
   }
   static isService(file) {
-    return typeof(file.isLoggedIn) != 'undefined';
+    return typeof(file.isLoggedIn) !== 'undefined';
   }
 }
