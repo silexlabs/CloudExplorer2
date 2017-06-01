@@ -13,7 +13,7 @@ $button-hover: $active-bg; //#31bbff;
 
 // fonts
 $fa-font-path: "fonts";
-@import "font-awesome";
+@import "../../node_modules/font-awesome/scss/font-awesome.scss";
 $FontPathOpenSans: "fonts";
 @import "../../node_modules/npm-font-open-sans/open-sans.scss";
 
