@@ -15,7 +15,7 @@ const Router = require('./router.js');
 
 // 6805 is the date of sexual revolution started in paris france 8-)
 const port = process.env.PORT || 6805;
-const rootUrl = `http://localhost:${port}`;
+const rootUrl = process.env.SERVER_URL || `http://localhost:${port}`;
 
 const app = express();
 app.use( bodyParser.json() );
@@ -31,15 +31,16 @@ const router = new Router(app, {
     showHiddenFile: false,
   },
   github: {
-    clientId: 'b4e46028bf36d871f68d', 
-    clientSecret: 'c39806c4d0906cfeaac932012996a1919475cc78',
+    clientId: process.env.GITHUB_APP_ID || 'b4e46028bf36d871f68d', 
+    clientSecret: process.env.GITHUB_APP_SECRET || 'c39806c4d0906cfeaac932012996a1919475cc78',
     state: 'aaathub',
+    redirectUri: process.env.GITHUB_APP_REDIRECT || rootUrl + '/github/oauth_callback',
   },
   dropbox: {
-    clientId: '37mo489tld3rdi2',
-    clientSecret: 'kqfzd11vamre6xr',
+    clientId: process.env.DROPBOX_APP_ID || '8lxz0i3aeztt0im',
+    clientSecret: process.env.DROBOX_APP_SECRET || 'twhvu6ztqnefkh6',
     state: 'aaathub',
-    redirectUri: rootUrl + '/dropbox/oauth-callback',
+    redirectUri: process.env.DROPBOX_APP_REDIRECT || rootUrl + '/dropbox/oauth_callback',
   },
   ftp: {
     redirectUri: rootUrl + '/ftp/signin',
