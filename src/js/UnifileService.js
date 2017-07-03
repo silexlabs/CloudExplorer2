@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
+const nameMap = new Map();
 
 export default class UnifileService {
   static ROOT_URL = window.location.origin + '/';
@@ -25,23 +26,27 @@ export default class UnifileService {
     return `${UnifileService.ROOT_URL}${path[0]}/get/${path.slice(1).join('/')}`;
   }
   getServices() {
-    return UnifileService.call(`services`);
+    return UnifileService.call(`services`)
+      .then((services) => {
+        services.forEach((srv) => nameMap.set(srv.name, srv.displayName));
+        return services;
+      });
   }
   ls(path = null) {
     let pathToLs = path || this.currentPath;
     if(pathToLs.length > 0) {
       return UnifileService.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}`)
-      .then((res) => {
-        sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
-        return res;
-      });
+        .then((res) => {
+          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
+          return res;
+        });
     }
     else {
       return this.getServices()
-      .then(res => {
-        sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
-        return res;
-      });
+        .then(res => {
+          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
+          return res;
+        });
     }
   }
   lsHasCache(path = null) {
@@ -200,5 +205,8 @@ export default class UnifileService {
   }
   static isService(file) {
     return typeof(file.isLoggedIn) !== 'undefined';
+  }
+  static getDisplayName(name) {
+    return nameMap.get(name);
   }
 }
