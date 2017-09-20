@@ -114,9 +114,13 @@ module.exports = class Router {
     });
     
     app.get(/\/(.*)\/get\/(.*)/, (req, res) => {
-      this.unifile.readFile(req.session.unifile, req.params[0], req.params[1])
-      .then((result) => {
-        res.send(result);
+      Promise.all([
+	this.unifile.stat(req.session.unifile, req.params[0], req.params[1]),
+	this.unifile.readFile(req.session.unifile, req.params[0], req.params[1]),
+      ])
+      .then(([fileInfo, fileContent]) => {
+        res.type(fileInfo.mime);
+	res.send(fileContent);
       })
       .catch((err) => {
         console.error(err);
