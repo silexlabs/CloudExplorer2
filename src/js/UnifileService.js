@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
+const nameMap = new Map();
 
 export default class UnifileService {
   static ROOT_URL = window.location.origin + '/';
@@ -13,14 +14,10 @@ export default class UnifileService {
     return `${STORAGE_KEY_LS_CACHE}('${path.join('/')}')`;
   }
   write(data, path) {
-    return new Promise((resolve, reject) => {
-      UnifileService.call(`${path[0]}/put/${path.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'PUT', JSON.stringify({content: data}));
-    });
+    return UnifileService.call(`${path[0]}/put/${path.slice(1).join('/')}`, 'PUT', JSON.stringify({content: data}));
   }
   read(path) {
-    return new Promise((resolve, reject) => {
-      UnifileService.call(`${path[0]}/get/${path.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'GET');
-    });
+    return UnifileService.call(`${path[0]}/get/${path.slice(1).join('/')}`, 'GET');
   }
   getPath(path) {
     return `${path.slice(1).join('/')}`;
@@ -29,26 +26,28 @@ export default class UnifileService {
     return `${UnifileService.ROOT_URL}${path[0]}/get/${path.slice(1).join('/')}`;
   }
   getServices() {
-    return new Promise((resolve, reject) => {
-      UnifileService.call(`services`, resolve, (e) => reject(e));
-    });
+    return UnifileService.call(`services`)
+      .then((services) => {
+        services.forEach((srv) => nameMap.set(srv.name, srv.displayName));
+        return services;
+      });
   }
   ls(path = null) {
-    return new Promise((resolve, reject) => {
-      let pathToLs = path || this.currentPath;
-      if(pathToLs.length > 0) {
-        UnifileService.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}`, (res) => {
+    let pathToLs = path || this.currentPath;
+    if(pathToLs.length > 0) {
+      return UnifileService.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}`)
+        .then((res) => {
           sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
-          resolve(res);
-        }, (e) => reject(e));
-      }
-      else {
-        this.getServices().then(res => {
-          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
-          resolve(res);
+          return res;
         });
-      }
-    });
+    }
+    else {
+      return this.getServices()
+        .then(res => {
+          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
+          return res;
+        });
+    }
   }
   lsHasCache(path = null) {
     return !!sessionStorage.getItem(this.getStorageKey(path));
@@ -64,35 +63,25 @@ export default class UnifileService {
     return [];
   }
   rm(path, relative=false) {
-    return new Promise((resolve, reject) => {
-      const absPath = relative ? this.currentPath.concat(path) : path;
-      UnifileService.call(`${absPath[0]}/rm/${absPath.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'DELETE');
-    });
+    const absPath = relative ? this.currentPath.concat(path) : path;
+    return UnifileService.call(`${absPath[0]}/rm/${absPath.slice(1).join('/')}`, 'DELETE');
   }
   batch(path, actions){
-    return new Promise((resolve, reject) => {
-      UnifileService.call(`${path[0]}/batch/`, resolve, reject, 'POST', JSON.stringify(actions))
-    });
+    return UnifileService.call(`${path[0]}/batch/`, 'POST', JSON.stringify(actions))
   }
   mkdir(path, relative=false) {
-    return new Promise((resolve, reject) => {
-      const absPath = relative ? this.currentPath.concat(path) : path;
-      UnifileService.call(`${absPath[0]}/mkdir/${absPath.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'PUT');
-    });
+    const absPath = relative ? this.currentPath.concat(path) : path;
+    return UnifileService.call(`${absPath[0]}/mkdir/${absPath.slice(1).join('/')}`, 'PUT');
   }
   rename(name, newName) {
-    return new Promise((resolve, reject) => {
-      const absPath = this.currentPath.concat([name]);
-      const absNewPath = this.currentPath.slice(1).concat([newName]);
-      UnifileService.call(
-        `${absPath[0]}/mv/${absPath.slice(1).join('/')}`,
-        (res) => resolve(res), (e) => reject(e),
-        'PATCH',
-        JSON.stringify({
-          'destination': absNewPath.join('/'),
-        })
-      );
-    });
+    const absPath = this.currentPath.concat([name]);
+    const absNewPath = this.currentPath.slice(1).concat([newName]);
+    return UnifileService.call(`${absPath[0]}/mv/${absPath.slice(1).join('/')}`,
+      'PATCH',
+      JSON.stringify({
+        'destination': absNewPath.join('/'),
+      })
+    );
   }
   cd(path) {
     return new Promise((resolve, reject) => {
@@ -158,10 +147,8 @@ export default class UnifileService {
       req.open('POST', '/' + service + '/authorize', false);
       req.send();
       if(req.responseText) {
-        console.log('auth returned', req.responseText);
         let win = window.open(req.responseText);
         win.addEventListener('unload', () => {
-          console.log('closed?', win.closed);
           win.onunload = null;
           this.startPollingAuthWin(win, service, resolve, reject);
         });
@@ -175,7 +162,6 @@ export default class UnifileService {
       .catch(e => reject(e));
   }
   startPollingAuthWin(win, service, resolve, reject) {
-    console.log('closed?', win.closed);
     if(win.closed) {
       this.authEnded(service, resolve, reject);
     }
@@ -183,39 +169,44 @@ export default class UnifileService {
       this.startPollingAuthWin(win, service, resolve, reject);
     }, 200);
   }
-  static call(route, cbk, err, method = 'GET', body = '') {
-    const oReq = new XMLHttpRequest();
-    oReq.onload = function(e) {
-      if(oReq.status === 200) {
-        let res = this.responseText;
-        const contentType = oReq.getResponseHeader("Content-Type")
-        if(contentType && contentType.indexOf('json') >= 0) {
-          try {
-            res = JSON.parse(this.responseText);
+  static call(route, method = 'GET', body = '') {
+    return new Promise((resolve, reject) => {
+      const oReq = new XMLHttpRequest();
+      oReq.onload = function(e) {
+        if(oReq.status === 200) {
+          let res = this.responseText;
+          const contentType = oReq.getResponseHeader("Content-Type")
+          if(contentType && contentType.indexOf('json') >= 0) {
+            try {
+              res = JSON.parse(this.responseText);
+            }
+            catch(e) {
+              console.info('an error occured while parsing JSON response', e);
+              reject(e);
+              return;
+            }
           }
-          catch(e) {
-            console.info('an error occured while parsing JSON response', e);
-            err(e);
-            return;
-          }
+          resolve(res);
         }
-        cbk(res);
-      }
-      else {
-        console.info('error in the request response with status', oReq.status, e);
-        err(e);
-      }
-    };
-    oReq.onerror = function(e) {
-      console.info('error for the request', e);
-      err(e);
-    };
-    const url = `${UnifileService.ROOT_URL}${route}`;
-    oReq.open(method, url);
-    oReq.setRequestHeader('Content-Type', 'application/json');
-    oReq.send(body);
+        else {
+          console.info('error in the request response with status', oReq.status, e);
+          reject(e);
+        }
+      };
+      oReq.onerror = function(e) {
+        console.info('error for the request', e);
+        reject(e);
+      };
+      const url = `${UnifileService.ROOT_URL}${route}`;
+      oReq.open(method, url);
+      oReq.setRequestHeader('Content-Type', 'application/json');
+      oReq.send(body);
+    });
   }
   static isService(file) {
-    return typeof(file.isLoggedIn) != 'undefined';
+    return typeof(file.isLoggedIn) !== 'undefined';
+  }
+  static getDisplayName(name) {
+    return nameMap.get(name);
   }
 }
