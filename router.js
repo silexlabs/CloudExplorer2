@@ -120,7 +120,7 @@ module.exports = class Router {
       ])
       .then(([fileInfo, fileContent]) => {
         res.type(fileInfo.mime);
-	res.end(fileContent, 'binary'); // "binary" prevents the addition of "charset=utf-8" to the mime type
+	res.send(Buffer.from(fileContent, 'binary')); // Buffer prevents the addition of "charset=utf-8" to the mime type
       })
       .catch((err) => {
         console.error(err);

@@ -87,6 +87,7 @@ ul, li {
 	overflow-y:scroll;
 	border: $thick-border;
 	border-radius: $border-radius;
+	height: 0; /* (no idea why) makes the height of the scrollable area 100% */
 }
 
 #cloud-explorer .files > li {
