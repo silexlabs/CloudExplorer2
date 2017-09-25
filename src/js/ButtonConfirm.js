@@ -2,6 +2,11 @@ import React from 'react';
 import ReactDom from 'react-dom';
 
 export default class ButtonConfirm extends React.Component {
+  componentWillReceiveProps(newProps) {
+    if(this.input && newProps.defaultFileName !== this.props.defaultFileName) {
+      this.input.value = newProps.defaultFileName;
+    }
+  }
   render() {
     this.allowPick = 
       // select folder with click on the folder
@@ -34,6 +39,7 @@ export default class ButtonConfirm extends React.Component {
             }}
             placeholder="File name"
             autoFocus
+            defaultValue={this.props.defaultFileName}
           />
         </div> : <div></div>
       }

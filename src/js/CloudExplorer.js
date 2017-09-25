@@ -14,7 +14,6 @@ import UnifileService from './UnifileService';
  */
 export default class CloudExplorer extends React.Component {
   INITIAL_STATE = {
-    selection: [],
     files: [],
     loading: false,
     cached: false, // flag the current folder is was cached
@@ -44,7 +43,7 @@ export default class CloudExplorer extends React.Component {
     });
   }
   delete(opt_file) {
-    const files = opt_file ? [opt_file] : this.state.selection;
+    const files = opt_file ? [opt_file] : this.props.selection;
     let batch = files.map(file => {
       return {
         name: file.isDir ? 'rmdir' : 'unlink',
@@ -61,17 +60,14 @@ export default class CloudExplorer extends React.Component {
     });
   }
   cd(path, relative = false) {
-    this.setState({
-      selection: [],
-    });
     this.props.onCd(
       relative ? this.props.path.concat(path) : path
     );
   }
   mkdir() {
+    this.props.onSelection([]);
     this.filesComponent.getNewDirName().then(name => {
       this.setState({
-        selection: [],
         loading: true,
       }, () => {
         this.unifile.mkdir(name, true).then(() => this.ls(true));
@@ -79,10 +75,10 @@ export default class CloudExplorer extends React.Component {
     });
   }
   rename(name) {
+    this.props.onSelection([]);
     this.filesComponent.getNewName(name).then(newName => {
       if(newName !== name) {
         this.setState({
-          selection: [],
           loading: true,
         }, () => {
           this.unifile.rename(name, newName)
@@ -117,7 +113,6 @@ export default class CloudExplorer extends React.Component {
   }
   initInputProps(newProps, opt_oldProps) {
     this.setState({
-      selection: [],
       loading: true,
     });
     this.unifile.cd(newProps.path)
@@ -166,13 +161,13 @@ export default class CloudExplorer extends React.Component {
       <div className="buttons panel">
         <h2>Buttons</h2>
         <ButtonBar
-          selection={this.state.selection}
+          selection={this.props.selection}
           path={this.props.path}
           onCreateFolder={() => this.mkdir()}
           onReload={() => this.ls()}
         />
         <ButtonConfirm
-          selection={this.state.selection}
+          selection={this.props.selection}
           path={this.props.path}
           pickFolder={this.props.pickFolder}
           inputName={this.props.inputName}
@@ -193,21 +188,21 @@ export default class CloudExplorer extends React.Component {
         <Files
           ref={c => this.filesComponent = c}
           path={this.props.path}
-          selection={this.state.selection}
+          selection={this.props.selection}
           files={this.state.files.concat(this.state.uploadingFiles)}
           multiple={this.props.multiple}
           getDownloadUrl={file => this.unifile.getUrl(this.props.path.concat([file.name]))}
           onDelete={file => this.delete(file)}
           onRename={file => this.rename(file.name)}
-          onChange={(selection) => this.setState({selection: selection})}
+          onChange={(selection) => this.props.onSelection(selection)}
           onEnter={folder => this.cd([folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
         />
         <KeyboardNav
           focusElement={this.filesComponent}
-          selection={this.state.selection}
+          selection={this.props.selection}
           files={this.state.files}
-          onChange={(selection) => this.setState({selection: selection})}
+          onChange={(selection) => this.props.onSelection(selection)}
           onEnter={folder => this.cd([folder.name], true)}
           onPick={(file) => this.props.onPick(file)}
           onCancel={() => {

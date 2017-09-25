@@ -13,6 +13,7 @@ class App extends React.Component {
     path: [],
     pickFolder: false,
     extensions: [],
+    selection: [],
     onCancel: null,
     onPick: null,
     onError: null,
@@ -28,10 +29,17 @@ class App extends React.Component {
   onChange(path) {
     if(path !== this.state.path) {
       this.setState({
+        selection: [],
         path: path,
       });
     }
     localStorage.setItem(STORAGE_KEY_PATH, JSON.stringify(path));
+  }
+  onSelection(selection) {
+    this.setState({
+      selection: selection,
+      defaultFileName: selection.length ? selection[0].name : this.state.defaultFileName,
+    });
   }
   componentWillMount() {
     this.loadHistory();
@@ -146,11 +154,13 @@ class App extends React.Component {
       onSave={fileName => this.state.onSave ? this.state.onSave(fileName) : ''}
       onPick={selection => this.state.onPick ? this.state.onPick(selection) : ''}
       onCd={path => this.onChange(path)}
+      onSelection={selection => this.onSelection(selection)}
       pickFolder={this.state.pickFolder}
       multiple={this.state.multiple}
       inputName={this.state.inputName}
       defaultFileName={this.state.defaultFileName}
       extensions={this.state.extensions}
+      selection={this.state.selection}
     />;
   }
 }
