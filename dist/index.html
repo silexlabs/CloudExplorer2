@@ -11,13 +11,21 @@
     <header>
       Cloud Explorer demo page
     </header>
-    <section class="button-bar"><ul>
-      <li id="ce-open-file">Select one HTML file</li>
-      <li id="ce-open-files">Select multiple HTML files</li>
-      <li id="ce-open-folder">Select a folder</li>
-      <li id="ce-save-file">Save</li>
-      <li id="ce-saveas-file">Save as</li>
-    </ul></section>
+    <section class="button-bar">
+      <ul>
+        <li id="ce-open-file">Select file</li>
+        <li id="ce-open-files">Select files</li>
+        <li id="ce-open-folder">Select a folder</li>
+        <li id="ce-save-file">Save a copy</li>
+        <li id="ce-saveas-file">Save as</li>
+      </ul>
+      <select id="ce-extensions">
+        <option value="">show all files</option>
+        <option value=".html">html</option>
+        <option value=".jpg,.png,.gif,.jpeg">images (png, gif, jpg)</option>
+        <option value=".jpg,.png,.gif,.jpeg,.mp3,.mp4,.ogg">media (image, sound, video)</option>
+      </select>
+    </section>
     <section id="selection"></section>
     <iframe id="ceIFrame" class="container" src="./cloud-explorer.html" />
     <footer></footer>

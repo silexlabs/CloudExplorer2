@@ -8,6 +8,9 @@ body, html {
   flex-direction: column;
   height: 100%;
 }
+.button-bar ul {
+  float: left;
+}
 .button-bar li {
   padding: .5em 1em;
   display: inline-block;
@@ -22,6 +25,13 @@ body, html {
 .button-bar li.selected {
   background-color: white;
   color: black;
+}
+.button-bar select {
+  margin-right: 40px;
+  float: right;
+  margin-top: 16px;
+  height: 40px;
+  min-width: 150px;
 }
 #selection {
   margin: 0 40px;

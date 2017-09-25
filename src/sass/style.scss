@@ -109,6 +109,7 @@ ul, li {
 	& li {
 		@extend .highlight;
 		padding:0 1em;
+		a:visited,
 		a:link {
 			@extend .highlight;
 		}
@@ -157,6 +158,7 @@ ul, li {
 	background-color:$active-bg;
 	color:$lighter;
 	& .inline-button-bar li a:link,
+	& .inline-button-bar li a:visited,
 	& .inline-button-bar li {
 		color:$lighter;
 		text-decoration: none;

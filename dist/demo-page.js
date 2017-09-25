@@ -1,5 +1,6 @@
 var selectedBtn = null;
 var selection = [];
+var extensions = null;
 
 window.onload = function() {
   const ce = document.querySelector('#ceIFrame').contentWindow.ce;
@@ -21,57 +22,42 @@ window.onload = function() {
     if(selectedBtn)
       selectedBtn.classList.remove('selected');
   }
+  function handleCePromise(promise, cbk) {
+    promise.then(result => {
+      console.log('result from ce', result);
+      if(result) {
+        cbk(result);
+      }
+      else {
+        console.info('user canceled action');
+      }
+      unselectTab();
+    })
+    .catch(e => {
+      console.error('Error thrown by CE', e);
+    });
+  }
+
+  document.querySelector('#ce-extensions').onchange = function(e) {
+    extensions = e.target.value.split(',').filter(el => el != "");
+    if(extensions.length === 0) extensions = null;
+    console.log(extensions);
+    ce.reload(extensions);
+  }
 
   document.querySelector('#ce-open-file').onclick = function(e) {
     selectTab(e.target);
-    ce.openFile().then(result => {
-      console.log('result from ce', result);
-      if(result) {
-        setSelection([result]);
-      }
-      else {
-        console.info('user canceled action');
-      }
-      unselectTab();
-    })
-    .catch(e => {
-      console.error('Error thrown by CE', e);
-    });
+    handleCePromise(ce.openFile(extensions), result => setSelection([result]));
   }
   document.querySelector('#ce-open-files').onclick = function(e) {
     selectTab(e.target);
-    ce.openFiles().then(result => {
-      console.log('result from ce', result);
-      if(result) {
-        setSelection(result);
-      }
-      else {
-        console.info('user canceled action');
-      }
-      unselectTab();
-    })
-    .catch(e => {
-      console.error('Error thrown by CE', e);
-    });
+    handleCePromise(ce.openFiles(extensions), result => setSelection(result));
   }
   document.querySelector('#ce-open-folder').onclick = function(e) {
     selectTab(e.target);
-    ce.openFolder().then(result => {
-      console.log('result from ce', result);
-      if(result) {
-        setSelection([result]);
-      }
-      else {
-        console.info('user canceled action');
-      }
-      unselectTab();
-    })
-    .catch(e => {
-      console.error('Error thrown by CE', e);
-    });
+    handleCePromise(ce.openFolder(), result => setSelection([result]));
   }
   document.querySelector('#ce-save-file').onclick = function(e) {
-    selectTab(e.target);
     if(selection.length) {
       ce.read(selection[0])
       .then(data => ce.write(data, Object.assign({}, selection[0], {
@@ -79,7 +65,7 @@ window.onload = function() {
         path: selection[0].path.replace(selection[0].name, 'tmp-saved-file-' + selection[0].name),
       }))
       .then(() => {
-        unselectTab();
+        ce.reload(extensions);
       }));
     }
     else {

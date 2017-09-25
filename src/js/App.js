@@ -12,6 +12,7 @@ class App extends React.Component {
   state = {
     path: [],
     pickFolder: false,
+    extensions: [],
     onCancel: null,
     onPick: null,
     onError: null,
@@ -65,34 +66,34 @@ class App extends React.Component {
   ////////////////////
   // API
   ////////////////////
-  openFile() {
+  openFile(extensions=null) {
     return new Promise((resolve, reject) => {
       this.setState({
         selection: [],
         pickFolder: false,
         multiple: false,
         inputName: false,
+	extensions: extensions,
         onCancel: () => resolve(null),
         onPick: files => resolve(this.createBlob(this.state.path, files[0])),
         onSave: null,
         onError: e => reject(e),
-      });
-      this.cloudExplorer.ls();
+      }, () => this.cloudExplorer.ls());
     });
   }
-  openFiles() {
+  openFiles(extensions=null) {
     return new Promise((resolve, reject) => {
       this.setState({
         selection: [],
         pickFolder: false,
         multiple: true,
         inputName: false,
+	extensions: extensions,
         onCancel: () => resolve(null),
         onPick: files => resolve(files.map(file => this.createBlob(this.state.path, file))),
         onSave: null,
         onError: e => reject(e),
-      });
-      this.cloudExplorer.ls();
+      }, () => this.cloudExplorer.ls());
     });
   }
   openFolder() {
@@ -102,15 +103,15 @@ class App extends React.Component {
         pickFolder: true,
         multiple: false,
         inputName: false,
+	extensions: [],
         onCancel: () => resolve(null),
         onPick: files => resolve(this.createBlob(this.state.path, files[0])),
         onSave: null,
         onError: e => reject(e),
-      });
-      this.cloudExplorer.ls();
+      }, () => this.cloudExplorer.ls());
     });
   }
-  saveAs(defaultFileName) {
+  saveAs(defaultFileName, extensions=null) {
     return new Promise((resolve, reject) => {
       this.setState({
         selection: [],
@@ -118,12 +119,19 @@ class App extends React.Component {
         multiple: false,
         inputName: true,
         defaultFileName: defaultFileName,
+	extensions: extensions,
         onCancel: () => resolve(null),
         onPick: null,
         onSave: fileName => resolve(this.createBlob(this.state.path, {name: fileName})),
         onError: e => reject(e),
-      });
-      this.cloudExplorer.ls();
+      }, () => this.cloudExplorer.ls());
+    });
+  }
+  reload(extensions) {
+    return new Promise((resolve, reject) => {
+      this.setState({
+	extensions: extensions,
+      }, () => this.cloudExplorer.ls());
     });
   }
   getServices() {
@@ -142,6 +150,7 @@ class App extends React.Component {
       multiple={this.state.multiple}
       inputName={this.state.inputName}
       defaultFileName={this.state.defaultFileName}
+      extensions={this.state.extensions}
     />;
   }
 }

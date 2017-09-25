@@ -113,6 +113,7 @@ export default class CloudExplorer extends React.Component {
     if(newProps.path.join('/') !== this.props.path.join('/')) {
       this.initInputProps(newProps, this.props);
     }
+    this.unifile.setExtensions(newProps.extensions);
   }
   initInputProps(newProps, opt_oldProps) {
     this.setState({

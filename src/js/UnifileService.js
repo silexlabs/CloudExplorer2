@@ -6,8 +6,12 @@ const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 export default class UnifileService {
   static ROOT_URL = window.location.origin + '/';
   currentPath = [];
+  extensions = null;
   constructor(path) {
     this.currentPath = path;
+  }
+  setExtensions(extensions) {
+    this.extensions = extensions;
   }
   getStorageKey(path) {
     return `${STORAGE_KEY_LS_CACHE}('${path.join('/')}')`;
@@ -37,7 +41,8 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       let pathToLs = path || this.currentPath;
       if(pathToLs.length > 0) {
-        UnifileService.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}`, (res) => {
+	const filters = this.extensions ? '?extensions=' + this.extensions.join(',') : '';
+        UnifileService.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}${filters}`, (res) => {
           sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
           resolve(res);
         }, (e) => reject(e));

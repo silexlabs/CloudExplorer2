@@ -83,7 +83,13 @@ module.exports = class Router {
     app.get(/\/(.*)\/ls\/(.*)/, (req, res) => {
       this.unifile.readdir(req.session.unifile, req.params[0], req.params[1])
       .then((result) => {
-        res.send(result);
+	if(req.query.extensions != null) { // allows '' to filter only the folders
+          const extensions = req.query.extensions.split(',');
+          res.send(result.filter(file => file.isDir || extensions.includes(Path.extname(file.name).toLowerCase())));
+	}
+	else {
+          res.send(result);
+	}
       })
       .catch((err) => {
         console.error(err);
@@ -170,14 +176,12 @@ module.exports = class Router {
     });
     
     app.post(/\/(.*)\/batch\/(.*)/, (req, res) => {
-      const path = req.params[1];
-      const batch = req.body;
-      this.unifile.batch(req.session.unifile, req.params[0], batch)
+      this.unifile.batch(req.session.unifile, req.params[0], req.body)
       .then((result) => {
         res.send(result);
       })
       .catch((err) => {
-        console.error(err);
+        console.error(err, err.message);
         res.status(400).send(err);
       });
     });

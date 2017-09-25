@@ -76,7 +76,6 @@ export default class Files extends React.Component {
     return false;
   }
   select(e, file) {
-    e.preventDefault();
     e.stopPropagation();
     const multiple = e.ctrlKey || e.shiftKey;
     if(this.isDoubleClick(file)) {

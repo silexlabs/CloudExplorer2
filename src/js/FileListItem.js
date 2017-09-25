@@ -35,7 +35,7 @@ export default class FileListItem extends React.Component {
           this.allowDownload ? <a
           target="_blank"
           href={this.props.downloadUrl}
-          className={this.allowDelete ? "enabled" : "disabled"}>Downoad</a> : ""
+          className={this.allowDelete ? "enabled" : "disabled"}>Download</a> : ""
         }</li>
         <li onClick={() => this.allowDelete && this.delete()} className={this.allowDelete ? "enabled" : "disabled"}>Delete</li>
         <li onClick={() => this.allowRename && this.rename()} className={this.allowRename ? "enabled" : "disabled"}>Rename</li>
