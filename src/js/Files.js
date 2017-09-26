@@ -95,7 +95,7 @@ export default class Files extends React.Component {
         key="newFolder"
         className="selected folder"
       >
-        <input type="text"
+        <input className="file-name-input" type="text"
           onBlur={e => this.onGetNewFolderName(e.target.value)}
           onKeyPress={e => {
             if(e.key === 'Enter') this.onGetNewFolderName(e.target.value)
@@ -113,7 +113,7 @@ export default class Files extends React.Component {
       className={this.props.selection.find(selected => selected.name === file.name) ? 'selected' : ''}>
       {
         this.state.renameFileMode && file.name === this.state.renameFileData.name ?
-          <input type="text"
+          <input className="file-name-input" type="text"
             onBlur={e => this.onGetNewFileName(e.target.value)}
             onKeyPress={e => {
               if(e.key === 'Enter') this.onGetNewFileName(e.target.value)

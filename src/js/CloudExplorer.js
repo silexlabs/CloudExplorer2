@@ -158,7 +158,7 @@ export default class CloudExplorer extends React.Component {
   }
   render() {
     return <div className={"root" + (this.state.loading ? ' loading' : '') + (this.state.cached ? ' cached' : '')}>
-      <div className="buttons panel">
+      <div className="panel top-button-bar">
         <h2>Buttons</h2>
         <ButtonBar
           selection={this.props.selection}

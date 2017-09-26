@@ -7,7 +7,7 @@ export default class FileListItem extends React.Component {
   delete() {
     ModalDialog.getInstance().confirm(<section>
         <h2>Are you sure you want to delete this file?</h2>
-        <p>{ this.props.file.name }</p>
+        <p>This file is about to be deleted:</p><p><strong>{ this.props.file.name }</strong></p>
       </section>,
       this.props.onDelete);
   }

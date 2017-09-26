@@ -75,11 +75,12 @@ ul, li {
 	background-color: $dark;
 }
 
-#cloud-explorer .files input {
+#cloud-explorer .files input.file-name-input {
 	border:0;
 	outline:0;
 	margin:0;
 	padding:0;
+	width: 100%;
 }
 
 #cloud-explorer .files > section {
@@ -136,7 +137,7 @@ ul, li {
 
 /* basic style for demo */
 /*#cloud-explorer li,*/
-#cloud-explorer .buttons.panel li,
+#cloud-explorer .button-bar li,
 #cloud-explorer .breadcrumbs.panel li,
 #cloud-explorer .upload.button {
 	@extend .highlight;
@@ -168,12 +169,8 @@ ul, li {
 	text-decoration:none;
 }
 
-#cloud-explorer .button-confirm .enabled,
-#cloud-explorer .button-bar .enabled {
-	/*color: blue;*/
-}
-
-#cloud-explorer .buttons.panel {
+#cloud-explorer .button-bar, 
+#cloud-explorer .top-button-bar {
 	display:flex;
 	flex-direction:row;
 	justify-content: space-between;
@@ -182,30 +179,27 @@ ul, li {
 	min-height:4em;
 }
 
-#cloud-explorer .buttons.panel > section {
-	/*flex-grow:1;*/
-}
-
-#cloud-explorer .buttons ul {
+#cloud-explorer .button-bar ul {
 	display:flex;
 	flex-direction:row;
 	flex-wrap:nowrap;
 	justify-content: center;
 	margin-bottom:1em;
 	text-align: center;
+	height: 35px;
 }
 
-#cloud-explorer .buttons li {
+#cloud-explorer .button-bar li {
 	flex-grow:1;
 	margin-left:-1px;
 	padding:.5em 1em;
 	border: $thin-border;
 }
-#cloud-explorer .buttons li:first-child {
+#cloud-explorer .button-bar li:first-child {
 	margin-left:0;
 }
 
-#cloud-explorer .buttons li.enabled:hover {
+#cloud-explorer .button-bar li.enabled:hover {
 	text-decoration:none;
 	background-color:$button-hover;
 	border-color:$lighter;
@@ -213,11 +207,21 @@ ul, li {
 	z-index: 1; /* the border of buttons must be over the other buttons */
 }
 
-#cloud-explorer .buttons li:nth-last-child(1) {
+#cloud-explorer .button-bar li:nth-last-child(1) {
 	border-radius:0 $border-radius $border-radius 0;
 }
-#cloud-explorer .buttons li:nth-child(1){
+#cloud-explorer .button-bar li:nth-child(1){
 	border-radius:$border-radius 0 0 $border-radius;
+}
+
+#cloud-explorer .button-icon {
+	margin-right: 8px;
+	vertical-align: middle;
+}
+
+#cloud-explorer .badge {
+	left: 5px;
+	top: 6px;
 }
 
 #cloud-explorer .files li.selected {
@@ -269,32 +273,16 @@ ul, li {
 	padding:.5em 1em;
 }
 
-.buttons h2,
-.breadcrumbs h2,
+.panel h2,
 .dialogs h2 {
 	display:none;
 }
 
-.modal-dialog h2 {
-	display:block;
-}
-
-
-.buttons.panel,
-.breadcrumbs.panel,
-.files.panel {
+.panel {
 	padding:0;
 	clear:right;
 	zoom:1;
 }
-
-/*.buttons ul {
-	border: 1px solid $light;
-	float:left;
-	margin-right:.5em;
-	border-radius:.25em;
-	margin:0 .5em .5em 0;
-}*/
 
 input, button {
 	border-color:transparent;
@@ -380,29 +368,51 @@ button:hover {
 	@extend .fa-angle-right;
 }
 
-.dialogs {
+.dialogs .dialog-bg {
 	position:absolute;
 	top:0;
 	left:0;
 	right:0;
+	bottom:0;
+	background-color: rgba(0, 0, 0, .5);
 }
 
-.modal-dialog {
+.modal-dialog .dialog-content {
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
 	border-radius:.25em;
 	margin:1em auto;
-	max-width:320px;
-	background-color:rgba(0,0,0,.8);
+	width:500px;
+	max-width:100%;
+	min-height:200px;
+	background-color:$darker;
 	color:$lighter;
-    box-shadow: 0 0 .5em $dark;
-
-    clear:both;
+	// box-shadow: 0 0 .5em $dark;
+	clear:both;
 	overflow:auto;
 	zoom:1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 15px 0;
+	border: 2px solid white;
 }
 
-.modal-dialog button {
-	float:right;
-	clear:both;
+.modal-dialog h2 {
+	display:block;
+	padding-top: 0;
+	padding-bottom: 15px;
+}
+
+.modal-dialog p {
+	padding: 15px;
+}
+
+.modal-dialog .button-bar ul {
+    margin-left: auto;
+    margin-right: 15px;
 }
 
 .upload.button {

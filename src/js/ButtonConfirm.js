@@ -18,7 +18,7 @@ export default class ButtonConfirm extends React.Component {
       this.props.path.length > 0) ||
       // input file name / save as
       (this.props.inputName && this.props.defaultFileName && this.props.defaultFileName.length > 0);
-    return <section className="button-confirm">
+    return <section className="button-confirm button-bar">
       {
         this.props.inputName ? <div>
           <input type="text"
@@ -53,8 +53,14 @@ export default class ButtonConfirm extends React.Component {
           className={
             this.allowPick || (this.props.inputName && this.input.value.length) ? "enabled" : "disabled"
           }
-        >Ok</li>
-        <li onClick={(e) => this.props.onCancel()} className="enabled">Cancel</li>
+        >
+          <span className="button-icon fa fa-check fa-1x"></span>
+	  <span>Ok</span>
+	</li>
+        <li onClick={(e) => this.props.onCancel()} className="enabled">
+          <span className="button-icon fa fa-ban fa-1x"></span>
+	  <span>Cancel</span>
+	</li>
       </ul>
     </section>;
   }

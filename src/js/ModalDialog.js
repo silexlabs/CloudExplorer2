@@ -50,11 +50,21 @@ export default class ModalDialog extends React.Component {
         markup = <input onChange={(e) => this.setState({inputText: e.target.value})} value={this.state.inputText} />;
       }
       return <section className="modal-dialog">
-        {this.state.message}
-        {markup}
-        <button onClick={() => this.ok()}>Ok</button>
-        <button onClick={() => this.cancel()}>Cancel</button>
-      </section>;
+        <div className="dialog-bg"></div>;
+        <div className="dialog-content">
+          {this.state.message}
+          {markup}
+          <section className="button-bar"><ul>
+            <li className="enabled" onClick={() => this.ok()}>
+              <span className="button-icon fa fa-check fa-1x"></span>
+              <span>Ok</span>
+            </li >
+            <li className="enabled" onClick={() => this.cancel()}>
+              <span className="button-icon fa fa-ban fa-1x"></span>
+              <span>Cancel</span>
+            </li >
+          </ul></section></div>
+        </section>;
     }
     return null;
   }
