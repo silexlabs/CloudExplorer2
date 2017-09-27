@@ -31,8 +31,8 @@ const router = new Router(app, {
     showHiddenFile: false,
   },
   github: {
-    clientId: process.env.GITHUB_APP_ID || 'b4e46028bf36d871f68d', 
-    clientSecret: process.env.GITHUB_APP_SECRET || 'c39806c4d0906cfeaac932012996a1919475cc78',
+    clientId: process.env.GITHUB_APP_ID || 'f124e4148bf9d633d58b', 
+    clientSecret: process.env.GITHUB_APP_SECRET || '1a8fcb93d5d0786eb0a16d81e8c118ce03eefece',
     state: 'aaathub',
     redirectUri: process.env.GITHUB_APP_REDIRECT || rootUrl + '/github/oauth_callback',
   },
