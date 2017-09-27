@@ -16,14 +16,14 @@ export default class UnifileService {
   getStorageKey(path) {
     return `${STORAGE_KEY_LS_CACHE}('${path.join('/')}')`;
   }
-  write(data, path) {
+  write(data, path, progress = null) {
     return new Promise((resolve, reject) => {
-      UnifileService.call(`${path[0]}/put/${path.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'PUT', JSON.stringify({content: data}));
+      UnifileService.call(`${path[0]}/put/${path.slice(1).join('/')}`, res => resolve(res), e => reject(e), 'PUT', data, progress, false, true);
     });
   }
   read(path) {
-    return new Promise((resolve, reject) => {
-      UnifileService.call(`${path[0]}/get/${path.slice(1).join('/')}`, (res) => resolve(res), (e) => reject(e), 'GET');
+    return new Promise((resolve, reject, progress = null) => {
+      UnifileService.call(`${path[0]}/get/${path.slice(1).join('/')}`, res => resolve(res), e => reject(e), 'GET', '', progress, true);
     });
   }
   getPath(path) {
@@ -104,12 +104,11 @@ export default class UnifileService {
       if(path.length === 1 && path[0] !== this.currentPath[0]) {
         this.auth(path[0])
           .then(service => {
-            console.log('success', path, service);
             this.currentPath = path;
             resolve(this.currentPath);
           })
           .catch(e => {
-            console.log('error', e);
+            console.error('error when trying to authenticate', e);
             reject(e);
           });
       }
@@ -119,42 +118,10 @@ export default class UnifileService {
       }
     });
   }
-  upload(file, onProgress) {
+  upload(file, progress = null) {
     return new Promise((resolve, reject) => {
       const absPath = this.currentPath.concat([file.name]);
-      const formData = new FormData();
-      const fileReader = new FileReader();
-      const xhr = new XMLHttpRequest();
-      xhr.upload.addEventListener("progress", (e) => {
-        console.log('progress');
-        if (e.lengthComputable) {
-          const percentage = Math.round((e.loaded * 100) / e.total);
-          onProgress(percentage);
-        }
-      }, false);
-      xhr.upload.addEventListener("load", (e) => {
-        console.log('load');
-        onProgress(100);
-      }, false);
-      xhr.upload.addEventListener("error", (e) => {
-        console.log('error');
-        onProgress(0);
-        reject(e);
-      }, false);
-
-      xhr.addEventListener('readystatechange',(e) => {
-        // FIXME handle error cases
-        if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
-          resolve();
-        }
-      });
-      xhr.open("PUT", `${UnifileService.ROOT_URL}${absPath[0]}/put/${absPath.slice(1).join('/')}`);
-      xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
-      fileReader.onload = (evt) => {
-        formData.append("uploads", evt.target.result);
-        xhr.send(formData);
-      };
-      fileReader.readAsBinaryString(file);
+      this.write(file, absPath).then(response => resolve(response)).catch(e => reject(e), progress);
     });
   }
   auth(service) {
@@ -163,10 +130,8 @@ export default class UnifileService {
       req.open('POST', '/' + service + '/authorize', false);
       req.send();
       if(req.responseText) {
-        console.log('auth returned', req.responseText);
         let win = window.open(req.responseText);
         win.addEventListener('unload', () => {
-          console.log('closed?', win.closed);
           win.onunload = null;
           this.startPollingAuthWin(win, service, resolve, reject);
         });
@@ -180,7 +145,6 @@ export default class UnifileService {
       .catch(e => reject(e));
   }
   startPollingAuthWin(win, service, resolve, reject) {
-    console.log('closed?', win.closed);
     if(win.closed) {
       this.authEnded(service, resolve, reject);
     }
@@ -188,37 +152,68 @@ export default class UnifileService {
       this.startPollingAuthWin(win, service, resolve, reject);
     }, 200);
   }
-  static call(route, cbk, err, method = 'GET', body = '') {
+  static call(route, cbk, err, method = 'GET', body = '', progress = null, receiveBinary = false, sendBinary=false) {
     const oReq = new XMLHttpRequest();
     oReq.onload = function(e) {
       if(oReq.status === 200) {
-        let res = this.responseText;
         const contentType = oReq.getResponseHeader("Content-Type")
         if(contentType && contentType.indexOf('json') >= 0) {
-          try {
-            res = JSON.parse(this.responseText);
-          }
-          catch(e) {
-            console.info('an error occured while parsing JSON response', e);
-            err(e);
-            return;
-          }
+          const res = (() => {
+	    try {
+              return JSON.parse(this.responseText);
+            }
+            catch(e) {
+              console.error('an error occured while parsing JSON response', e);
+              err(e);
+              return null;
+            }
+	  })();
+	  if(res != null) cbk(res);
         }
-        cbk(res);
+        else {
+	  cbk(this.response);
+	}
       }
       else {
-        console.info('error in the request response with status', oReq.status, e);
+        console.error('error in the request response with status', oReq.status, e);
         err(e);
       }
     };
     oReq.onerror = function(e) {
-      console.info('error for the request', e);
+      error.info('error for the request', e);
       err(e);
     };
+    if(progress != null) {
+      const dispatcher = (() => {
+        if(sendBinary) return oReq.upload;
+	return oReq;
+      });
+      dispatcher.upload.addEventListener("progress", (e) => {
+        if (e.lengthComputable) {
+          const percentage = Math.round((e.loaded * 100) / e.total);
+          progress(percentage);
+        }
+      }, false);
+      dispatcher.upload.addEventListener("load", (e) => {
+        progress(100);
+      }, false);
+      dispatcher.upload.addEventListener("error", (e) => {
+        progress(0);
+        reject(e);
+      }, false);
+    }
     const url = `${UnifileService.ROOT_URL}${route}`;
     oReq.open(method, url);
-    oReq.setRequestHeader('Content-Type', 'application/json');
-    oReq.send(body);
+    if(receiveBinary) oReq.responseType = "blob";
+    if(sendBinary) {
+      const data = new FormData();
+      data.append('content', body);
+      oReq.send(data);
+    }
+    else {
+      oReq.setRequestHeader('Content-Type', 'application/json');
+      oReq.send(body);
+    }
   }
   static isService(file) {
     return typeof(file.isLoggedIn) != 'undefined';

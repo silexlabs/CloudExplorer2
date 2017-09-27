@@ -11,15 +11,10 @@ const PassThrough = require('stream').PassThrough;
 const serveStatic = require('serve-static');
 const Unifile = require('unifile');
 
-// unifile connectors
-/*
-const GitHubConnector = require('./node_modules/unifile/lib/unifile-github.js');
-const DropboxConnector = require('./node_modules/unifile/lib/unifile-dropbox.js');
-const FtpConnector = require('./node_modules/unifile/lib/unifile-ftp.js');
-const WebDavConnector = require('./node_modules/unifile/lib/unifile-webdav.js');
-const FsConnector = require('./node_modules/unifile/lib/unifile-fs.js');
-const SftpConnector = require('./node_modules/unifile/lib/unifile-sftp.js');
-*/
+// file upload
+const multer  = require('multer');
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 /**
  * the router class
@@ -107,9 +102,9 @@ module.exports = class Router {
         res.status(400).send(err);
       });
     });
-    
-    app.put(/\/(.*)\/put\/(.*)/, (req, res) => {
-      this.unifile.writeFile(req.session.unifile, req.params[0], req.params[1], req.body.content)
+
+    app.put(/\/(.*)\/put\/(.*)/, upload.single('content'), (req, res) => {
+      this.unifile.writeFile(req.session.unifile, req.params[0], req.params[1], Buffer.from(req.file.buffer, 'binary'))
       .then((result) => {
         res.send(result);
       })
