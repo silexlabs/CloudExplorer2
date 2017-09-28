@@ -21,6 +21,28 @@ const upload = multer({ storage: storage })
  * @use new ExpressRouter(app)
  */
 module.exports = class Router {
+  static getHttpStatus(unifileErrorCode) {
+    switch(unifileErrorCode) {
+      case 'ENOTSUP':
+        return '405';
+      case 'EISDIR':
+        return '405';
+      case 'EACCES':
+        return '403';
+      case 'EINVAL':
+        return '400';
+      case 'ENOENT':
+        return '404';
+      case 'EIO':
+        return '500';
+      default:
+        return '400';
+    }
+  }
+  static handleError(res, err) {
+    console.error(err.message);
+    res.status(Router.getHttpStatus(err.code)).send(err);
+  }
   /**
    * @param {Object} app - the express app
    * @param {Object} options - object with the following optional attributes
@@ -86,10 +108,7 @@ module.exports = class Router {
           res.send(result);
 	}
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send(err);
-      });
+      .catch((err) => Router.handleError(res, err));
     });
     
     app.put(/\/(.*)\/mkdir\/(.*)/, (req, res) => {
@@ -97,10 +116,7 @@ module.exports = class Router {
       .then((result) => {
         res.send(result);
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send(err);
-      });
+      .catch((err) => Router.handleError(res, err));
     });
 
     app.put(/\/(.*)\/put\/(.*)/, upload.single('content'), (req, res) => {
@@ -108,10 +124,7 @@ module.exports = class Router {
       .then((result) => {
         res.send(result);
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send(err);
-      });
+      .catch((err) => Router.handleError(res, err));
     });
     
     app.get(/\/(.*)\/get\/(.*)/, (req, res) => {
@@ -123,10 +136,7 @@ module.exports = class Router {
         res.type(fileInfo.mime);
 	res.send(Buffer.from(fileContent, 'binary')); // Buffer prevents the addition of "charset=utf-8" to the mime type
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send(err);
-      });
+      .catch((err) => Router.handleError(res, err));
     });
     
     app.patch(/\/(.*)\/mv\/(.*)/, (req, res) => {
@@ -134,10 +144,7 @@ module.exports = class Router {
       .then((result) => {
         res.send(result);
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send(err);
-      });
+      .catch((err) => Router.handleError(res, err));
     });
     
     app.delete(/\/(.*)\/rm\/(.*)/, (req, res) => {
@@ -145,10 +152,7 @@ module.exports = class Router {
       .then((result) => {
         res.send(result);
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send(err);
-      });
+      .catch((err) => Router.handleError(res, err));
     });
     
     app.delete(/\/(.*)\/rmdir\/(.*)/, (req, res) => {
@@ -156,10 +160,7 @@ module.exports = class Router {
       .then((result) => {
         res.send(result);
       })
-      .catch((err) => {
-        console.error(err);
-        res.status(400).send(err);
-      });
+      .catch((err) => Router.handleError(res, err));
     });
     
     app.post(/\/(.*)\/cp\/(.*)/, (req, res) => {
@@ -176,8 +177,8 @@ module.exports = class Router {
         res.send(result);
       })
       .catch((err) => {
-        console.error(err, err.message);
-        res.status(400).send(err);
+        console.error(err, err);
+        res.status(Router.getHttpStatus(err.code)).send(err);
       });
     });
     
@@ -187,7 +188,7 @@ module.exports = class Router {
         res.send(result);
       })
       .catch((err) => {
-        res.status(400).send(err.message);
+        res.status(Router.getHttpStatus(err.code)).send(err);
       });
     });
     

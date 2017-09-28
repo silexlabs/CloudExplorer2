@@ -152,29 +152,31 @@ export default class UnifileService {
       this.startPollingAuthWin(win, service, resolve, reject);
     }, 200);
   }
+  static getJsonBody(oReq) {
+    try {
+      return JSON.parse(oReq.responseText);
+    }
+    catch(e) {
+      console.error('an error occured while parsing JSON response', e);
+      return null;
+    }
+  }
   static call(route, cbk, err, method = 'GET', body = '', progress = null, receiveBinary = false, sendBinary=false) {
     const oReq = new XMLHttpRequest();
-    oReq.onload = function(e) {
+    oReq.onload = function(event) {
       if(oReq.status === 200) {
         const contentType = oReq.getResponseHeader("Content-Type")
         if(contentType && contentType.indexOf('json') >= 0) {
-          const res = (() => {
-	    try {
-              return JSON.parse(this.responseText);
-            }
-            catch(e) {
-              console.error('an error occured while parsing JSON response', e);
-              err(e);
-              return null;
-            }
-	  })();
+          const res = UnifileService.getJsonBody(oReq);
 	  if(res != null) cbk(res);
         }
         else {
-	  cbk(this.response);
+	  cbk(oReq.response);
 	}
       }
       else {
+	// unifile should set the error object in the response body
+	const e = UnifileService.getJsonBody(oReq);
         console.error('error in the request response with status', oReq.status, e);
         err(e);
       }

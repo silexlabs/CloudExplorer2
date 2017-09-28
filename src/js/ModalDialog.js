@@ -16,6 +16,13 @@ export default class ModalDialog extends React.Component {
   componentDidMount() {
     ModalDialog.instance = this;
   }
+  alert(message, cbk) {
+    this.cbk = cbk;
+    this.setState({
+      mode: 'alert',
+      message: message,
+    });
+  }
   prompt(message, inputText, cbk) {
     this.cbk = cbk;
     this.setState({
@@ -59,10 +66,12 @@ export default class ModalDialog extends React.Component {
               <span className="button-icon fa fa-check fa-1x"></span>
               <span>Ok</span>
             </li >
-            <li className="enabled" onClick={() => this.cancel()}>
-              <span className="button-icon fa fa-ban fa-1x"></span>
-              <span>Cancel</span>
-            </li >
+	    { this.state.mode === 'alert' ? '' :
+              <li className="enabled" onClick={() => this.cancel()}>
+                <span className="button-icon fa fa-ban fa-1x"></span>
+                <span>Cancel</span>
+              </li >
+            }
           </ul></section></div>
         </section>;
     }

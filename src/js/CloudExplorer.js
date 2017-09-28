@@ -21,6 +21,27 @@ export default class CloudExplorer extends React.Component {
   };
   unifile = new UnifileService(this.props.path)
   state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
+  // handle unifile errors
+  // some of them will be handled here
+  // other are passed to the caller
+  onUnifileError(e) {
+    console.error('Error from unifile', e);
+    switch(e.code) {
+      case 'EACCES':
+        this.cd([]);
+        break;
+      default:
+        ModalDialog.getInstance().alert(<section>
+            <h2>An error occured</h2>
+            <p>This operation failed with the following error message:</p><p><strong>{ e.message || 'Unknown error.' }</strong></p>
+          </section>,
+        () => {
+          if(this.props.onError) {
+            this.props.onError(e);
+          }
+	});
+    }
+  }
   ls(disableCache=false) {
     const hasCache = disableCache ? false : this.unifile.lsHasCache(this.props.path);
     const cache = this.unifile.lsGetCache(this.props.path);
@@ -39,7 +60,8 @@ export default class CloudExplorer extends React.Component {
             cached: false,
           });
         }
-      });
+      })
+      .catch(e => this.onUnifileError(e));
     });
   }
   delete(opt_file) {
@@ -54,10 +76,7 @@ export default class CloudExplorer extends React.Component {
     .then(results => {
       this.ls();
     })
-    .catch(e => {
-      console.error('ERROR:', e);
-      if(this.props.onError) this.props.onError(e);
-    });
+    .catch(e => this.onUnifileError(e));
   }
   cd(path, relative = false) {
     this.props.onCd(
@@ -70,7 +89,9 @@ export default class CloudExplorer extends React.Component {
       this.setState({
         loading: true,
       }, () => {
-        this.unifile.mkdir(name, true).then(() => this.ls(true));
+        this.unifile.mkdir(name, true)
+        .then(() => this.ls(true))
+        .catch(e => this.onUnifileError(e));
       });
     });
   }
@@ -85,10 +106,7 @@ export default class CloudExplorer extends React.Component {
           .then(res => {
             this.ls();
           })
-          .catch(e => {
-            console.error('ERROR:', e);
-            if(this.props.onError) this.props.onError(e);
-          });
+	  .catch(e => this.onUnifileError(e));
         });
       }
     });
@@ -120,9 +138,8 @@ export default class CloudExplorer extends React.Component {
       this.ls();
     })
     .catch(e => {
-      console.error('ERROR:', e);
       if(opt_oldProps && opt_oldProps.path) this.props.onCd(opt_oldProps.path);
-      if(this.props.onError) this.props.onError(e);
+      this.onUnifileError(e);
     });
   }
   upload(files) {
@@ -148,6 +165,7 @@ export default class CloudExplorer extends React.Component {
         console.log('error uploading file', e);
         file.upload.error = e;
         this.forceUpdate();
+        this.onUnifileError(e);
       });
       i++;
       return file;
