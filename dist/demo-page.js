@@ -76,13 +76,14 @@ window.onload = function() {
   document.querySelector('#ce-saveas-file').onclick = function(e) {
     selectTab(e.target);
     if(selection.length) {
-      ce.saveAs(selection[0].name).then(result => {
+      ce.saveAs(selection[0].name, extensions).then(result => {
         if(result) {
           console.log('result from ce', result);
           ce.read(selection[0])
           .then(data => ce.write(data, result)
           .then(() => {
             unselectTab();
+            ce.reload(extensions);
           }));
         }
         else {
