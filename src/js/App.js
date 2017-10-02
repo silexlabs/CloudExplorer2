@@ -113,7 +113,27 @@ class App extends React.Component {
         inputName: false,
 	extensions: [],
         onCancel: () => resolve(null),
-        onPick: files => resolve(this.createBlob(this.state.path, files[0])),
+        onPick: files => {
+          if(files.length) {
+            // case of a selected folder in the current path
+            resolve(this.createBlob(this.state.path, files[0]));
+          }
+          else {
+            if(this.state.path.length > 1) {
+              // the user pressed "ok" to select the current folder
+              resolve(this.createBlob(this.state.path.slice(0, -1), {
+                name: this.state.path[this.state.path.length-1], 
+                isDir: true, mime: "application/octet-stream"
+              }));
+            }
+            else {
+              // same case but for the / folder (root)
+              resolve(this.createBlob(this.state.path, {
+                name: '', isDir: true, mime: "application/octet-stream"
+              }));
+            }
+          }
+        },
         onSave: null,
         onError: e => reject(e),
       }, () => this.cloudExplorer.ls());

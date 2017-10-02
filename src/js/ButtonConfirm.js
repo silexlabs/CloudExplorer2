@@ -48,7 +48,8 @@ export default class ButtonConfirm extends React.Component {
           onClick={(e) => {
             if(this.props.inputName) this.props.onSave(this.input.value);
             // pick the selection or the current folder 
-            else if(this.allowPick) this.props.onPick(this.props.selection.length ? this.props.selection : [{name: this.props.path[this.props.path.length-1], isDir: true, mime: "application/octet-stream"}])
+            // for the current folder, we call `onPick([]);`
+            else if(this.allowPick) this.props.onPick(this.props.selection)
           }}
           className={
             this.allowPick || (this.props.inputName && this.input.value.length) ? "enabled" : "disabled"
