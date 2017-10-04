@@ -38,7 +38,7 @@ class App extends React.Component {
   onSelection(selection) {
     this.setState({
       selection: selection,
-      defaultFileName: selection.length ? selection[0].name : this.state.defaultFileName,
+      defaultFileName: selection.length && !selection[0].isDir ? selection[0].name : this.state.defaultFileName,
     });
   }
   componentWillMount() {
