@@ -41,7 +41,7 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       let pathToLs = path || this.currentPath;
       if(pathToLs.length > 0) {
-	const filters = this.extensions ? '?extensions=' + this.extensions.join(',') : '';
+        const filters = this.extensions ? '?extensions=' + this.extensions.join(',') : '';
         UnifileService.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}${filters}`, (res) => {
           sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
           resolve(res);
@@ -168,15 +168,18 @@ export default class UnifileService {
         const contentType = oReq.getResponseHeader("Content-Type")
         if(contentType && contentType.indexOf('json') >= 0) {
           const res = UnifileService.getJsonBody(oReq);
-	  if(res != null) cbk(res);
+          if(res != null) cbk(res);
         }
         else {
-	  cbk(oReq.response);
-	}
+          // convert to blob if needed
+          // this happens on heroku not locally
+          if(oReq.response instanceof Blob) cbk(oReq.response);
+          else cbk(new Blob(oReq.response));
+        }
       }
       else {
-	// unifile should set the error object in the response body
-	const e = UnifileService.getJsonBody(oReq);
+        // unifile should set the error object in the response body
+        const e = UnifileService.getJsonBody(oReq);
         console.error('error in the request response with status', oReq.status, e);
         err(e);
       }
@@ -188,7 +191,7 @@ export default class UnifileService {
     if(progress != null) {
       const dispatcher = (() => {
         if(sendBinary) return oReq.upload;
-	return oReq;
+        return oReq;
       });
       dispatcher.upload.addEventListener("progress", (e) => {
         if (e.lengthComputable) {
