@@ -170,11 +170,17 @@ export default class UnifileService {
           const res = UnifileService.getJsonBody(oReq);
           if(res != null) cbk(res);
         }
-        else {
-          // convert to blob if needed
-          // this happens on heroku not locally
+        else if(oReq.response != '') {
           if(oReq.response instanceof Blob) cbk(oReq.response);
-          else cbk(new Blob(oReq.response));
+          else {
+            // convert to blob if needed
+            // this happens on heroku not locally
+            cbk(new Blob([oReq.response.toString()]));
+          }
+        }
+        else {
+          console.log('empty response body');
+          cbk(null);
         }
       }
       else {
