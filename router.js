@@ -54,7 +54,7 @@ module.exports = class Router {
     if(options.github) this.unifile.use(new Unifile.GitHubConnector(options.github));
     if(options.dropbox) this.unifile.use(new Unifile.DropboxConnector(options.dropbox));
     if(options.ftp) this.unifile.use(new Unifile.FtpConnector(options.ftp));
-    if(options.webdav) this.unifile.use(new Unifile.WebDavConnector(options.webdav));
+    // if(options.webdav) this.unifile.use(new Unifile.WebDavConnector(options.webdav));
     if(options.fs) this.unifile.use(new Unifile.FsConnector(options.fs));
     if(options.sftp) this.unifile.use(new Unifile.SftpConnector(options.sftp));
     
@@ -72,16 +72,12 @@ module.exports = class Router {
     app.get('/services', (req, res) => {
       const services = [];
 
-      this.unifile.connectors
-      .forEach(connector => services.push(connector.getInfos(req.session.unifile)));
-/*
       for(let key in this.options) services.push({
         name: key,
         displayName: this.options[key].displayName || key,
         mime: 'application/json',
         isDir: true,
       });
-      */
       res.send(services);
     });
 

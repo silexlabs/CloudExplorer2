@@ -44,7 +44,8 @@
     "react-dom": "^15.2.0",
     "request": "^2.72.0",
     "serve-static": "^1.11.1",
-    "unifile": "silexlabs/unifile#master"
+    "unifile": "silexlabs/unifile#master",
+    "unifile-common-tools": "silexlabs/unifile-common-tools#master"
   },
   "devDependencies": {
     "babel-jest": "^13.2.2",
