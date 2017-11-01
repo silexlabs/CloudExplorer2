@@ -16,14 +16,14 @@ export default class ModalDialog extends React.Component {
   componentDidMount() {
     ModalDialog.instance = this;
   }
-  alert(message, cbk) {
+  alert(message, cbk=null) {
     this.cbk = cbk;
     this.setState({
       mode: 'alert',
       message: message,
     });
   }
-  prompt(message, inputText, cbk) {
+  prompt(message, inputText, cbk=null) {
     this.cbk = cbk;
     this.setState({
       mode: 'prompt',
@@ -31,7 +31,7 @@ export default class ModalDialog extends React.Component {
       inputText: inputText,
     });
   }
-  confirm(message, cbk) {
+  confirm(message, cbk=null) {
     this.cbk = cbk;
     this.setState({
       mode: 'confirm',
@@ -40,7 +40,7 @@ export default class ModalDialog extends React.Component {
   }
   ok() {
     this.setState({mode: 'hidden'});
-    this.cbk(this.state.inputText);
+    if(this.cbk) this.cbk(this.state.inputText);
     this.cbk = null;
   }
   cancel() {

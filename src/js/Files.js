@@ -106,10 +106,15 @@ export default class Files extends React.Component {
       </li>);
     }
     // each file has the extension in its export default class name
+		const pathStr = this.props.path.join('/');
     let dotIdx;
-    list = list.concat(this.props.files.map(file => <li
+    list = list.concat(this.props.files
+			// filter the uploading files to other folders
+			.filter(file => !file.upload || file.upload.path.join('/') === pathStr)
+			// build the <ul> list
+			.map(file => <li
         onClick={e => this.select(e, file)}
-      key={file.name}
+      key={file.name + (file.upload ? '-uploading' : '')}
       className={this.props.selection.find(selected => selected.name === file.name) ? 'selected' : ''}>
       {
         this.state.renameFileMode && file.name === this.state.renameFileData.name ?

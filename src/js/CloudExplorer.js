@@ -13,35 +13,51 @@ import UnifileService from './UnifileService';
  * @class which binds the UI and the Unifile service all together
  */
 export default class CloudExplorer extends React.Component {
+  // initial state for the react component
   INITIAL_STATE = {
     files: [],
     loading: false,
     cached: false, // flag the current folder is was cached
     uploadingFiles: [],
   };
-  unifile = new UnifileService(this.props.path)
-  state = JSON.parse(JSON.stringify(this.INITIAL_STATE))
+  // class attributes
+  unifile = new UnifileService(this.props.path);
+  state = JSON.parse(JSON.stringify(this.INITIAL_STATE));
+
+  ///////////////////////////////////////////
+  // Utils methods
+  ///////////////////////////////////////////
+
   // handle unifile errors
-  // some of them will be handled here
-  // other are passed to the caller
-  onUnifileError(e) {
+  // if message is not provided, it will display e.message
+  // message can be a react template or a string
+  onUnifileError(err={}, message=null) {
+    // make sure that e is not null,
+    // this happens when unifile returns a null error (empty body)
+    const e = err || {};
     console.error('Error from unifile', e);
+
+    // take action depending on the error code
     switch(e.code) {
       case 'EACCES':
+        // go back to /
         this.cd([]);
-        break;
-      default:
-        ModalDialog.getInstance().alert(<section>
-            <h2>An error occured</h2>
-            <p>This operation failed with the following error message:</p><p><strong>{ e.message || 'Unknown error.' }</strong></p>
-          </section>,
-        () => {
-          if(this.props.onError) {
-            this.props.onError(e);
-          }
-	});
+        // do not display an error message
+        return;
     }
+
+    // display a modal with an error message
+    const finalMessage = message || e.message || 'Unknown error';
+    ModalDialog.getInstance().alert(<section>
+      <h2>An error occured</h2>
+      <p>This operation failed with the following error message:</p><p><strong>{ finalMessage }</strong></p>
+      </section>);
   }
+
+  ///////////////////////////////////////////
+  // Cloud Explorer internal API used by the App class
+  ///////////////////////////////////////////
+
   ls(disableCache=false) {
     const hasCache = disableCache ? false : this.unifile.lsHasCache(this.props.path);
     const cache = this.unifile.lsGetCache(this.props.path);
@@ -106,7 +122,7 @@ export default class CloudExplorer extends React.Component {
           .then(res => {
             this.ls();
           })
-	  .catch(e => this.onUnifileError(e));
+    .catch(e => this.onUnifileError(e));
         });
       }
     });
@@ -117,6 +133,49 @@ export default class CloudExplorer extends React.Component {
       () => this.props.onCancel()
     );
   }
+  removeFromUploadingFiles(file) {
+    this.setState({uploadingFiles: this.state.uploadingFiles.filter(f=>f.upload.id != file.upload.id)});
+  }
+  upload(files) {
+    const uploadedFilesWithError = [];
+    const uploads = files.map(file => {
+      file.upload = {
+        error: null,
+        progress: 0,
+        path: this.props.path,
+        id: '_' + Math.random().toString() + Date.now().toString(),
+      };
+      this.unifile.upload(file, progress => {
+        console.log('progress', progress);
+        file.upload.progress = progress;
+        this.forceUpdate();
+      })
+      .then( () => {
+        console.log('done uploading file', file);
+        file.upload.progress = 1;
+        this.removeFromUploadingFiles(file);
+        this.ls();
+      })
+      .catch(e => {
+        console.log('error uploading file', e);
+        file.upload.error = e;
+        this.forceUpdate();
+        uploadedFilesWithError.push(file);
+        const fileNamesInError = <ul>{ uploadedFilesWithError.map(file => <li>- {file.name}</li>) }</ul>;
+        this.onUnifileError(null, <div><p>I did not manage to upload the files:</p>{fileNamesInError}<p>{ e ? e.message || e.code : '' }</p></div>);
+        this.removeFromUploadingFiles(file);
+      });
+      return file;
+    });
+
+    this.setState({uploadingFiles: this.state.uploadingFiles.concat(uploads)});
+
+  }
+
+  ///////////////////////////////////////////
+  // React component's methods
+  ///////////////////////////////////////////
+
   componentDidMount() {
     this.initInputProps(this.props);
   }
@@ -142,38 +201,7 @@ export default class CloudExplorer extends React.Component {
       this.onUnifileError(e);
     });
   }
-  upload(files) {
-    var i = 0;
-    var uploads = files.map(file => {
-      file.upload = {
-        error: null,
-        progress: 0
-      };
-      this.unifile.upload(file, progress => {
-        console.log('progress', progress);
-        file.upload.progress = progress;
-        this.forceUpdate();
-      })
-      .then( () => {
-        console.log('done uploading file', file);
-        file.upload.progress = 1;
-        var deleted = file;
-        this.setState({uploadingFiles: this.state.uploadingFiles.filter(file=>{file != deleted;})});
-        this.ls();
-      })
-      .catch( e => {
-        console.log('error uploading file', e);
-        file.upload.error = e;
-        this.forceUpdate();
-        this.onUnifileError(e);
-      });
-      i++;
-      return file;
-    });
 
-    this.setState({uploadingFiles: this.state.uploadingFiles.concat(uploads)});
-
-  }
   render() {
     return <div className={"root" + (this.state.loading ? ' loading' : '') + (this.state.cached ? ' cached' : '')}>
       <div className="panel top-button-bar">

@@ -179,7 +179,6 @@ export default class UnifileService {
           }
         }
         else {
-          console.log('empty response body');
           cbk(null);
         }
       }
@@ -191,7 +190,7 @@ export default class UnifileService {
       }
     };
     oReq.onerror = function(e) {
-      error.info('error for the request', e);
+      console.error('error for the request', e);
       err(e);
     };
     if(progress != null) {

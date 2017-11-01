@@ -22,10 +22,13 @@ export default class FileListItem extends React.Component {
     this.allowRename = (!file.upload) && this.props.path.length > 0 && !isService;
     const mime = isService ? ' application json' : 
       file.mime && file.mime.replace(/\//g, ' ');
-    return <section className="file-list-item">
+    return <section className={
+			"file-list-item" +
+			(file.upload ? ' uploading progress-' + file.upload.progress : '')
+		}>
       <i className={
 	      "icon" + 
-	      (file.isDir || isService ? ' folder' : ' file') + 
+	      (file.upload ? ' fa-gear' : (file.isDir || isService ? ' folder' : ' file')) + 
 	      (file.isLoggedIn ? ' loggedin' : '') + // for services only
 	      (mime ? ' ' + mime : '')
       }></i>
