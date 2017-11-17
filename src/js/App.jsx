@@ -86,10 +86,6 @@ class App extends React.Component {
 		return this.cloudExplorer.unifile.read(this.fromBlobToPath(blob));
 	}
 
-	write (data, blob) {
-		return this.cloudExplorer.unifile.write(data, this.fromBlobToPath(blob));
-	}
-
 	/*
 	 * //////////////////
 	 * API

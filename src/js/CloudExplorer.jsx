@@ -133,7 +133,7 @@ export default class CloudExplorer extends React.Component {
 				ModalDialog.getInstance().alert((
 					<section>
 						<h2>{this.ERROR_MESSAGE}</h2>
-						<p>{this.ERROR_DETAILS}</p><p><strong>{ finalMessage }</strong></p>
+						<p>{this.ERROR_DETAILS}</p><strong>{ finalMessage }</strong>
 					</section>
 				));
 			}
@@ -176,7 +176,7 @@ export default class CloudExplorer extends React.Component {
 			name: f.isDir ? 'rmdir' : 'unlink',
 			path: UnifileService.getPath(this.props.path.concat([f.name]))
 		}));
-		return UnifileService.batch(this.props.path, batch)
+		return UnifileService.delete(this.props.path, batch)
 		.then(() => {
 			this.ls();
 		})
@@ -220,12 +220,11 @@ export default class CloudExplorer extends React.Component {
 		);
 	}
 
-	removeFromUploadingFiles (file) {
-		this.setState({uploadingFiles: this.state.uploadingFiles.filter((f) => f.upload.id !== file.upload.id)});
+	removeFromUploadingFiles (files) {
+		this.setState({uploadingFiles: this.state.uploadingFiles.filter((f) => files.every((file) => file.upload.id !== f.upload.id))});
 	}
 
 	upload (files) {
-		const uploadedFilesWithError = [];
 		const uploads = files.map((file) => {
 			file.upload = {
 				error: null,
@@ -233,44 +232,34 @@ export default class CloudExplorer extends React.Component {
 				path: this.props.path,
 				progress: 0
 			};
-			this.unifile.upload(file, (progress) => {
-				console.log('progress', progress);
-				file.upload.progress = progress;
-				this.forceUpdate();
-			})
-			.then(() => {
-				console.log('done uploading file', file);
-				file.upload.progress = 1;
-				this.removeFromUploadingFiles(file);
-				this.ls();
-			})
-			.catch((e) => {
-				console.log('error uploading file', e);
-				file.upload.error = e;
-				this.forceUpdate();
-				uploadedFilesWithError.push(file);
-				const fileNamesInError = (
-					<ul>{
-						uploadedFilesWithError.map((f) => (
-							<li key={f.name}>
-								{this.BULLET_POINT}{f.name}
-							</li>
-						))}
-					</ul>
-				);
-				this.onUnifileError(
-					null, (
-						<div>
-							<p>{this.UPLOAD_ERROR_MESSAGE}</p>
-							{fileNamesInError}
-							<p>{ e ? e.message || e.code : '' }</p>
-						</div>
-					)
-				);
-				this.removeFromUploadingFiles(file);
-			});
 			return file;
 		});
+		UnifileService.upload(this.props.path, uploads, (progress) => {
+			console.log('progress', progress);
+		})
+		.then(() => {
+			console.log('done uploading files', uploads);
+			this.ls();
+		})
+		.catch((e) => {
+			console.log('error uploading file', e);
+			this.onUnifileError(
+				null, (
+					<div>
+						<p>{this.UPLOAD_ERROR_MESSAGE}</p>
+						<ul>{
+							uploads.map((f) => (
+								<li key={f.name}>
+									{this.BULLET_POINT}{f.name}
+								</li>
+							))}
+						</ul>
+						<p>{ e ? e.message || e.code : '' }</p>
+					</div>
+				)
+			);
+		})
+		.then(() => this.removeFromUploadingFiles(uploads));
 
 		this.setState({uploadingFiles: this.state.uploadingFiles.concat(uploads)});
 

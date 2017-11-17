@@ -1,7 +1,11 @@
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 
 const POLLING_FREQUENCY = 200;
-const OK_STATUS = 200;
+const EMPTY_STATUSES = [
+	201,
+	204
+];
+const OK_STATUSES = [200].concat(EMPTY_STATUSES);
 
 const nameMap = new Map();
 
@@ -25,35 +29,26 @@ export default class UnifileService {
 		return `${STORAGE_KEY_LS_CACHE}('${path.join('/')}')`;
 	}
 
-	static write (data, path, progress = null) {
-		return new Promise((resolve, reject) => {
-			UnifileService.call(
-				`${path[0]}/put/${path.slice(1).join('/')}`,
-				(res) => resolve(res), (e) => reject(e), 'PUT', data, progress, false, true
-			);
-		});
-	}
-
 	static read (path) {
 		return new Promise((resolve, reject, progress = null) => {
-			UnifileService.call(
-				`${path[0]}/get/${path.slice(1).join('/')}`,
+			this.call(
+				`${path[0]}/get/${this.getPath(path)}`,
 				(res) => resolve(res), (e) => reject(e), 'GET', '', progress, true
 			);
 		});
 	}
 
 	static getPath (path) {
-		return `${path.slice(1).join('/')}`;
+		return path.slice(1).join('/');
 	}
 
 	static getUrl (path) {
-		return `${UnifileService.ROOT_URL}${path[0]}/get/${path.slice(1).join('/')}`;
+		return `${UnifileService.ROOT_URL}${path[0]}/get/${this.getPath(path)}`;
 	}
 
 	static getServices () {
 		return new Promise((resolve, reject) => {
-			UnifileService.call('services', (services) => {
+			this.call('services', (services) => {
 				services.forEach((service) => {
 					nameMap.set(service.name, service.displayName);
 				});
@@ -67,7 +62,7 @@ export default class UnifileService {
 			const pathToLs = path || this.currentPath;
 			if (pathToLs.length > 0) {
 				const filters = this.extensions ? `?extensions=${this.extensions.join(',')}` : '';
-				UnifileService.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}${filters}`, (res) => {
+				this.constructor.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}${filters}`, (res) => {
 					sessionStorage.setItem(this.constructor.getStorageKey(path), JSON.stringify(res));
 					resolve(res);
 				}, (e) => reject(e));
@@ -96,26 +91,10 @@ export default class UnifileService {
 		return [];
 	}
 
-	rm (path, relative = false) {
-		return new Promise((resolve, reject) => {
-			const absPath = relative ? this.currentPath.concat(path) : path;
-			UnifileService.call(
-				`${absPath[0]}/rm/${absPath.slice(1).join('/')}`,
-				(res) => resolve(res), (e) => reject(e), 'DELETE'
-			);
-		});
-	}
-
-	static batch (path, actions) {
-		return new Promise((resolve, reject) => {
-			UnifileService.call(`${path[0]}/batch/`, resolve, reject, 'POST', JSON.stringify(actions));
-		});
-	}
-
 	mkdir (path, relative = false) {
 		return new Promise((resolve, reject) => {
 			const absPath = relative ? this.currentPath.concat(path) : path;
-			UnifileService.call(
+			this.constructor.call(
 				`${absPath[0]}/mkdir/${absPath.slice(1).join('/')}`,
 				(res) => resolve(res), (e) => reject(e), 'PUT'
 			);
@@ -126,9 +105,9 @@ export default class UnifileService {
 		return new Promise((resolve, reject) => {
 			const absPath = this.currentPath.concat([name]);
 			const absNewPath = this.currentPath.slice(1).concat([newName]);
-			UnifileService.call(
+			this.constructor.call(
 				`${absPath[0]}/mv/${absPath.slice(1).join('/')}`,
-				(res) => resolve(res), (e) => reject(e),
+				resolve, reject,
 				'PATCH',
 				JSON.stringify({destination: absNewPath.join('/')})
 			);
@@ -154,11 +133,15 @@ export default class UnifileService {
 		});
 	}
 
-	upload (file, progress = null) {
+	static upload (path, files, progress = null) {
 		return new Promise((resolve, reject) => {
-			const absPath = this.currentPath.concat([file.name]);
-			this.constructor.write(file, absPath).then((response) => resolve(response))
-			.catch((e) => reject(e), progress);
+			this.call(`${path[0]}/upload/${this.getPath(path)}`, resolve, reject, 'POST', files, null, false, true);
+		});
+	}
+
+	static delete (path, files) {
+		return new Promise((resolve, reject) => {
+			this.call(`${path[0]}/rm/`, resolve, reject, 'DELETE', JSON.stringify(files));
 		});
 	}
 
@@ -206,6 +189,13 @@ export default class UnifileService {
 	}
 
 	static getJsonBody (oReq) {
+		if ([
+			201,
+			204
+		].includes(oReq.status)) {
+			return null;
+		}
+
 		try {
 			return JSON.parse(oReq.responseText);
 		} catch (e) {
@@ -225,7 +215,7 @@ export default class UnifileService {
 	) {
 		const oReq = new XMLHttpRequest();
 		oReq.onload = function onload () {
-			if (oReq.status === OK_STATUS) {
+			if (OK_STATUSES.includes(oReq.status)) {
 				const contentType = oReq.getResponseHeader('Content-Type');
 				if (contentType && contentType.indexOf('json') >= 0) {
 					const res = UnifileService.getJsonBody(oReq);
@@ -282,7 +272,11 @@ export default class UnifileService {
 		}
 		if (sendBinary) {
 			const data = new FormData();
-			data.append('content', body);
+			if (Array.isArray(body)) {
+				body.forEach((file) => data.append('content', file));
+			} else {
+				data.append('content', body);
+			}
 			oReq.send(data);
 		} else {
 			oReq.setRequestHeader('Content-Type', 'application/json');
