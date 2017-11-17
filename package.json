@@ -7,14 +7,15 @@
 		"node": "6.2.x",
 		"npm": "3.9.x"
 	},
+	"main": "lib/router.js",
 	"scripts": {
 		"postinstall": "npm run build:fonts && npm run build",
-		"start": "node .",
+		"start": "node lib/index.js",
 		"test": "jest",
 		"test:watch": "watch 'npm test' src/ __tests__/",
 		"build": "npm run build:js && npm run build:sass",
 		"build:fonts": "mkdir -p dist/fonts && cp -R `node_modules`/font-awesome/fonts/* `node_modules`/npm-font-open-sans/fonts/* dist/fonts/",
-		"build:js": "browserify --extension='jsx' src/js/App.jsx -d -o dist/cloud-explorer.js -t [ babelify ]",
+		"build:js": "browserify --extension=jsx src/js/App.jsx -d -o dist/cloud-explorer.js -t [ babelify ]",
 		"build:sass": "node-sass --include-path src/sass --include-path node_modules/font-awesome/scss src/sass/style.scss dist/style.css",
 		"lint": "eslint src/js/*.js && eslint src/js/*.jsx",
 		"watch": "live-reload dist/ --port 35729 & watch 'npm run build:js' src/js & watch 'npm run build:sass' src/sass"
