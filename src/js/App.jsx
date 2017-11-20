@@ -1,7 +1,7 @@
-import {getPath, getUrl} from './UnifileService';
 import CloudExplorer from './CloudExplorer';
 import React from 'react';
 import ReactDom from 'react-dom';
+import UnifileService from './UnifileService';
 
 const STORAGE_KEY_PATH = 'CloudExplorer.path';
 
@@ -12,10 +12,10 @@ class App extends React.Component {
 
   static createBlob (path, file) {
     return Object.assign({}, file, {
-      folder: getPath(path),
-      path: getPath(path.concat(file.name)),
+      folder: UnifileService.getPath(path),
+      path: UnifileService.getPath(path.concat(file.name)),
       service: path[0],
-      url: getUrl(path.concat(file.name))
+      url: UnifileService.getUrl(path.concat(file.name))
     });
   }
 
