@@ -32,15 +32,6 @@ export default class UnifileService {
     return `${STORAGE_KEY_LS_CACHE}('${path.join('/')}')`;
   }
 
-  static read (path) {
-    return new Promise((resolve, reject, progress = null) => {
-      this.call(
-        `${path[0]}/get/${this.getPath(path)}`,
-        (res) => resolve(res), (e) => reject(e), 'GET', '', progress, true
-      );
-    });
-  }
-
   static getPath (path) {
     return path.slice(1).join('/');
   }
@@ -57,6 +48,15 @@ export default class UnifileService {
         });
         resolve(services);
       }, (e) => reject(e));
+    });
+  }
+
+  read (path) {
+    return new Promise((resolve, reject, progress = null) => {
+      this.constructor.call(
+        `${path[0]}/get/${this.constructor.getPath(path)}`,
+        (res) => resolve(res), (e) => reject(e), 'GET', '', progress, false
+      );
     });
   }
 
@@ -85,13 +85,11 @@ export default class UnifileService {
   lsGetCache (path = null) {
     try {
       const cached = sessionStorage.getItem(this.constructor.getStorageKey(path));
-      if (cached) {
-        return JSON.parse(cached);
-      }
+      if (cached) return JSON.parse(cached);
+      return [];
     } catch (e) {
-      console.error('Cache is unavailable');
+      return [];
     }
-    return [];
   }
 
   mkdir (path, relative = false) {
@@ -121,14 +119,13 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       if (path.length === 1 && path[0] !== this.currentPath[0]) {
         this.auth(path[0])
-          .then(() => {
-            this.currentPath = path;
-            resolve(this.currentPath);
-          })
-          .catch((e) => {
-            console.error('error when trying to authenticate', e);
-            reject(e);
-          });
+        .then(() => {
+          this.currentPath = path;
+          resolve(this.currentPath);
+        })
+        .catch((e) => {
+          reject(e);
+        });
       } else {
         this.currentPath = path;
         resolve(this.currentPath);
@@ -136,15 +133,24 @@ export default class UnifileService {
     });
   }
 
-  static upload (path, files, progress = null) {
+  upload (path, files, progress = null) {
     return new Promise((resolve, reject) => {
-      this.call(`${path[0]}/upload/${this.getPath(path)}`, resolve, reject, 'POST', files, progress, false, true);
+      this.constructor.call(
+        `${path[0]}/upload/${this.constructor.getPath(path)}`,
+        resolve,
+        reject,
+        'POST',
+        files,
+        progress,
+        false,
+        true
+      );
     });
   }
 
-  static delete (path, files) {
+  delete (path, files) {
     return new Promise((resolve, reject) => {
-      this.call(`${path[0]}/rm/`, resolve, reject, 'DELETE', JSON.stringify(files));
+      this.constructor.call(`${path[0]}/rm/`, resolve, reject, 'DELETE', JSON.stringify(files));
     });
   }
 
@@ -172,8 +178,8 @@ export default class UnifileService {
 
   authEnded (service, resolve, reject) {
     this.ls([service])
-      .then((res) => resolve(res))
-      .catch((e) => reject(e));
+    .then((res) => resolve(res))
+    .catch((e) => reject(e));
   }
 
   startPollingAuthWin ({win, service, resolve, reject}) {
@@ -199,7 +205,6 @@ export default class UnifileService {
     try {
       return JSON.parse(oReq.responseText);
     } catch (e) {
-      console.error('an error occured while parsing JSON response', e);
       return null;
     }
   }
@@ -237,12 +242,10 @@ export default class UnifileService {
       } else {
         // Unifile should set the error object in the response body
         const e = UnifileService.getJsonBody(oReq);
-        console.error('error in the request response with status', oReq.status, e);
         err(e);
       }
     };
     oReq.onerror = function onerror (e) {
-      console.error('error for the request', e);
       err(e);
     };
     if (progress !== null) {

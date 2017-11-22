@@ -57,9 +57,7 @@ export default class ButtonConfirm extends React.Component {
                   }
                 }}
                 onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    this.props.onSave(e.target.value);
-                  }
+                  if (e.key === 'Enter') this.props.onSave(e.target.value);
                 }}
                 placeholder="File name"
                 ref={(c) => {
@@ -76,14 +74,13 @@ export default class ButtonConfirm extends React.Component {
               this.allowPick || (this.props.inputName && this.input.value.length) ? 'enabled' : 'disabled'
             }
             onClick={() => {
-              if (this.props.inputName) {
-                this.props.onSave(this.input.value);
-              } else if (this.allowPick) {
 
-                /*
-                 * Pick the selection or the current folder
-                 * For the current folder, we call `onPick([]);`
-                 */
+              /*
+               * Pick the selection or the current folder
+               * For the current folder, we call `onPick([]);`
+               */
+              if (this.props.inputName) this.props.onSave(this.input.value);
+              else if (this.allowPick) {
                 this.props.onPick(this.props.selection);
               }
             }}

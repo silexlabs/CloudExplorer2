@@ -57,24 +57,22 @@ export default class CloudExplorer extends React.Component {
      * This will be false when the parent component changes
      * The props because we called onCd
      */
-    if (newProps.path.join('/') !== this.props.path.join('/')) {
-      this.initInputProps(newProps, this.props);
-    }
+    if (newProps.path.join('/') !== this.props.path.join('/')) this.initInputProps(newProps, this.props);
     this.unifile.setExtensions(newProps.extensions);
   }
 
   initInputProps (newProps, oldProps) {
     this.setState({loading: true});
     this.unifile.cd(newProps.path)
-      .then(() => {
-        this.ls();
-      })
-      .catch((e) => {
-        if (oldProps && oldProps.path) {
-          this.props.onCd(oldProps.path);
-        }
-        this.onUnifileError(e);
-      });
+    .then(() => {
+      this.ls();
+    })
+    .catch((e) => {
+      if (oldProps && oldProps.path) {
+        this.props.onCd(oldProps.path);
+      }
+      this.onUnifileError(e);
+    });
   }
 
   ERROR_MESSAGE = 'An error occured';
@@ -123,20 +121,20 @@ export default class CloudExplorer extends React.Component {
 
     // Take action depending on the error code
     switch (e.code) {
-    case 'EACCES':
-      // Go back to /
-      this.cd([]);
-      break;
-    default: {
-      // Display a modal with an error message
-      const finalMessage = message || e.message || 'Unknown error';
-      ModalDialog.getInstance().alert((
-        <section>
-          <h2>{this.ERROR_MESSAGE}</h2>
-          <p>{this.ERROR_DETAILS}</p><strong>{ finalMessage }</strong>
-        </section>
-      ));
-    }
+      case 'EACCES':
+        // Go back to /
+        this.cd([]);
+        break;
+      default: {
+        // Display a modal with an error message
+        const finalMessage = message || e.message || 'Unknown error';
+        ModalDialog.getInstance().alert((
+          <section>
+            <h2>{this.ERROR_MESSAGE}</h2>
+            <p>{this.ERROR_DETAILS}</p><strong>{ finalMessage }</strong>
+          </section>
+        ));
+      }
     }
 
   }
@@ -166,7 +164,7 @@ export default class CloudExplorer extends React.Component {
           });
         }
       })
-        .catch((e) => this.onUnifileError(e));
+      .catch((e) => this.onUnifileError(e));
     });
   }
 
@@ -176,11 +174,11 @@ export default class CloudExplorer extends React.Component {
       name: f.isDir ? 'rmdir' : 'unlink',
       path: UnifileService.getPath(this.props.path.concat([f.name]))
     }));
-    return UnifileService.delete(this.props.path, batch)
-      .then(() => {
-        this.ls();
-      })
-      .catch((e) => this.onUnifileError(e));
+    return this.unifile.delete(this.props.path, batch)
+    .then(() => {
+      this.ls();
+    })
+    .catch((e) => this.onUnifileError(e));
   }
 
   cd (path, relative = false) {
@@ -192,8 +190,8 @@ export default class CloudExplorer extends React.Component {
     this.filesComponent.getNewDirName().then((name) => {
       this.setState({loading: true}, () => {
         this.unifile.mkdir(name, true)
-          .then(() => this.ls(true))
-          .catch((e) => this.onUnifileError(e));
+        .then(() => this.ls(true))
+        .catch((e) => this.onUnifileError(e));
       });
     });
   }
@@ -204,10 +202,10 @@ export default class CloudExplorer extends React.Component {
       if (newName !== name) {
         this.setState({loading: true}, () => {
           this.unifile.rename(name, newName)
-            .then(() => {
-              this.ls();
-            })
-            .catch((e) => this.onUnifileError(e));
+          .then(() => {
+            this.ls();
+          })
+          .catch((e) => this.onUnifileError(e));
         });
       }
     });
@@ -221,7 +219,10 @@ export default class CloudExplorer extends React.Component {
   }
 
   removeFromUploadingFiles (files) {
-    this.setState({uploadingFiles: this.state.uploadingFiles.filter((f) => files.every((file) => file.upload.id !== f.upload.id))});
+    this.setState({
+      uploadingFiles: this.state.uploadingFiles
+      .filter((f) => files.every((file) => file.upload.id !== f.upload.id))
+    });
   }
 
   upload (files) {
@@ -234,32 +235,32 @@ export default class CloudExplorer extends React.Component {
       };
       return file;
     });
-    UnifileService.upload(this.props.path, uploads, (progress) => {
+    this.unifile.upload(this.props.path, uploads, (progress) => {
       console.log('progress', progress);
     })
-      .then(() => {
-        console.log('done uploading files', uploads);
-        this.ls();
-      })
-      .catch((e) => {
-        console.log('error uploading file', e);
-        this.onUnifileError(
-          null, (
-            <div>
-              <p>{this.UPLOAD_ERROR_MESSAGE}</p>
-              <ul>{
-                uploads.map((f) => (
-                  <li key={f.name}>
-                    {this.BULLET_POINT}{f.name}
-                  </li>
-                ))}
-              </ul>
-              <p>{ e ? e.message || e.code : '' }</p>
-            </div>
-          )
-        );
-      })
-      .then(() => this.removeFromUploadingFiles(uploads));
+    .then(() => {
+      console.log('done uploading files', uploads);
+      this.ls();
+    })
+    .catch((e) => {
+      console.log('error uploading file', e);
+      this.onUnifileError(
+        null, (
+          <div>
+            <p>{this.UPLOAD_ERROR_MESSAGE}</p>
+            <ul>{
+              uploads.map((f) => (
+                <li key={f.name}>
+                  {this.BULLET_POINT}{f.name}
+                </li>
+              ))}
+            </ul>
+            <p>{ e ? e.message || e.code : '' }</p>
+          </div>
+        )
+      );
+    })
+    .then(() => this.removeFromUploadingFiles(uploads));
 
     this.setState({uploadingFiles: this.state.uploadingFiles.concat(uploads)});
 
