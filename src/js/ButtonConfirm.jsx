@@ -33,17 +33,32 @@ export default class ButtonConfirm extends React.Component {
 
   CANCEL_LABEL = 'Cancel';
 
+  // Select folder with click on the folder
+  isSelectingDir () {
+    return this.props.selection.length &&
+      this.props.pickFolder === this.props.selection[0].isDir;
+  }
+
+  isInASelectableDir () {
+    // Select folder with enter the folder and click ok
+    return this.props.selection.length === 0 &&
+      this.props.pickFolder &&
+      this.props.path.length > 0;
+  }
+
+  isInputNameValid () {
+    // Input file name / save as
+    return this.props.inputName &&
+      this.props.defaultFileName &&
+      this.props.defaultFileName.length > 0;
+  }
+
   render () {
     this.allowPick =
-      // Select folder with click on the folder
-      this.props.selection.length &&
-      (this.props.pickFolder === this.props.selection[0].isDir ||
-        // Select folder with enter the folder and click ok
-        this.props.selection.length === 0) &&
-      this.props.pickFolder &&
-      (this.props.path.length > 0 ||
-        // Input file name / save as
-        this.props.inputName) && this.props.defaultFileName && this.props.defaultFileName.length > 0;
+      this.isSelectingDir() ||
+      this.isInASelectableDir() ||
+      this.isInputNameValid();
+
     return (
       <section className="button-confirm button-bar">
         {
