@@ -1,7 +1,11 @@
 {
   "extends": ["eslint:all"],
   "rules": {
-    "indent": ["error", 2],
+    "indent": ["error", 2, {
+      "SwitchCase": 1,
+      "MemberExpression": 0
+    }],
+    "curly": ["error", "multi-line"],
     "padded-blocks": ["off"],
     "no-tabs": ["off"],
     "quotes": ["error", "single"],

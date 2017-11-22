@@ -142,49 +142,49 @@ export default class Files extends React.Component {
     const pathStr = this.props.path.join('/');
     list = list.concat(this.props.files
       // Filter the uploading files to other folders
-      .filter((file) => !file.upload || file.upload.path.join('/') === pathStr)
+    .filter((file) => !file.upload || file.upload.path.join('/') === pathStr)
       // Build the <ul> list
-      .map((file) => ((
-        <li
-          className={this.props.selection.find((selected) => selected.name === file.name) ? 'selected' : ''}
-          key={file.name + (file.upload ? '-uploading' : '')}
-          onClick={(e) => this.select(e, file)}
-        >
-          {
-            this.state.renameFileMode && file.name === this.state.renameFileData.name
-              ? (
-                <input
-                  autoFocus
-                  className="file-name-input"
-                  onBlur={(e) => this.onGetNewFileName(e.target.value)}
-                  onChange={(e) => this.setState({
-                    renameFileData: {
-                      name: file.name,
-                      newName: e.target.value
-                    }
-                  })}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      this.onGetNewFileName(e.target.value);
-                    }
-                  }}
-                  type="text"
-                  value={this.state.renameFileData.newName}
-                />
-              )
-              : (
-                <FileListItem
-                  downloadUrl={this.props.getDownloadUrl(file)}
-                  file={file}
-                  onDelete={() => this.props.onDelete(file)}
-                  onRename={() => this.props.onRename(file)}
-                  path={this.props.path}
-                >{file.displayName || file.name}
-                </FileListItem>
-              )
-          }
-        </li>
-      ))));
+    .map((file) => ((
+      <li
+        className={this.props.selection.find((selected) => selected.name === file.name) ? 'selected' : ''}
+        key={file.name + (file.upload ? '-uploading' : '')}
+        onClick={(e) => this.select(e, file)}
+      >
+        {
+          this.state.renameFileMode && file.name === this.state.renameFileData.name
+            ? (
+              <input
+                autoFocus
+                className="file-name-input"
+                onBlur={(e) => this.onGetNewFileName(e.target.value)}
+                onChange={(e) => this.setState({
+                  renameFileData: {
+                    name: file.name,
+                    newName: e.target.value
+                  }
+                })}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    this.onGetNewFileName(e.target.value);
+                  }
+                }}
+                type="text"
+                value={this.state.renameFileData.newName}
+              />
+            )
+            : (
+              <FileListItem
+                downloadUrl={this.props.getDownloadUrl(file)}
+                file={file}
+                onDelete={() => this.props.onDelete(file)}
+                onRename={() => this.props.onRename(file)}
+                path={this.props.path}
+              >{file.displayName || file.name}
+              </FileListItem>
+            )
+        }
+      </li>
+    ))));
     return <section><ul className="files">{list}</ul></section>;
   }
 }

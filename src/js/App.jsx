@@ -73,9 +73,7 @@ class App extends React.Component {
 
   loadHistory () {
     const path = localStorage.getItem(STORAGE_KEY_PATH);
-    if (path && path !== this.state.path) {
-      this.setState({path: JSON.parse(path)});
-    }
+    if (path && path !== this.state.path) this.setState({path: JSON.parse(path)});
   }
 
   onCloudExplorerReady (cloudExplorer) {
@@ -83,7 +81,16 @@ class App extends React.Component {
   }
 
   read (blob) {
-    return this.cloudExplorer.unifile.read(this.fromBlobToPath(blob));
+    return this.cloudExplorer.unifile.read(this.constructor.fromBlobToPath(blob));
+  }
+
+  write (data, blob) {
+    const content = (Array.isArray(data) ? data : [data])
+    .map((c) => {
+      if (typeof c === 'object') return JSON.stringify(c);
+      return c.toString();
+    });
+    return this.cloudExplorer.unifile.upload(this.constructor.fromBlobToPath(blob), content);
   }
 
   /*
@@ -181,7 +188,7 @@ class App extends React.Component {
   }
 
   getServices () {
-    return this.cloudExplorer.unifile.getServices();
+    return UnifileService.getServices();
   }
 
   render () {
