@@ -18,6 +18,11 @@ export default class ButtonConfirm extends React.Component {
     inputName: false
   }
 
+  constructor () {
+    super();
+    this.input = {};
+  }
+
   componentWillReceiveProps (newProps) {
     if (this.input && newProps.defaultFileName !== this.props.defaultFileName) {
       this.input.value = newProps.defaultFileName;
