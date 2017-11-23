@@ -1,4 +1,8 @@
 {
+  "env": {
+    "browser": true,
+    "es6": true
+  },
   "extends": ["eslint:all"],
   "rules": {
     "indent": ["error", 2, {
@@ -19,6 +23,7 @@
     "no-extra-parens": ["error", "functions"],
     "no-plusplus": ["off"],
     "no-console": ["warn"],
+    "no-alert": ["warn"],
     "one-var": ["error", "never"],
     "dot-location": ["error", "property"],
     "max-lines": ["off"],

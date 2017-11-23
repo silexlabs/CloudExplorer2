@@ -11,13 +11,13 @@
     "postinstall": "npm run build:fonts && npm run build",
     "start": "node lib/index.js",
     "test": "jest",
-    "test:watch": "watch 'npm test' src/ __tests__/",
+    "test:watch": "npm test -- --watch",
     "build": "npm run build:js && npm run build:sass",
     "build:fonts": "mkdir -p dist/fonts && cp -R `node_modules`/font-awesome/fonts/* `node_modules`/npm-font-open-sans/fonts/* dist/fonts/",
     "build:js": "browserify --extension=jsx src/js/App.jsx -d -o dist/cloud-explorer.js -t [ babelify ]",
     "build:sass": "node-sass --include-path src/sass --include-path node_modules/font-awesome/scss src/sass/style.scss dist/style.css",
     "lint": "npm run lint:client && npm run lint:server",
-    "lint:client": "eslint --ext .jsx,.js src/js",
+    "lint:client": "eslint --ext .jsx,.js src/js __tests__ dist/demo-page.js",
     "lint:server": "eslint lib/",
     "watch": "live-reload dist/ --port 35729 & watch 'npm run build:js' src/js & watch 'npm run build:sass' src/sass"
   },
@@ -56,7 +56,8 @@
     "eslint": "^4.11.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-react": "^7.4.0",
-    "jest-cli": "^13.2.3",
+    "jest": "^21.2.1",
+    "jest-localstorage-mock": "^2.1.0",
     "live-reload": "^1.1.0",
     "pre-commit": "^1.2.2",
     "react-addons-test-utils": "^15.2.0",
@@ -64,5 +65,10 @@
   },
   "precommit": [
     "lint"
-  ]
+  ],
+  "jest": {
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ]
+  }
 }
