@@ -19,10 +19,11 @@ class App extends React.Component {
     });
   }
 
-  static fromBlobToPath (blob) {
+  static fromBlobToPath (blob, folderPath = false) {
+    const path = folderPath ? blob.folder : blob.path;
     return [
       blob.service,
-      ...blob.path.split('/').filter((file) => file !== '')
+      ...path.split('/').filter((file) => file !== '')
     ];
   }
 
@@ -85,12 +86,16 @@ class App extends React.Component {
   }
 
   write (data, blob) {
+    // Convert data to an Array of File
     const content = (Array.isArray(data) ? data : [data])
     .map((c) => {
-      if (typeof c === 'object') return JSON.stringify(c);
-      return c.toString();
+      if (c.constructor === String) return new File([c], blob.path.split('/').pop(), {type: 'text/plain'});
+
+      if (c instanceof File) return c;
+
+      throw new Error('Invalid data. You must provide a String or a File');
     });
-    return this.cloudExplorer.unifile.upload(this.constructor.fromBlobToPath(blob), content);
+    return this.cloudExplorer.unifile.upload(this.constructor.fromBlobToPath(blob, true), content);
   }
 
   /*
