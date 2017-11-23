@@ -1,0 +1,16 @@
+{
+  "env": {
+    "browser": true,
+    "jest": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "globals": {
+    "fail": true
+  },
+  "rules": {
+    "no-invalid-this": ["off"]
+  }
+}

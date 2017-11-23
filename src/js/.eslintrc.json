@@ -22,7 +22,7 @@
       "jsx": true
     }
   },
-  "extends": ["plugin:react/all"],
+  "extends": ["plugin:react/recommended"],
   "rules": {
     "react/jsx-indent": ["error", 2],
     "react/jsx-indent-props": ["error", 2],
