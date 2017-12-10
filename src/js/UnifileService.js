@@ -157,22 +157,26 @@ export default class UnifileService {
   auth (service) {
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
-      req.open('POST', `/${service}/authorize`, false);
-      req.send();
-      if (req.responseText) {
-        const win = window.open(req.responseText);
-        win.addEventListener('unload', () => {
-          win.onunload = null;
-          this.startPollingAuthWin({
-            reject,
-            resolve,
-            service,
-            win
+      req.open('POST', `/${service}/authorize`);
+      req.onload = () => {
+        if (req.responseText) {
+          const win = window.open(req.responseText);
+          win.addEventListener('unload', () => {
+            win.onunload = null;
+            this.startPollingAuthWin({
+              reject,
+              resolve,
+              service,
+              win
+            });
           });
-        });
-      } else {
-        this.authEnded(service, resolve, reject);
-      }
+        } else {
+          this.authEnded(service, resolve, reject);
+        }
+      };
+      req.onerror = reject;
+      req.ontimeout = () => reject(new Error('Auth request timed out'));
+      req.send();
     });
   }
 
