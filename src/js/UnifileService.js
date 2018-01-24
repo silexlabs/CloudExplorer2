@@ -156,11 +156,15 @@ export default class UnifileService {
 
   auth (service) {
     return new Promise((resolve, reject) => {
+      // Open a blank window right away, before we know the URL
+      // Otherwise the browser blocks it
+      // https://github.com/silexlabs/CloudExplorer2/issues/39
+      const win = window.open();
       const req = new XMLHttpRequest();
       req.open('POST', `/${service}/authorize`);
       req.onload = () => {
         if (req.responseText) {
-          const win = window.open(req.responseText);
+          win.location = req.responseText;
           win.addEventListener('unload', () => {
             win.onunload = null;
             this.startPollingAuthWin({
