@@ -28,7 +28,6 @@
     "dot-location": ["error", "property"],
     "max-lines": ["off"],
     "class-methods-use-this": ["warn"],
-    "max-statements": ["off"],
-    "multiline-comment-style": ["off"]
+    "max-statements": ["off"]
   }
 }

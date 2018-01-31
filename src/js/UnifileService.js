@@ -154,11 +154,10 @@ export default class UnifileService {
     });
   }
 
+  // The auth method has to be called on a click or keydown in order not to be blocked by the browser
   auth (service) {
     return new Promise((resolve, reject) => {
-      // Open a blank window right away, before we know the URL
-      // Otherwise the browser blocks it
-      // https://github.com/silexlabs/CloudExplorer2/issues/39
+      // Open a blank window right away, before we know the URL, otherwise the browser blocks it
       const win = window.open();
       const req = new XMLHttpRequest();
       req.open('POST', `/${service}/authorize`);
