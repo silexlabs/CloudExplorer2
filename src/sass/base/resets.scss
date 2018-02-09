@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+/* ----------------------------------------------------------
+  Resets
+---------------------------------------------------------- */
+
+html {
+  font-size: 120%;
+  line-height: 1;
+}
+
+button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  outline: 0;
+  font-size: inherit;
+  text-align: left;
+  color: inherit;
+}

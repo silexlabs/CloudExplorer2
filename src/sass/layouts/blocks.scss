@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+/* ----------------------------------------------------------
+  Block utilities
+---------------------------------------------------------- */
+
+.is-vertically-centered {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.is-centered-aligned {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
