@@ -17,9 +17,7 @@ class ErrorPage extends React.Component {
   }
 
   handleClick () {
-    this.setState((prevState) => ({
-      isCollapsed: !prevState.isCollapsed
-    }));
+    this.setState((prevState) => ({isCollapsed: !prevState.isCollapsed}));
   }
 
   render () {
