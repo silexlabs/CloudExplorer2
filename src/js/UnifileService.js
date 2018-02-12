@@ -159,7 +159,6 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       // Open a blank window right away, before we know the URL, otherwise the browser blocks it
       const win = window.open();
-      win.document.write(`Please wait while I check if you need to be redirected to a thind party service (${service}).`);
       const req = new XMLHttpRequest();
       req.open('POST', `/${service}/authorize`);
       req.onload = () => {
