@@ -175,6 +175,7 @@ export default class UnifileService {
           });
         } else {
           this.authEnded(service, resolve, reject);
+          win.close();
         }
       };
       req.onerror = reject;
