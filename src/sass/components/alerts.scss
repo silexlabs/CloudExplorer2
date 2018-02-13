@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+/* ----------------------------------------------------------
+  Alerts
+---------------------------------------------------------- */
+
+.alert {
+  padding: 8px 15px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+
+  &.is-default {
+    color: $color-default;
+    border-color: #888;
+    background-color: #eee;
+  }
+
+  &.is-danger {
+    color: $color-danger;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+  }
+}

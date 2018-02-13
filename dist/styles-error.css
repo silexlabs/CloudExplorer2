@@ -1,0 +1,78 @@
+/* ----------------------------------------------------------
+  Variables
+---------------------------------------------------------- */
+/* ----------------------------------------------------------
+  Resets
+---------------------------------------------------------- */
+html {
+  font-size: 120%;
+  line-height: 1; }
+
+button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  outline: 0;
+  font-size: inherit;
+  text-align: left;
+  color: inherit; }
+
+/* ----------------------------------------------------------
+  Block utilities
+---------------------------------------------------------- */
+.is-vertically-centered {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); }
+
+.is-centered-aligned {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+
+/* ----------------------------------------------------------
+  Alerts
+---------------------------------------------------------- */
+.alert {
+  padding: 8px 15px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px; }
+  .alert.is-default {
+    color: #555;
+    border-color: #888;
+    background-color: #eee; }
+  .alert.is-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1; }
+
+/* ----------------------------------------------------------
+  Collapse
+---------------------------------------------------------- */
+.collapse button {
+  width: 100%;
+  /* Triangle */
+  /* Child: must be unique */ }
+  .collapse button:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid #555; }
+  .collapse button > * {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 10px; }
+
+.collapse .collapse-section {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  height: auto;
+  max-height: 600px; }
+  .collapse .collapse-section.is-collapsed {
+    max-height: 0; }
