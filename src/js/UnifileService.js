@@ -159,6 +159,11 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       // Open a blank window right away, before we know the URL, otherwise the browser blocks it
       const win = window.open();
+      const rejectError = (error) => {
+        window.removeEventListener('message', rejectError);
+        return reject(new Error(JSON.parse(error.data).message));
+      };
+      window.addEventListener('message', rejectError);
       const req = new XMLHttpRequest();
       req.open('POST', `/${service}/authorize`);
       req.onload = () => {
