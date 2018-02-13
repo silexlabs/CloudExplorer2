@@ -47,6 +47,9 @@ export default class CloudExplorer extends React.Component {
    */
 
   componentDidMount () {
+    window.addEventListener('message', (err) => {
+      this.onUnifileError(JSON.parse(err.data));
+    });
     this.initInputProps(this.props);
   }
 

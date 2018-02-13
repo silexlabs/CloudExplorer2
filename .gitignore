@@ -1,4 +1,5 @@
 node_modules
+.idea
 dist/cloud-explorer.js
 dist/style.css
 dist/fonts
