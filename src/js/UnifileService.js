@@ -20,12 +20,20 @@ export default class UnifileService {
 
   extensions = null;
 
+  error = null;
+
   constructor (path) {
     this.currentPath = path;
   }
 
   setExtensions (extensions) {
     this.extensions = extensions;
+  }
+
+  // We set the error as a constant to be available in all class
+  setError (error) {
+    this.error = error;
+    window.removeEventListener('message', this.setError);
   }
 
   static getStorageKey (path) {
@@ -159,13 +167,10 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       // Open a blank window right away, before we know the URL, otherwise the browser blocks it
       const win = window.open();
-      const rejectError = (error) => {
-        window.removeEventListener('message', rejectError);
-        return reject(new Error(JSON.parse(error.data).message));
-      };
-      window.addEventListener('message', rejectError);
       const req = new XMLHttpRequest();
       req.open('POST', `/${service}/authorize`);
+      // Window needs to be opened in order to catch the message event
+      window.addEventListener('message', (error) => this.setError(error));
       req.onload = () => {
         if (req.responseText) {
           win.location = req.responseText;
@@ -190,12 +195,17 @@ export default class UnifileService {
   }
 
   authEnded (service, resolve, reject) {
-    this.ls([service])
-    .then((res) => resolve(res))
-    .catch((e) => reject(e));
+    if (this.error) {
+      reject(new Error(JSON.parse(this.error.data).message));
+      this.error = null;
+    } else {
+      this.ls([service])
+      .then((res) => resolve(res))
+      .catch((e) => reject(e));
+    }
   }
 
-  startPollingAuthWin ({win, service, resolve, reject}) {
+  startPollingAuthWin ({service, resolve, reject, win}) {
     if (win.closed) {
       this.authEnded(service, resolve, reject);
     } else {
