@@ -33,7 +33,7 @@
     "browserify": "^13.0.1",
     "connect-multiparty": "^2.0.0",
     "cookie-parser": "^1.4.3",
-    "express": "^4.0.0",
+    "express": "^4.16.0",
     "express-session": "^1.13.0",
     "font-awesome": "^4.6.3",
     "multer": "^1.3.0",
@@ -43,7 +43,8 @@
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
     "request": "^2.72.0",
-    "unifile": "silexlabs/unifile#master"
+    "unifile": "^2.0.2",
+    "unifile-webdav": "^1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.2",
