@@ -43,7 +43,7 @@
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
     "request": "^2.72.0",
-    "unifile": "^2.0.2",
+    "unifile": "^2.0.3",
     "unifile-webdav": "^1.0.0"
   },
   "devDependencies": {
