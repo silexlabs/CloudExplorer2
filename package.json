@@ -4,8 +4,8 @@
   "description": "",
   "main": "lib/router.js",
   "engines": {
-    "node": "6.2.x",
-    "npm": "3.9.x"
+    "node": "8.10.x",
+    "npm": "5.6.x"
   },
   "scripts": {
     "postinstall": "npm run build:fonts && npm run build",
