@@ -15,7 +15,7 @@
     "quotes": ["error", "single"],
     "max-len": ["warn", 120],
     "no-ternary": ["off"],
-    "no-magic-numbers": ["error", {"ignore": [-1, 0, 1, 100, 201]}],
+    "no-magic-numbers": ["warn", {"ignore": [0, 1]}],
     "quote-props": ["error", "as-needed"],
     "multiline-ternary": ["error", "always-multiline"],
     "id-length": ["off"],
