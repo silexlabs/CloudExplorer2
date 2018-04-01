@@ -14,7 +14,16 @@ const nameMap = new Map();
 
 export default class UnifileService {
 
-  static ROOT_URL = `${window.location.origin}/`;
+  /**
+   * Endpoint of the API is defined by the router
+   * It depends where the router is "attached"
+   * It can be found in ".." of the cloud-explorer.html
+   * /abc/def/cloud-explorer/cloud-explorer.html => /abc/def/
+   */
+  static ROOT_URL = `${window.location.href
+  .split('/')
+  .slice(0, -2)
+  .join('/')}/`;
 
   currentPath = [];
 
@@ -160,7 +169,7 @@ export default class UnifileService {
       // Open a blank window right away, before we know the URL, otherwise the browser blocks it
       const win = window.open();
       const req = new XMLHttpRequest();
-      req.open('POST', `/${service}/authorize`);
+      req.open('POST', `${UnifileService.ROOT_URL}${service}/authorize`);
       req.onload = () => {
         if (req.responseText) {
           win.location = req.responseText;
