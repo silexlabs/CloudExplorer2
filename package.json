@@ -4,8 +4,8 @@
   "description": "",
   "main": "lib/router.js",
   "engines": {
-    "node": "6.2.x",
-    "npm": "3.9.x"
+    "node": "8.10.x",
+    "npm": "5.6.x"
   },
   "scripts": {
     "postinstall": "npm run build:fonts && npm run build",
@@ -54,10 +54,8 @@
     "eslint-plugin-react": "^7.4.0",
     "jest": "^21.2.1",
     "jest-localstorage-mock": "^2.1.0",
-    "live-reload": "^1.1.0",
     "pre-commit": "^1.2.2",
-    "react-addons-test-utils": "^15.2.0",
-    "watch": "^0.19.1"
+    "react-addons-test-utils": "^15.2.0"
   },
   "precommit": [
     "lint"
