@@ -13,7 +13,8 @@
     "test": "jest",
     "test:watch": "npm test -- --watch",
     "build": "npm run build:js && npm run build:sass",
-    "build:fonts": "mkdir -p dist/fonts && cp -R `node_modules`/font-awesome/fonts/* `node_modules`/npm-font-open-sans/fonts/* dist/fonts/",
+    "build:prod": "browserify --extension=jsx src/js/App.jsx -t [ babelify ] -g [ envify --NODE_ENV production ] -g uglifyify | uglifyjs --compress --mangle > dist/cloud-explorer.js",
+    "build:fonts": "cross-env mkdir -p dist/fonts && (cp -R ../font-awesome/fonts/* ../npm-font-open-sans/fonts/* dist/fonts/) || (cp -R node_modules/font-awesome/fonts/* node_modules/npm-font-open-sans/fonts/* dist/fonts/)",
     "build:js": "browserify --extension=jsx src/js/App.jsx -d -o dist/cloud-explorer.js -t [ babelify ]",
     "build:sass": "node-sass --include-path src/sass --include-path node_modules/font-awesome/scss src/sass/style.scss dist/style.css",
     "lint": "npm run lint:client && npm run lint:server",
@@ -33,12 +34,12 @@
     "browserify": "^13.0.1",
     "connect-multiparty": "^2.0.0",
     "cookie-parser": "^1.4.3",
+    "cross-env": "^5.1.6",
     "express": "^4.16.0",
     "express-session": "^1.13.0",
     "font-awesome": "^4.6.3",
     "multer": "^1.3.0",
     "node-sass": "^3.10.1",
-    "node_modules-path": "*",
     "npm-font-open-sans": "^1.0.3",
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
@@ -55,7 +56,9 @@
     "jest": "^21.2.1",
     "jest-localstorage-mock": "^2.1.0",
     "pre-commit": "^1.2.2",
-    "react-addons-test-utils": "^15.2.0"
+    "react-addons-test-utils": "^15.2.0",
+    "uglify-js": "^3.3.27",
+    "uglifyify": "^5.0.0"
   },
   "precommit": [
     "lint"
