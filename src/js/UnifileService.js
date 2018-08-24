@@ -299,6 +299,7 @@ export default class UnifileService {
   }
 
   static isService (file) {
-    return typeof file.isLoggedIn !== 'undefined';
+    console.log('isService', file, file.isLoggedIn);
+    return typeof file.mime === 'application/json';
   }
 }
