@@ -124,9 +124,9 @@ export default class UnifileService {
     });
   }
 
-  cd (path) {
+  cd (path, preventAuth=false) {
     return new Promise((resolve, reject) => {
-      if (path.length === 1 && path[0] !== this.currentPath[0]) {
+      if (!preventAuth && path.length === 1 && path[0] !== this.currentPath[0]) {
         this.auth(path[0])
         .then(() => {
           this.currentPath = path;

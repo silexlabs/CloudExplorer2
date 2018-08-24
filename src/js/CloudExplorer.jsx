@@ -162,6 +162,15 @@ export default class CloudExplorer extends React.Component {
             files,
             loading: false
           });
+          // the first display, single service mode, try to enter
+          // this is useful when CE is used by hosting companies to display the user files, and the user has logged in their system
+          if(!this.initDone && files.length === 1 && path.length === 0/* && files[0].isLoggedIn === true*/) {
+            this.unifile.cd([files[0].name], true)
+              .then(path => {
+                this.props.onCd(path);
+              });
+          }
+          this.initDone = true;
         }
       })
       .catch((e) => this.onUnifileError(e));
