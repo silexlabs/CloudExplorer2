@@ -178,6 +178,7 @@ export default class Files extends React.Component {
                 file={file}
                 onDelete={() => this.props.onDelete(file)}
                 onRename={() => this.props.onRename(file)}
+                onLogout={(service) => this.props.onLogout(service)}
                 path={this.props.path}
               >{file.displayName || file.name}
               </FileListItem>

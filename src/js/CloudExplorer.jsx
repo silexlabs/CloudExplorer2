@@ -164,8 +164,11 @@ export default class CloudExplorer extends React.Component {
           });
           // the first display, single service mode, try to enter
           // this is useful when CE is used by hosting companies to display the user files, and the user has logged in their system
-          if(!this.initDone && files.length === 1 && path.length === 0/* && files[0].isLoggedIn === true*/) {
-            this.unifile.cd([files[0].name], true)
+          if(!this.initDone && files.length === 1 &&
+            UnifileService.isService(files[0]) &&
+            files[0].isLoggedIn === true) {
+            // enter the only service since we are logged in
+            this.unifile.cd([files[0].name])
               .then(path => {
                 this.props.onCd(path);
               });
@@ -218,6 +221,11 @@ export default class CloudExplorer extends React.Component {
         });
       }
     });
+  }
+
+  logout(service) {
+    return this.unifile.logout(service)
+    .then(() => this.ls());
   }
 
   cancel () {
@@ -313,6 +321,7 @@ export default class CloudExplorer extends React.Component {
             multiple={this.props.multiple}
             onChange={(selection) => this.props.onSelection(selection)}
             onDelete={(file) => this.delete(file)}
+            onLogout={(service) => this.logout(service)}
             onEnter={(folder) => this.cd([folder.name], true)}
             onPick={(file) => this.props.onPick(file)}
             onRename={(file) => this.rename(file.name)}
