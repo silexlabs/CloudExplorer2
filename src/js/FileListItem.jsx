@@ -9,6 +9,7 @@ export default class FileListItem extends React.Component {
     downloadUrl: PropTypes.string.isRequired,
     file: PropTypes.shape({name: PropTypes.string.isRequired}).isRequired,
     onDelete: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
     onRename: PropTypes.func.isRequired,
     path: PropTypes.arrayOf(PropTypes.string).isRequired
   }
@@ -55,7 +56,7 @@ export default class FileListItem extends React.Component {
     this.props.onRename();
   }
 
-  logout() {
+  logout () {
     this.props.onLogout(this.props.file.name);
   }
 
@@ -69,18 +70,14 @@ export default class FileListItem extends React.Component {
     const className = this.constructor.getClassName(file, isService, mime);
     return (
       <section className={
-        `file-list-item${
-          file.upload ? ` uploading progress-${file.upload.progress}` : ''}`
-      }
-      >
+        `file-list-item${file.upload ? ` uploading progress-${file.upload.progress}` : ''}`
+      }>
         <i className={className} />
         <label>{this.props.children}</label>
         <ul className="inline-button-bar">
           {
-            file.isService ? <li
-              className={file.isLoggedIn ? 'enabled' : 'disabled'}
-              onClick={() => file.isLoggedIn && this.logout()}
-            >{this.LOGOUT_LABEL}</li> : ''
+            file.isService ? <li className={ file.isLoggedIn ? 'enabled' : 'disabled' }
+              onClick={() => file.isLoggedIn && this.logout()}>{this.LOGOUT_LABEL}</li> : ''
           }
           {
             this.allowDownload

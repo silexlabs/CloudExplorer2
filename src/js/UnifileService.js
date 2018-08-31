@@ -59,7 +59,8 @@ export default class UnifileService {
       }, (e) => reject(e));
     });
   }
-  static getServiceByName(name) {
+
+  static getServiceByName (name) {
     return serviceMap.get(name);
   }
 
@@ -165,7 +166,8 @@ export default class UnifileService {
       this.constructor.call(`${path[0]}/rm/`, resolve, reject, 'DELETE', JSON.stringify(files));
     });
   }
-  logout(service) {
+
+  logout (service) {
     return new Promise((resolve, reject) => {
       this.constructor.call(
         `${service}/logout/`,
@@ -181,10 +183,9 @@ export default class UnifileService {
   auth (serviceName) {
     return new Promise((resolve, reject) => {
       const service = this.constructor.getServiceByName(serviceName);
-      if(service.isLoggedIn) {
+      if (service.isLoggedIn) {
         this.authEnded(serviceName, resolve, reject);
-      }
-      else {
+      } else {
         // Open a blank window right away, before we know the URL, otherwise the browser blocks it
         const win = window.open();
         const req = new XMLHttpRequest();

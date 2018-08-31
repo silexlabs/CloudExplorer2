@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 let selectedBtn = null;
 let selection = [];

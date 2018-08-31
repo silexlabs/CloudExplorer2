@@ -17,7 +17,7 @@
     "no-ternary": ["off"],
     "no-magic-numbers": ["warn", {"ignore": [0, 1]}],
     "quote-props": ["error", "as-needed"],
-    "multiline-ternary": ["error", "always-multiline"],
+    "multiline-ternary": ["off"],
     "id-length": ["off"],
     "no-confusing-arrow": ["error", {"allowParens": true}],
     "no-extra-parens": ["error", "functions"],
@@ -28,6 +28,8 @@
     "dot-location": ["error", "property"],
     "max-lines": ["off"],
     "class-methods-use-this": ["warn"],
-    "max-statements": ["off"]
+    "max-statements": ["off"],
+    "comma-dangle": ["off"],
+    "capitalized-comments": ["warn"]
   }
 }
