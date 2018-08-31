@@ -10,7 +10,7 @@ const OK_STATUSES = [
   EMPTY_STATUS
 ];
 
-const nameMap = new Map();
+const serviceMap = new Map();
 
 export default class UnifileService {
 
@@ -53,11 +53,15 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       this.call('services', (services) => {
         services.forEach((service) => {
-          nameMap.set(service.name, service.displayName);
+          serviceMap.set(service.name, service);
         });
         resolve(services);
       }, (e) => reject(e));
     });
+  }
+
+  static getServiceByName (name) {
+    return serviceMap.get(name);
   }
 
   read (path) {
@@ -163,33 +167,50 @@ export default class UnifileService {
     });
   }
 
-  // The auth method has to be called on a click or keydown in order not to be blocked by the browser
-  auth (service) {
+  logout (service) {
     return new Promise((resolve, reject) => {
-      // Open a blank window right away, before we know the URL, otherwise the browser blocks it
-      const win = window.open();
-      const req = new XMLHttpRequest();
-      req.open('POST', `${UnifileService.ROOT_URL}${service}/authorize`);
-      req.onload = () => {
-        if (req.responseText) {
-          win.location = req.responseText;
-          win.addEventListener('unload', () => {
-            win.onunload = null;
-            this.startPollingAuthWin({
-              reject,
-              resolve,
-              service,
-              win
+      this.constructor.call(
+        `${service}/logout/`,
+        resolve,
+        reject,
+        'POST'
+      );
+    });
+
+  }
+
+  // The auth method has to be called on a click or keydown in order not to be blocked by the browser
+  auth (serviceName) {
+    return new Promise((resolve, reject) => {
+      const service = this.constructor.getServiceByName(serviceName);
+      if (service.isLoggedIn) {
+        this.authEnded(serviceName, resolve, reject);
+      } else {
+        // Open a blank window right away, before we know the URL, otherwise the browser blocks it
+        const win = window.open();
+        const req = new XMLHttpRequest();
+        req.open('POST', `${UnifileService.ROOT_URL}${serviceName}/authorize`);
+        req.onload = () => {
+          if (req.responseText) {
+            win.location = req.responseText;
+            win.addEventListener('unload', () => {
+              win.onunload = null;
+              this.startPollingAuthWin({
+                reject,
+                resolve,
+                serviceName,
+                win
+              });
             });
-          });
-        } else {
-          this.authEnded(service, resolve, reject);
-          win.close();
-        }
-      };
-      req.onerror = reject;
-      req.ontimeout = () => reject(new Error('Auth request timed out'));
-      req.send();
+          } else {
+            this.authEnded(serviceName, resolve, reject);
+            win.close();
+          }
+        };
+        req.onerror = reject;
+        req.ontimeout = () => reject(new Error('Auth request timed out'));
+        req.send();
+      }
     });
   }
 
@@ -199,15 +220,15 @@ export default class UnifileService {
     .catch((e) => reject(e));
   }
 
-  startPollingAuthWin ({win, service, resolve, reject}) {
+  startPollingAuthWin ({win, serviceName, resolve, reject}) {
     if (win.closed) {
-      this.authEnded(service, resolve, reject);
+      this.authEnded(serviceName, resolve, reject);
     } else {
       setTimeout(() => {
         this.startPollingAuthWin({
           reject,
           resolve,
-          service,
+          serviceName,
           win
         });
       }, POLLING_FREQUENCY);
@@ -299,6 +320,6 @@ export default class UnifileService {
   }
 
   static isService (file) {
-    return typeof file.isLoggedIn !== 'undefined';
+    return typeof file.isService !== 'undefined';
   }
 }

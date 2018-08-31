@@ -14,6 +14,7 @@ export default class Files extends React.Component {
     onDelete: PropTypes.func.isRequired,
     onEnter: PropTypes.func.isRequired,
     onPick: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
     onRename: PropTypes.func.isRequired,
     path: PropTypes.arrayOf(PropTypes.string).isRequired,
     selection: PropTypes.arrayOf(PropTypes.object).isRequired
@@ -178,6 +179,7 @@ export default class Files extends React.Component {
                 file={file}
                 onDelete={() => this.props.onDelete(file)}
                 onRename={() => this.props.onRename(file)}
+                onLogout={(service) => this.props.onLogout(service)}
                 path={this.props.path}
               >{file.displayName || file.name}
               </FileListItem>

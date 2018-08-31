@@ -169,7 +169,7 @@ ul, li {
 	text-decoration:none;
 }
 
-#cloud-explorer .button-bar, 
+#cloud-explorer .button-bar,
 #cloud-explorer .top-button-bar {
 	display:flex;
 	flex-direction:row;
@@ -236,7 +236,10 @@ ul, li {
 
 #cloud-explorer .application.json.folder.icon {
 	// service, really
-	@extend .fa-plug;
+	@extend .fa-lock;
+  &.loggedin {
+    @extend .fa-unlock;
+  }
 }
 
 #cloud-explorer .folder.icon {

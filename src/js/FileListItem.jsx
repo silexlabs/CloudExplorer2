@@ -9,6 +9,7 @@ export default class FileListItem extends React.Component {
     downloadUrl: PropTypes.string.isRequired,
     file: PropTypes.shape({name: PropTypes.string.isRequired}).isRequired,
     onDelete: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
     onRename: PropTypes.func.isRequired,
     path: PropTypes.arrayOf(PropTypes.string).isRequired
   }
@@ -39,6 +40,8 @@ export default class FileListItem extends React.Component {
 
   RENAME_LABEL = 'Rename';
 
+  LOGOUT_LABEL = 'Logout';
+
   delete () {
     ModalDialog.getInstance().confirm(
       <section>
@@ -53,37 +56,41 @@ export default class FileListItem extends React.Component {
     this.props.onRename();
   }
 
+  logout () {
+    this.props.onLogout(this.props.file.name);
+  }
+
   render () {
     const {file} = this.props;
     const isService = UnifileService.isService(file);
     this.allowDownload = !file.upload && this.props.path.length > 0 && !file.isDir && !isService;
     this.allowDelete = !file.upload && this.props.path.length > 0 && !isService;
     this.allowRename = !file.upload && this.props.path.length > 0 && !isService;
-    const mime = isService
-      ? ' application json'
-      : file.mime && file.mime.replace(/\//g, ' ');
+    const mime = file.mime ? file.mime.replace(/\//g, ' ') : '';
+    const className = this.constructor.getClassName(file, isService, mime);
     return (
       <section className={
-        `file-list-item${
-          file.upload ? ` uploading progress-${file.upload.progress}` : ''}`
-      }
-      >
-        <i className={this.constructor.getClassName(file, isService, mime)} />
+        `file-list-item${file.upload ? ` uploading progress-${file.upload.progress}` : ''}`
+      }>
+        <i className={className} />
         <label>{this.props.children}</label>
         <ul className="inline-button-bar">
-          <li>{
+          {
+            file.isService ? <li className={ file.isLoggedIn ? 'enabled' : 'disabled' }
+              onClick={() => file.isLoggedIn && this.logout()}>{this.LOGOUT_LABEL}</li> : ''
+          }
+          {
             this.allowDownload
               ? (
-                <a
+                <li><a
                   className={this.allowDelete ? 'enabled' : 'disabled'}
                   href={this.props.downloadUrl}
                   target="_blank"
                 >{this.DOWNLOAD_LABEL}
-                </a>
+                </a></li>
               )
               : ''
           }
-          </li>
           <li
             className={this.allowDelete ? 'enabled' : 'disabled'}
             onClick={() => this.allowDelete && this.delete()}
