@@ -94,9 +94,9 @@ export default class CloudExplorer extends React.Component {
     // Flag the current folder is was cached,
     cached: false,
     files: [],
+    initDone: false,
     loading: false,
     uploadingFiles: [],
-    initDone: false,
   };
 
 
