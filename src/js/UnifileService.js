@@ -74,6 +74,7 @@ export default class UnifileService {
   }
 
   ls (path = null) {
+    console.log('ls', path);
     return new Promise((resolve, reject) => {
       const pathToLs = path || this.currentPath;
       if (pathToLs.length > 0) {
@@ -183,9 +184,9 @@ export default class UnifileService {
   auth (serviceName) {
     return new Promise((resolve, reject) => {
       const service = this.constructor.getServiceByName(serviceName);
-      if (service.isLoggedIn) {
-        this.authEnded(serviceName, resolve, reject);
-      } else {
+      //if (service.isLoggedIn) {
+      //  this.authEnded(serviceName, resolve, reject);
+      //} else {
         // Open a blank window right away, before we know the URL, otherwise the browser blocks it
         const win = window.open();
         const req = new XMLHttpRequest();
@@ -210,7 +211,7 @@ export default class UnifileService {
         req.onerror = reject;
         req.ontimeout = () => reject(new Error('Auth request timed out'));
         req.send();
-      }
+      //}
     });
   }
 

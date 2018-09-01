@@ -1,6 +1,5 @@
 import CloudExplorer from './CloudExplorer';
 import React from 'react';
-import ReactDom from 'react-dom';
 import UnifileService from './UnifileService';
 
 const STORAGE_KEY_PATH = 'CloudExplorer.path';
@@ -8,7 +7,7 @@ const STORAGE_KEY_PATH = 'CloudExplorer.path';
 /**
  * Class in charge of the history and init of the main CloudExplorer component
  */
-class App extends React.Component {
+export default class App extends React.Component {
 
   static createBlob (path, file) {
     return Object.assign({}, file, {
@@ -217,8 +216,3 @@ class App extends React.Component {
     );
   }
 }
-
-ReactDom.render(
-  <App />,
-  document.getElementById('cloud-explorer')
-);
