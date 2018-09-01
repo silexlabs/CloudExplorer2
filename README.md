@@ -20,9 +20,9 @@ You can serve `dist` on `http://localhost:6805` with
 $ npm start
 ```
 
-And then access the demo app on `http://localhost:6805/cloud-explorer/`
+And then access the demo app on `http://localhost:6805/ce/cloud-explorer/`
 
-This is what is done on heroku here: [a live demo](https://cloud-explorer2.herokuapp.com/cloud-explorer/)
+This is what is done on heroku here: [a live demo](https://cloud-explorer2.herokuapp.com/ce/cloud-explorer/)
 
 ## Use
 
@@ -31,7 +31,7 @@ For a complete example see the dist folder.
 On the client side, the HTML:
 
 ```html
-<iframe id="ceIFrame" class="container" src="/cloud-explorer/cloud-explorer.html" />
+<iframe id="ceIFrame" class="container" src="/ce/cloud-explorer/cloud-explorer.html" />
 ```
 
 And the Javascript:
