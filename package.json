@@ -8,13 +8,12 @@
     "npm": "5.6.x"
   },
   "scripts": {
-    "postinstall": "npm run build:fonts && npm run build",
+    "postinstall": "npm run build",
     "start": "node lib/index.js",
     "test": "jest",
     "test:watch": "npm test -- --watch",
     "build": "npm run build:js && npm run build:sass",
     "build:prod": "browserify --extension=jsx src/js/App.jsx -t [ babelify ] -g [ envify --NODE_ENV production ] -g uglifyify | uglifyjs --compress --mangle > dist/cloud-explorer.js",
-    "build:fonts": "cross-env mkdir -p dist/fonts && (cp -R ../font-awesome/fonts/* ../npm-font-open-sans/fonts/* dist/fonts/) || (cp -R node_modules/font-awesome/fonts/* node_modules/npm-font-open-sans/fonts/* dist/fonts/)",
     "build:js": "browserify --extension=jsx src/js/App.jsx -d -o dist/cloud-explorer.js -t [ babelify ]",
     "build:sass": "node-sass --include-path src/sass --include-path node_modules/font-awesome/scss src/sass/style.scss dist/style.css",
     "lint": "npm run lint:client && npm run lint:server",
@@ -40,6 +39,7 @@
     "font-awesome": "^4.6.3",
     "multer": "^1.3.0",
     "node-sass": "^3.10.1",
+    "node_modules-path": "^1.0.5",
     "npm-font-open-sans": "^1.0.3",
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
