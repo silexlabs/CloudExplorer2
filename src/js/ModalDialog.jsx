@@ -34,8 +34,9 @@ export default class ModalDialog extends React.Component {
     });
   }
 
-  prompt (message, inputText, cbk = null) {
+  prompt (message, inputText, cbk = null, cancelCbk = null) {
     this.cbk = cbk;
+    this.cancelCbk = cancelCbk;
     this.setState({
       inputText,
       message,
@@ -43,7 +44,8 @@ export default class ModalDialog extends React.Component {
     });
   }
 
-  confirm (message, cbk = null) {
+  confirm (message, cbk = null, cancelCbk = null) {
+    this.cancelCbk = cancelCbk;
     this.cbk = cbk;
     this.setState({
       message,
@@ -61,7 +63,11 @@ export default class ModalDialog extends React.Component {
 
   cancel () {
     this.setState({mode: 'hidden'});
+    if (this.cancelCbk) {
+      this.cancelCbk();
+    }
     this.cbk = null;
+    this.cancelCbk = null;
   }
 
   isOpened () {

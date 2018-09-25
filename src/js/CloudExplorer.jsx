@@ -77,6 +77,9 @@ export default class CloudExplorer extends React.Component {
 
   ERROR_MESSAGE = 'An error occured';
 
+  LOGGEDOUT_ERROR_MESSAGE = 'You are note logged in.';
+  LOGGEDOUT_DETAILS = 'Click ok to proceed to login';
+
   ERROR_DETAILS = 'This operation failed with the following error message: ';
 
   BULLET_POINT = '- ';
@@ -123,8 +126,24 @@ export default class CloudExplorer extends React.Component {
     // Take action depending on the error code
     switch (e.code) {
       case 'EACCES':
-        // Go back to /
-        this.cd([]);
+      case 403:
+        ModalDialog.getInstance().confirm((
+          <section>
+            <h2>{this.LOGGEDOUT_ERROR_MESSAGE}</h2>
+            <p>{ this.LOGGEDOUT_DETAILS }</p>
+          </section>
+        ), () => {
+          // ok
+          this.unifile.auth(this.props.path[0])
+          .catch(e => {
+            return this.cd([]);
+          })
+          .then(() => this.ls())
+        }, () => {
+          // cancel
+          // Go back to /
+          this.cd([]);
+        });
         break;
       default: {
         // Display a modal with an error message
@@ -256,14 +275,12 @@ export default class CloudExplorer extends React.Component {
       return file;
     });
     this.unifile.upload(this.props.path, uploads, (progress) => {
-      console.log('progress', progress);
     })
     .then(() => {
-      console.log('done uploading files', uploads);
       this.ls();
     })
     .catch((e) => {
-      console.log('error uploading file', e);
+      console.error('Error uploading file', e);
       this.onUnifileError(
         null, (
           <div>
