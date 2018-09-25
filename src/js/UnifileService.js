@@ -78,15 +78,18 @@ export default class UnifileService {
       const pathToLs = path || this.currentPath;
       if (pathToLs.length > 0) {
         const filters = this.extensions ? `?extensions=${this.extensions.join(',')}` : '';
+
         this.constructor.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}${filters}`, (res) => {
           sessionStorage.setItem(this.constructor.getStorageKey(path), JSON.stringify(res));
           resolve(res);
         }, (e) => reject(e));
       } else {
-        this.constructor.getServices().then((res) => {
+        /*resolve*/ (this.constructor.getServices().then((res) => {
           sessionStorage.setItem(this.constructor.getStorageKey(path), JSON.stringify(res));
           resolve(res);
-        });
+        }).catch(e => {
+          console.log('unifile getServices failed', e);
+        }));
       }
     });
   }
@@ -183,7 +186,8 @@ export default class UnifileService {
   auth (serviceName) {
     return new Promise((resolve, reject) => {
       const service = this.constructor.getServiceByName(serviceName);
-      if (service.isLoggedIn) {
+      // here we may not have the service info yet, e.g. if we did not ls '/'
+      if (service && service.isLoggedIn) {
         this.authEnded(serviceName, resolve, reject);
       } else {
         // Open a blank window right away, before we know the URL, otherwise the browser blocks it
@@ -279,7 +283,10 @@ export default class UnifileService {
         }
       } else {
         // Unifile should set the error object in the response body
-        const e = UnifileService.getJsonBody(oReq);
+        const e = UnifileService.getJsonBody(oReq) || {
+          message: `${oReq.responseText} (${oReq.statusText})`,
+          code: oReq.status,
+        };
         err(e);
       }
     };
