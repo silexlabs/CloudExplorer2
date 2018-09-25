@@ -196,6 +196,11 @@ class App extends React.Component {
     return UnifileService.getServices();
   }
 
+  // The auth method has to be called on a click or keydown in order not to be blocked by the browser
+  auth(serviceName) {
+    return this.cloudExplorer.unifile.auth(serviceName);
+  }
+
   render () {
     return (
       <CloudExplorer
