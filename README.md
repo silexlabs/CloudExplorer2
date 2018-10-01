@@ -50,5 +50,5 @@ ce.openFile(['.jpg', '.jpeg', '.png', '.gif'])
 
 Please feel free to ask in the issues, and contribute docs in the wiki.
 
-For now, the best way to know the API is to [take a look at the `App` class which exposes all CE methods here](https://github.com/silexlabs/CloudExplorer2/blob/master/src/js/App.js#L77).
+For now, the best way to know the API is to [take a look at the `App` class which exposes all CE methods here](https://github.com/silexlabs/CloudExplorer2/blob/master/src/js/App.jsx#L106).
 
