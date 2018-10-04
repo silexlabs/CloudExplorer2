@@ -78,6 +78,7 @@ export default class CloudExplorer extends React.Component {
   ERROR_MESSAGE = 'An error occured';
 
   LOGGEDOUT_ERROR_MESSAGE = 'You are note logged in.';
+
   LOGGEDOUT_DETAILS = 'Click ok to proceed to login';
 
   ERROR_DETAILS = 'This operation failed with the following error message: ';
@@ -122,28 +123,32 @@ export default class CloudExplorer extends React.Component {
      */
     const e = err || {};
     console.error('Error from unifile', e);
+    const httpForbiddenCode = 403;
 
     // Take action depending on the error code
     switch (e.code) {
       case 'EACCES':
-      case 403:
-        ModalDialog.getInstance().confirm((
-          <section>
-            <h2>{this.LOGGEDOUT_ERROR_MESSAGE}</h2>
-            <p>{ this.LOGGEDOUT_DETAILS }</p>
-          </section>
-        ), () => {
-          // ok
-          this.unifile.auth(this.props.path[0])
-          .catch(e => {
-            return this.cd([]);
-          })
-          .then(() => this.ls())
-        }, () => {
-          // cancel
-          // Go back to /
-          this.cd([]);
-        });
+      case httpForbiddenCode:
+        ModalDialog.getInstance().confirm(
+          (
+            <section>
+              <h2>{this.LOGGEDOUT_ERROR_MESSAGE}</h2>
+              <p>{ this.LOGGEDOUT_DETAILS }</p>
+            </section>
+          ), () => {
+          // Ok
+            this.unifile.auth(this.props.path[0])
+            .catch(() => this.cd([]))
+            .then(() => this.ls());
+          }, () => {
+
+          /*
+           * Cancel
+           * Go back to /
+           */
+            this.cd([]);
+          }
+        );
         break;
       default: {
         // Display a modal with an error message
@@ -175,8 +180,13 @@ export default class CloudExplorer extends React.Component {
     }, () => {
       const {path} = this.props;
       this.unifile.ls(path).then((files) => {
-        // single service mode: at init, when there is only 1 service and the user is logged in, try to enter the service
-        // this is useful when CE is used by hosting companies to display the user files, and the user has logged in their system
+
+        /*
+         * Single service mode: at init, when there is only 1 service and the
+         * user is logged in, try to enter the service
+         * This is useful when CE is used by hosting companies to display the
+         * user files, and the user has logged in their system
+         */
         const singleServiceMode = !this.state.initDone && files.length === 1 &&
           UnifileService.isService(files[0]) &&
           files[0].isLoggedIn === true;
@@ -187,12 +197,12 @@ export default class CloudExplorer extends React.Component {
             files,
             loading: singleServiceMode,
           }, () => {
-            if(singleServiceMode) {
-              // enter the only service since we are logged in
+            if (singleServiceMode) {
+              // Enter the only service since we are logged in
               this.unifile.cd([files[0].name])
-                .then(path => {
-                  this.props.onCd(path);
-                });
+              .then((filePath) => {
+                this.props.onCd(filePath);
+              });
             }
             this.setState({initDone: true});
           });
@@ -245,7 +255,7 @@ export default class CloudExplorer extends React.Component {
     });
   }
 
-  logout(service) {
+  logout (service) {
     return this.unifile.logout(service)
     .then(() => this.ls());
   }
