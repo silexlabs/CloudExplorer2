@@ -149,7 +149,8 @@ class App extends React.Component {
             resolve(this.constructor.createBlob(this.state.path, files[0]));
           } else if (this.state.path.length > 1) {
             // The user pressed "ok" to select the current folder
-            resolve(this.constructor.createBlob(this.state.path.slice(0, -1), {
+            const endOffset = -1;
+            resolve(this.constructor.createBlob(this.state.path.slice(0, endOffset), {
               isDir: true,
               mime: 'application/octet-stream',
               name: this.state.path[this.state.path.length - 1]
@@ -192,12 +193,12 @@ class App extends React.Component {
     return Promise.resolve();
   }
 
-  getServices () {
+  static getServices () {
     return UnifileService.getServices();
   }
 
   // The auth method has to be called on a click or keydown in order not to be blocked by the browser
-  auth(serviceName) {
+  auth (serviceName) {
     return this.cloudExplorer.unifile.auth(serviceName);
   }
 

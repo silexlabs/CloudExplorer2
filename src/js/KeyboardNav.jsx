@@ -58,7 +58,7 @@ export default class KeyboardNav extends React.Component {
     }, true);
   }
 
-  render () {
+  static render () {
     return <div />;
   }
 }

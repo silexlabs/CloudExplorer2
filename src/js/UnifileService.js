@@ -84,10 +84,11 @@ export default class UnifileService {
           resolve(res);
         }, (e) => reject(e));
       } else {
-        /*resolve*/ (this.constructor.getServices().then((res) => {
+        (this.constructor.getServices().then((res) => {
           sessionStorage.setItem(this.constructor.getStorageKey(path), JSON.stringify(res));
           resolve(res);
-        }).catch(e => {
+        })
+        .catch((e) => {
           console.log('unifile getServices failed', e);
         }));
       }
@@ -186,7 +187,7 @@ export default class UnifileService {
   auth (serviceName) {
     return new Promise((resolve, reject) => {
       const service = this.constructor.getServiceByName(serviceName);
-      // here we may not have the service info yet, e.g. if we did not ls '/'
+      // Here we may not have the service info yet, e.g. if we did not ls '/'
       if (service && service.isLoggedIn) {
         this.authEnded(serviceName, resolve, reject);
       } else {
@@ -284,8 +285,8 @@ export default class UnifileService {
       } else {
         // Unifile should set the error object in the response body
         const e = UnifileService.getJsonBody(oReq) || {
-          message: `${oReq.responseText} (${oReq.statusText})`,
           code: oReq.status,
+          message: `${oReq.responseText} (${oReq.statusText})`,
         };
         err(e);
       }
@@ -293,15 +294,16 @@ export default class UnifileService {
     oReq.onerror = function onerror (e) {
       err(e);
     };
+    const loadedValue = 100;
     if (progress !== null) {
       oReq.upload.onprogress = (e) => {
         if (e.lengthComputable) {
-          const percentage = Math.round(e.loaded * 100 / e.total);
+          const percentage = Math.round(e.loaded * loadedValue / e.total);
           progress(percentage);
         }
       };
       oReq.upload.onload = () => {
-        progress(100);
+        progress(loadedValue);
       };
       oReq.upload.onerror = () => {
         progress(0);
