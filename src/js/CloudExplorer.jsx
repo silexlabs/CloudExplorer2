@@ -68,7 +68,7 @@ export default class CloudExplorer extends React.Component {
       this.ls();
     })
     .catch((e) => {
-      if (oldProps && oldProps.path) {
+      if (oldProps && oldProps.path && oldProps.path.length != 0) {
         this.props.onCd(oldProps.path);
       }
       this.onUnifileError(e);
@@ -138,7 +138,7 @@ export default class CloudExplorer extends React.Component {
           ), () => {
           // Ok
             this.unifile.auth(this.props.path[0])
-            .catch(() => this.cd([]))
+            .catch(() => this.cd([this.props.path[0]]))
             .then(() => this.ls());
           }, () => {
 
