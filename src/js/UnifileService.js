@@ -1,3 +1,4 @@
+import {modalLog} from './ModalLogin';     //a new component: ModalWindow, I prefer it external.
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 
 const POLLING_FREQUENCY = 200;
@@ -192,7 +193,14 @@ export default class UnifileService {
         this.authEnded(serviceName, resolve, reject);
       } else {
         // Open a blank window right away, before we know the URL, otherwise the browser blocks it
-        const win = window.open();
+        //For OAuth (github, droopbox...) we use a blank window, as the user is exiting from the site, so it's more evident
+        //Non Oauth, like ftp, sftp uses the modal window. I tyr to get the  minimal modification in the process
+        var winLog;
+        if (service.isOAuth)
+            winLog = window.open();
+        else
+            winLog = modalLog('ftp','about:blank');
+        const win = winLog;
         const req = new XMLHttpRequest();
         req.open('POST', `${UnifileService.ROOT_URL}${serviceName}/authorize`);
         req.onload = () => {
