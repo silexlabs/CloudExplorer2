@@ -1,3 +1,4 @@
+import {modalLog} from './ModalLogin';
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 
 const POLLING_FREQUENCY = 200;
