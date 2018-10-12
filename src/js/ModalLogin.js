@@ -2,7 +2,7 @@
 export function modalLog(Uri) {
     //Layer that contains all
     var mBase=document.createElement("div");
-    mBase.className="esmodal"; 
+    mBase.className="logModal"; 
     //Layer child for contain a header, container and footer
     var mBody =document.createElement("div");
     mBody.className="panel";
