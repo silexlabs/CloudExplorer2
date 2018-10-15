@@ -193,7 +193,7 @@ class App extends React.Component {
     return Promise.resolve();
   }
 
-  static getServices () {
+  getServices () {
     return UnifileService.getServices();
   }
 
