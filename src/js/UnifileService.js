@@ -186,45 +186,57 @@ export default class UnifileService {
 
   // The auth method has to be called on a click or keydown in order not to be blocked by the browser
   auth (serviceName) {
-    return new Promise((resolve, reject) => {
-      const service = this.constructor.getServiceByName(serviceName);
-      // Here we may not have the service info yet, e.g. if we did not ls '/'
-      if (service && service.isLoggedIn) {
-        this.authEnded(serviceName, resolve, reject);
-      } else {
-        // Open a blank window right away, before we know the URL, otherwise the browser blocks it
-        var winLog ;
-        //For OAuth (github, droopbox...) we use a blank window, as the user is exiting from the site, so it's more evident
-        //Non OAuth, like ftp, sftp uses the modal window. OAuth uses blank window browser.
-        if (service.isOAuth)
-            winLog = window.open();
-        else
-            winLog = modalLog('Login','about:blank');
-        
-        const win = winLog;
-        const req = new XMLHttpRequest();
-        req.open('POST', `${UnifileService.ROOT_URL}${serviceName}/authorize`);
-        req.onload = () => {
-          if (req.responseText) {
-            win.location = req.responseText;
-            win.addEventListener('unload', () => {
-              win.onunload = null;
-              this.startPollingAuthWin({
+      //To avoid repeat code, this function prepare the login/auth process
+  function prepLogin(win, req, resolve, reject, UnifileService, serviceName, obj){
+ 			req.open('POST', `${UnifileService.ROOT_URL}${serviceName}/authorize`);
+			req.onload = () => {
+			  if (req.responseText) {
+          win.location = req.responseText;
+          win.addEventListener('unload', () => {
+                win.onunload = null;
+                obj.startPollingAuthWin({
                 reject,
                 resolve,
                 serviceName,
                 win
-              });
-            });
-          } else {
-            this.authEnded(serviceName, resolve, reject);
+				      });
+				    });
+ 			  } else {
+            obj.authEnded(serviceName, resolve, reject);
             win.close();
-          }
-        };
-        req.onerror = reject;
-        req.ontimeout = () => reject(new Error('Auth request timed out'));
-        req.send();
-      }
+				  }			
+				}
+			  req.onerror = reject;
+			  req.ontimeout = () => reject(new Error('Auth request timed out'));
+			  req.send();
+			  return;
+     	}    
+    return new Promise((resolve, reject) =>     return new Promise((resolve, reject) => {
+      const service = this.constructor.getServiceByName(serviceName);
+      // Here we may not have the service info yet, e.g. if we did not ls '/'
+      if (service && service.isLoggedIn) {
+            this.authEnded(serviceName, resolve, reject);
+      } else {
+            //For OAuth (github, droopbox...) we use a blank window, as the user is exiting from the site, so it's more evident
+            //Non Oauth, like ftp, sftp uses the modal window. I tyr to get the  minimal modification in the process
+           if (service.isOAuth){
+                const win = window.open();
+                const req = new XMLHttpRequest();
+                prepLogin(win,req,resolve, reject, UnifileService, serviceName, this);
+                }
+            else{
+                var cer = ce.cloudExplorer;				
+                var m = ModalDialog.getInstance();
+                //Change state and callback function for login in win popup
+                //Cannot have an synchronous render so need to use callback.
+                m.setState({mode:'login'},
+                          () =>{
+                            const win = m.state.winOb;
+                            const req = new XMLHttpRequest();
+                            prepLogin(win,req,resolve, reject, UnifileService, serviceName, this);
+                            });
+                      };
+                 }
     });
   }
 
