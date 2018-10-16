@@ -73,8 +73,22 @@ export default class ModalDialog extends React.Component {
   isOpened () {
     return this.state.mode !== 'hidden';
   }
+   //Init state.winOb value from iframe src (this ref)
+  setwind = ref => {
+		if (ref !== null)
+			 this.setState({winOb: ref.contentWindow ||ref.contentDocument});
+		  };
 
+  //conditional render for normal window and login window
   render () {
+    if (this.state.mode === 'login')
+		    return this.login();
+	  else
+		    return this.notify();
+  }
+  
+  notify ()
+  {
     if (this.state.mode !== 'hidden') {
       let markup = null;
       if (this.state.mode === 'prompt') {
@@ -118,5 +132,26 @@ export default class ModalDialog extends React.Component {
       );
     }
     return null;
+  }
+
+//Window for host an iframe with the login page (a customized html)
+login ()
+  {
+     return (
+        <section className="logModal visible">
+          <div className="panel" >
+          	<div className="title">Login</div>
+		  	<div className="close" onClick={() => this.ok()}>X</div>
+			<div className="content">
+			<iframe id ="frLogin" scrolling="no" src="about:blank" onLoad={this.getwind} ref={this.setwind}>
+			</iframe>
+			</div>
+			<div className="footer">
+			<button className="button" id = "button" onClick={() => this.ok()}>close</button>
+			</div>
+		  </div>
+         </section>
+      );
+    
   }
 }
