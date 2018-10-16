@@ -211,7 +211,7 @@ export default class UnifileService {
 			  req.send();
 			  return;
      	}    
-    return new Promise((resolve, reject) =>     return new Promise((resolve, reject) => {
+return new Promise((resolve, reject) => {
       const service = this.constructor.getServiceByName(serviceName);
       // Here we may not have the service info yet, e.g. if we did not ls '/'
       if (service && service.isLoggedIn) {
