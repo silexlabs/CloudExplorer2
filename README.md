@@ -8,23 +8,35 @@ Manage your users' cloud services from your application.
 ## Install
 
 ```
-$ npm i
-$ npm run build
+$ npm install --save github:silexlabs/CloudExplorer2#master
 ```
-
-This will compile the JS files from `src/` with [ReactJS](https://facebook.github.io/react/) and [Babel](https://babeljs.io/). The generated files will go in `dist/`.
-
-You can serve `dist` on `http://localhost:6805` with
-
-```
-$ npm start
-```
-
-And then access the demo app on `http://localhost:6805/ce/cloud-explorer/`
-
-This is what is done on heroku here: [a live demo](https://cloud-explorer2.herokuapp.com/ce/cloud-explorer/)
 
 ## Use
+
+Here is an example on how to use Cloud Explorer's router to expose an API used by the front end to list files, read and write - [see this file for a complete example](https://github.com/silexlabs/CloudExplorer2/blob/master/lib/index.js)
+
+```js
+// before this create an express application 
+
+const CloudExplorer = require('cloud-explorer');
+
+const router = new Router({
+  dropbox: {
+    clientId: '8lxz0i3aeztt0im',
+    clientSecret: 'twhvu6ztqnefkh6',
+    redirectUri: `${rootUrl}/ce/dropbox/oauth_callback`,
+    state: 'abcd'
+  },
+  ftp: {redirectUri: `${rootUrl}/ce/ftp/signin`},
+});
+
+app.use('/ce', router);
+```
+
+There is also an [example of use in Silex website builder here](https://github.com/silexlabs/Silex/blob/develop/dist/server/CloudExplorerRouter.js).
+
+
+### Client side
 
 For a complete example see the dist folder.
 
@@ -45,6 +57,30 @@ ce.openFile(['.jpg', '.jpeg', '.png', '.gif'])
 })
 .catch(e => alert('an error occured: ' + e.message));
 ```
+
+
+## Dev setup
+
+To contribute to Cloud Explorer, clone this repo and build:
+
+```
+$ git clone github:silexlabs/CloudExplorer2
+$ cd CloudExplorer2
+$ npm i
+$ npm run build
+```
+
+This will compile the JS files from `src/` with [ReactJS](https://facebook.github.io/react/) and [Babel](https://babeljs.io/). The generated files will go in `dist/`.
+
+You can serve `dist` on `http://localhost:6805` with
+
+```
+$ npm start
+```
+
+And then access the demo app on `http://localhost:6805/ce/cloud-explorer/`
+
+This is what is done on heroku here: [a live demo](https://cloud-explorer2.herokuapp.com/ce/cloud-explorer/)
 
 ## Docs
 
