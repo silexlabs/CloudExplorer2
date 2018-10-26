@@ -68,7 +68,7 @@ export default class CloudExplorer extends React.Component {
       this.ls();
     })
     .catch((e) => {
-      if (oldProps && oldProps.path) {
+      if (oldProps && oldProps.path && oldProps.path.length !== 0) {
         this.props.onCd(oldProps.path);
       }
       this.onUnifileError(e);
@@ -136,9 +136,9 @@ export default class CloudExplorer extends React.Component {
               <p>{ this.LOGGEDOUT_DETAILS }</p>
             </section>
           ), () => {
-          // Ok
+          // Ok, to restart the service must do this.cd() must know the service name.
             this.unifile.auth(this.props.path[0])
-            .catch(() => this.cd([]))
+            .catch(() => this.cd([]))     
             .then(() => this.ls());
           }, () => {
 
