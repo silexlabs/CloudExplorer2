@@ -187,30 +187,32 @@ export default class UnifileService {
   // The auth method has to be called on a click or keydown in order not to be blocked by the browser
   auth (serviceName) {
       //To avoid repeat code, this function prepare the login/auth process
-  function prepLogin(win, req, resolve, reject, UnifileService, serviceName, obj){
+ function prepLogin(win, req, UnifileService, serviceName){
+  	return new Promise((resolve, reject)  => {
  			req.open('POST', `${UnifileService.ROOT_URL}${serviceName}/authorize`);
 			req.onload = () => {
 			  if (req.responseText) {
-          win.location = req.responseText;
-          win.addEventListener('unload', () => {
-                win.onunload = null;
-                obj.startPollingAuthWin({
-                reject,
-                resolve,
-                serviceName,
-                win
-				      });
-				    });
+				win.location = req.responseText;
+				//For consistency
+				win.onunload = () => {
+				  win.onunload = null;
+				  this.startPollingAuthWin({
+					reject,
+					resolve,
+					serviceName,
+					win
+				  });
+				};
  			  } else {
-            obj.authEnded(serviceName, resolve, reject);
-            win.close();
+					this.authEnded(serviceName, resolve, reject);
+					win.close();
 				  }			
 				}
 			  req.onerror = reject;
 			  req.ontimeout = () => reject(new Error('Auth request timed out'));
-			  req.send();
-			  return;
-     	}    
+			  req.send();			
+		   });
+    }   
 return new Promise((resolve, reject) => {
       const service = this.constructor.getServiceByName(serviceName);
       // Here we may not have the service info yet, e.g. if we did not ls '/'
@@ -222,7 +224,7 @@ return new Promise((resolve, reject) => {
            if (service.isOAuth){
                 const win = window.open();
                 const req = new XMLHttpRequest();
-                prepLogin(win,req,resolve, reject, UnifileService, serviceName, this);
+                prepLogin.bind(this)(win,req, UnifileService, serviceName);
                 }
             else{
                 var cer = ce.cloudExplorer;				
@@ -233,7 +235,7 @@ return new Promise((resolve, reject) => {
                           () =>{
                             const win = m.state.winOb;
                             const req = new XMLHttpRequest();
-                            prepLogin(win,req,resolve, reject, UnifileService, serviceName, this);
+                            prepLogin.bind(this)(win,req, UnifileService, serviceName);
                             });
                       };
                  }
