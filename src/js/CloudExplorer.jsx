@@ -285,6 +285,7 @@ export default class CloudExplorer extends React.Component {
       return file;
     });
     this.unifile.upload(this.props.path, uploads, (progress) => {
+      console.log('upload progress', progress);
     })
     .then(() => {
       this.ls();

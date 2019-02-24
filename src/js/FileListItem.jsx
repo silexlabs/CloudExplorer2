@@ -85,7 +85,7 @@ export default class FileListItem extends React.Component {
                 <li><a
                   className={this.allowDelete ? 'enabled' : 'disabled'}
                   href={this.props.downloadUrl}
-                  target="_blank"
+                  target="_blank" rel="noopener noreferrer"
                 >{this.DOWNLOAD_LABEL}
                 </a></li>
               )
