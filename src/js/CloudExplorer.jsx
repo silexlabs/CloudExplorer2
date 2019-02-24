@@ -138,7 +138,7 @@ export default class CloudExplorer extends React.Component {
           ), () => {
           // Ok, to restart the service must do this.cd() must know the service name.
             this.unifile.auth(this.props.path[0])
-            .catch(() => this.cd([]))     
+            .catch(() => this.cd([]))
             .then(() => this.ls());
           }, () => {
 
@@ -285,6 +285,7 @@ export default class CloudExplorer extends React.Component {
       return file;
     });
     this.unifile.upload(this.props.path, uploads, (progress) => {
+      console.log('upload progress', progress);
     })
     .then(() => {
       this.ls();
