@@ -1,6 +1,6 @@
 {
   "name": "cloud-explorer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
   "main": "lib/router.js",
   "engines": {
@@ -39,7 +39,7 @@
     "express-session": "^1.13.0",
     "font-awesome": "^4.6.3",
     "multer": "^1.3.0",
-    "node-sass": "^3.10.1",
+    "node-sass": "^4.12.0",
     "node_modules-path": "^2.0.0",
     "npm-font-open-sans": "^1.0.3",
     "react": "^15.2.0",
@@ -56,14 +56,10 @@
     "eslint-plugin-react": "^7.4.0",
     "jest": "^21.2.1",
     "jest-localstorage-mock": "^2.1.0",
-    "pre-commit": "^1.2.2",
     "react-addons-test-utils": "^15.2.0",
     "uglify-js": "^3.3.27",
     "uglifyify": "^5.0.0"
   },
-  "precommit": [
-    "lint"
-  ],
   "jest": {
     "setupFiles": [
       "jest-localstorage-mock"
