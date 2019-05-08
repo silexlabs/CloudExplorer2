@@ -1,3 +1,4 @@
+import "@babel/polyfill";
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 
 const POLLING_FREQUENCY = 200;

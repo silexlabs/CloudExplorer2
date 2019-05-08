@@ -1,3 +1,4 @@
+import "@babel/polyfill";
 import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
