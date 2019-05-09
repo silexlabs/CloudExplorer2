@@ -55,7 +55,7 @@
     "jest": "^24.8.0",
     "jest-localstorage-mock": "^2.4.0",
     "node-sass": "^4.12.0",
-    "node_modules-path": "^2.0.2",
+    "node_modules-path": "*",
     "react": "^16.8.6",
     "react-addons-test-utils": "^15.6.2",
     "react-dom": "^16.8.6",
