@@ -8,7 +8,7 @@ Manage your users' cloud services from your application.
 ## Install
 
 ```
-$ npm install --save github:silexlabs/CloudExplorer2#master
+$ npm install --save cloud-explorer
 ```
 
 ## Use
@@ -16,7 +16,7 @@ $ npm install --save github:silexlabs/CloudExplorer2#master
 Here is an example on how to use Cloud Explorer's router to expose an API used by the front end to list files, read and write - [see this file for a complete example](https://github.com/silexlabs/CloudExplorer2/blob/master/lib/index.js)
 
 ```js
-// before this create an express application 
+// before this create an express application
 
 const CloudExplorer = require('cloud-explorer');
 
