@@ -77,7 +77,7 @@ export default class CloudExplorer extends React.Component {
 
   ERROR_MESSAGE = 'An error occured';
 
-  LOGGEDOUT_ERROR_MESSAGE = 'You are note logged in.';
+  LOGGEDOUT_ERROR_MESSAGE = 'You are not logged in.';
 
   LOGGEDOUT_DETAILS = 'Click ok to proceed to login';
 
@@ -138,7 +138,7 @@ export default class CloudExplorer extends React.Component {
           ), () => {
           // Ok, to restart the service must do this.cd() must know the service name.
             this.unifile.auth(this.props.path[0])
-            .catch(() => this.cd([]))     
+            .catch(() => this.cd([]))
             .then(() => this.ls());
           }, () => {
 
