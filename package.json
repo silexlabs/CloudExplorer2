@@ -1,11 +1,10 @@
 {
   "name": "cloud-explorer",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "",
   "main": "lib/router.js",
   "engines": {
-    "node": "8.10.x",
-    "npm": "5.6.x"
+    "node": ">=8.10.0 <=11.15.0"
   },
   "scripts": {
     "prepublish": "npm run build",
