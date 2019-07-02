@@ -1,6 +1,6 @@
 {
   "name": "cloud-explorer",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "",
   "main": "lib/router.js",
   "engines": {
@@ -32,6 +32,7 @@
     "express-session": "^1.16.1",
     "font-awesome": "^4.7.0",
     "multer": "^1.4.1",
+    "node_modules-path": "*",
     "npm-font-open-sans": "^1.1.0",
     "request": "^2.88.0",
     "unifile": "^2.0.5",
@@ -55,7 +56,6 @@
     "jest": "^24.8.0",
     "jest-localstorage-mock": "^2.4.0",
     "node-sass": "^4.12.0",
-    "node_modules-path": "*",
     "react": "^16.8.6",
     "react-addons-test-utils": "^15.6.2",
     "react-dom": "^16.8.6",
