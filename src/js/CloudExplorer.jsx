@@ -68,7 +68,7 @@ export default class CloudExplorer extends React.Component {
       this.ls();
     })
     .catch((e) => {
-      if (oldProps && oldProps.path) {
+      if (oldProps && oldProps.path && oldProps.path.length !== 0) {
         this.props.onCd(oldProps.path);
       }
       this.onUnifileError(e);
@@ -77,7 +77,7 @@ export default class CloudExplorer extends React.Component {
 
   ERROR_MESSAGE = 'An error occured';
 
-  LOGGEDOUT_ERROR_MESSAGE = 'You are note logged in.';
+  LOGGEDOUT_ERROR_MESSAGE = 'You are not logged in.';
 
   LOGGEDOUT_DETAILS = 'Click ok to proceed to login';
 
@@ -136,7 +136,7 @@ export default class CloudExplorer extends React.Component {
               <p>{ this.LOGGEDOUT_DETAILS }</p>
             </section>
           ), () => {
-          // Ok
+          // Ok, to restart the service must do this.cd() must know the service name.
             this.unifile.auth(this.props.path[0])
             .catch(() => this.cd([]))
             .then(() => this.ls());
@@ -285,6 +285,7 @@ export default class CloudExplorer extends React.Component {
       return file;
     });
     this.unifile.upload(this.props.path, uploads, (progress) => {
+      console.log('upload progress', progress);
     })
     .then(() => {
       this.ls();

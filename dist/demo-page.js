@@ -1,10 +1,11 @@
 /* eslint-disable */
 
+
 let selectedBtn = null;
 let selection = [];
 let extensions = null;
 
-window.onload = function onload () {
+window.addEventListener('load', function () {
   'use strict';
   const {ce} = document.querySelector('#ceIFrame').contentWindow;
   const setSelection = function setSelection (sel) {
@@ -97,4 +98,4 @@ window.onload = function onload () {
       unselectTab();
     }
   };
-};
+});
