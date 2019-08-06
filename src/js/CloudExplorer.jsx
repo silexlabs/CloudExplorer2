@@ -380,6 +380,7 @@ export default class CloudExplorer extends React.Component {
         </div>
         <div className="upload panel">
           <FilesDropZone
+            disabled={this.props.path.length === 0}
             onDrop={(files) => this.upload(files)}
           />
         </div>
