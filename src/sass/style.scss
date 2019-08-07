@@ -142,14 +142,12 @@ ul, li {
 #cloud-explorer .upload.button {
 	@extend .highlight;
 
-	&.disabled {
+	&.disabled, &.disabled:hover {
 		cursor: default;
 		color: $light;
 		opacity: .6;
-		&:hover  {
-			text-decoration:none;
-			color: $light;
-		}
+		pointer-events: none;
+		text-decoration: none;
 	}
 }
 
@@ -339,7 +337,7 @@ button:hover {
 }
 
 #cloud-explorer .breadcrumbs li:hover,
-#cloud-explorer .upload.panel:hover
+#cloud-explorer .upload.panel .button:hover
 {
 	@extend .highlight;
 }

@@ -46,11 +46,12 @@ export default class FilesDropZone extends React.Component {
   render () {
     return (
       <div
-        className="upload button"
+        className={`upload button${this.props.disabled ? ' disabled' : ''}`}
         onClick={() => this.input.click()}
         ref={(c) => (this.div = c)}
       >
         <input
+          disabled={this.props.disabled}
           multiple
           onChange={(e) => this.onDrop(e.target.files)}
           ref={(c) => (this.input = c)}
