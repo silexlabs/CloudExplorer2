@@ -46,6 +46,11 @@ export default class UnifileService {
     return path.slice(1).join('/');
   }
 
+  static getIconUrl (path, name) {
+    const nameWithSlash = path.length > 1 ? '/' + name : name;
+    return `${UnifileService.ROOT_URL}${path[0]}/icon/${this.getPath(path)}${nameWithSlash}`;
+  }
+
   static getUrl (path) {
     return `${UnifileService.ROOT_URL}${path[0]}/get/${this.getPath(path)}`;
   }

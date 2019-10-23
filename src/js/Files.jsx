@@ -17,7 +17,8 @@ export default class Files extends React.Component {
     onPick: PropTypes.func.isRequired,
     onRename: PropTypes.func.isRequired,
     path: PropTypes.arrayOf(PropTypes.string).isRequired,
-    selection: PropTypes.arrayOf(PropTypes.object).isRequired
+    selection: PropTypes.arrayOf(PropTypes.object).isRequired,
+    thumbnailMode: PropTypes.bool,
   }
 
   static defaultProps = {multiple: false}
@@ -181,12 +182,13 @@ export default class Files extends React.Component {
                 onRename={() => this.props.onRename(file)}
                 onLogout={(service) => this.props.onLogout(service)}
                 path={this.props.path}
+                thumbnailMode={this.props.thumbnailMode}
               >{file.displayName || file.name}
               </FileListItem>
             )
         }
       </li>
     ))));
-    return <section><ul className="files">{list}</ul></section>;
+    return <section><ul className={`files${this.props.thumbnailMode ? ' thumbnail-mode' : ''}`}>{list}</ul></section>;
   }
 }
