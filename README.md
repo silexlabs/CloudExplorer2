@@ -7,6 +7,8 @@ Manage your users' cloud services from your application.
 
 ## Install
 
+[Image Magick](https://github.com/ImageMagick/ImageMagick) is required unless you set the env var `ENABLE_IMAGE_MAGICK=false`, which will disable the resize of images for thumbnails (in this case it is discouraged to use the thumbnail mode).
+
 ```
 $ npm install --save cloud-explorer
 ```
@@ -50,6 +52,7 @@ And the Javascript:
 
 ```javascript
 const ce = document.querySelector('#ceIFrame').contentWindow.ce;
+ce.showThumbnails(true);
 ce.openFile(['.jpg', '.jpeg', '.png', '.gif'])
 .then(fileInfo => {
     if(fileInfo) alert('you chose:' + fileInfo.path);
@@ -57,6 +60,8 @@ ce.openFile(['.jpg', '.jpeg', '.png', '.gif'])
 })
 .catch(e => alert('an error occured: ' + e.message));
 ```
+
+In order to know what are the possible options, please [read the code](./src/js/App.jsx)
 
 
 ## Dev setup
