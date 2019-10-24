@@ -11,6 +11,8 @@ $thin-border: 1px solid $medium;
 $border-radius: .25em;
 $button-hover: $active-bg; //#31bbff;
 
+$thumbnailSize: 256px;
+
 // fonts
 $fa-font-path: "fonts";
 @import "font-awesome/scss/font-awesome.scss";

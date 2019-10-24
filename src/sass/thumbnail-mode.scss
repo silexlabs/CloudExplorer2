@@ -3,8 +3,8 @@
   flex-wrap: wrap;
   justify-content: center;
   &>li {
-    width: 255px;
-    height: 255px;
+    width: $thumbnailSize;
+    height: $thumbnailSize;
   }
   .file-list-item {
     width: 100%;
@@ -24,6 +24,10 @@
       line-height: 2;
       flex-grow: initial;
       font-weight: bold;
+    }
+    label {
+      display: block;
+      overflow: hidden;
     }
     &:hover {
       label, ul {
