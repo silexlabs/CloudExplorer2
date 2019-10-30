@@ -8,6 +8,7 @@ import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
 import UnifileService from './UnifileService';
+import WithCustomUi from './WithCustomUi'
 
 /**
  * Class which binds the UI and the Unifile service all together
@@ -287,7 +288,8 @@ export default class CloudExplorer extends React.Component {
       return file;
     });
     this.unifile.upload(this.props.path, uploads, (progress) => {
-      console.log('upload progress', progress);
+      // TODO: upload progress
+      console.log('TODO: upload progress', progress);
     })
     .then(() => {
       this.ls();
@@ -317,85 +319,53 @@ export default class CloudExplorer extends React.Component {
   }
 
   render () {
-    return (
-      <div
-        className={`root${this.state.loading ? ' loading' : ''}${this.state.cached ? ' cached' : ''}`}
-      >
-        <div className="panel top-button-bar">
-          <h2>{this.BUTTONS_TITLE}</h2>
-          <ButtonBar
-            onCreateFolder={() => this.mkdir()}
-            onReload={() => this.ls(true)}
-            onThumbnailMode={(thumbnailMode) => this.props.onThumbnailMode(thumbnailMode)}
-            thumbnailMode={this.props.thumbnailMode}
-            path={this.props.path}
-            selection={this.props.selection}
-          />
-          <ButtonConfirm
-            defaultFileName={this.props.defaultFileName}
-            inputName={this.props.inputName}
-            onCancel={() => this.cancel()}
-            onPick={(file) => this.props.onPick(file)}
-            onSave={(fileName) => this.props.onSave(fileName)}
-            path={this.props.path}
-            pickFolder={this.props.pickFolder}
-            selection={this.props.selection}
-          />
-        </div>
-        <div className="breadcrumbs panel">
-          <h2>{this.BREADCRUMBS_TITLE}</h2>
-          <Breadcrumbs
-            onEnter={(path) => this.cd(path)}
-            path={this.props.path}
-          />
-        </div>
-        <div className="files panel">
-          <Files
-            files={this.state.files.concat(this.state.uploadingFiles)}
-            getDownloadUrl={(file) => UnifileService.getUrl(this.props.path.concat([file.name]))}
-            multiple={this.props.multiple}
-            onChange={(selection) => this.props.onSelection(selection)}
-            onDelete={(file) => this.delete(file)}
-            onLogout={(service) => this.logout(service)}
-            onEnter={(folder) => this.cd([folder.name], true)}
-            onPick={(file) => this.props.onPick(file)}
-            onRename={(file) => this.rename(file.name)}
-            path={this.props.path}
-            ref={(c) => (this.filesComponent = c)}
-            selection={this.props.selection}
-            thumbnailMode={this.props.thumbnailMode}
-          />
-          <KeyboardNav
-            files={this.state.files}
-            focusElement={this.filesComponent}
-            onCancel={() => {
-              if (this.dialog.isOpened()) {
-                this.dialog.cancel();
-              } else if (this.filesComponent.isInputMode()) {
-                this.filesComponent.cancelInputMode();
-              } else {
-                this.cancel();
-              }
-            }}
-            onChange={(selection) => this.props.onSelection(selection)}
-            onEnter={(folder) => this.cd([folder.name], true)}
-            onPick={(file) => this.props.onPick(file)}
-            selection={this.props.selection}
-          />
-        </div>
-        <div className="upload panel">
-          <FilesDropZone
-            disabled={this.props.path.length === 0}
-            onDrop={(files) => this.upload(files)}
-          />
-        </div>
-
-        <div className="dialogs panel">
-          <h2>{this.DIALOG_TITLE}</h2>
-          <ModalDialog
-            ref={(c) => (this.dialog = c)}
-          />
-        </div>
-      </div>);
+    return <WithCustomUi
+      buttonBar={<ButtonBar
+        onCreateFolder={() => this.mkdir()}
+        onReload={() => this.ls(true)}
+        onThumbnailMode={(thumbnailMode) => this.props.onThumbnailMode(thumbnailMode)}
+        thumbnailMode={this.props.thumbnailMode}
+        path={this.props.path}
+        selection={this.props.selection}
+      />}
+      breadcrumbs={<Breadcrumbs
+        onEnter={(path) => this.cd(path)}
+        path={this.props.path}
+      />}
+      filesDropZone={<FilesDropZone
+        disabled={this.props.path.length === 0}
+        onDrop={(files) => this.upload(files)}
+      />}
+      filesComponent={<Files
+        files={this.state.files.concat(this.state.uploadingFiles)}
+        getDownloadUrl={(file) => !file.upload && this.props.path.length > 0 && !file.isDir && !UnifileService.isService(file) ? UnifileService.getUrl(this.props.path.concat([file.name])) : null}
+        getThumbnailUrl={(file) => file.isDir ? UnifileService.getIconUrl([this.props.path[0]], '.folder') : UnifileService.getIconUrl(this.props.path, file.name) }
+        multiple={this.props.multiple}
+        onChange={(s) => this.props.onSelection(s)}
+        onDelete={(file) => this.delete(file)}
+        onLogout={(service) => this.logout(service)}
+        onEnter={(folder) => this.cd([folder.name], true)}
+        onPick={(file) => this.props.onPick(file)}
+        onRename={(file) => this.rename(file.name)}
+        path={this.props.path}
+        ref={(c) => (this.filesComponent = c)}
+        selection={this.props.selection}
+        thumbnailMode={this.props.thumbnailMode}
+      />}
+      loading={this.state.loading}
+      cached={this.state.cached}
+      files={this.state.files}
+      defaultFileName={this.props.defaultFileName}
+      inputName={this.props.inputName}
+      onCancel={() => this.cancel()}
+      onPick={(file) => this.props.onPick(file)}
+      onSave={(fileName) => this.props.onSave(fileName)}
+      path={this.props.path}
+      pickFolder={this.props.pickFolder}
+      selection={this.props.selection}
+      onSelection={(s) => this.props.onSelection(s)}
+      onEnter={(folder) => this.cd([folder.name], true)}
+      />;
   }
 }
+

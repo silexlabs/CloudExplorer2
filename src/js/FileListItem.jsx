@@ -7,12 +7,13 @@ import UnifileService from './UnifileService';
 export default class FileListItem extends React.Component {
   static propTypes = {
     children: PropTypes.string.isRequired,
-    downloadUrl: PropTypes.string.isRequired,
+    downloadUrl: PropTypes.string,
     file: PropTypes.shape({name: PropTypes.string.isRequired}).isRequired,
     onDelete: PropTypes.func.isRequired,
     onLogout: PropTypes.func.isRequired,
     onRename: PropTypes.func.isRequired,
-    path: PropTypes.arrayOf(PropTypes.string).isRequired,
+    path: PropTypes.arrayOf(PropTypes.string),
+    getThumbnailUrl: PropTypes.func.isRequired,
     thumbnailMode: PropTypes.bool,
   }
 
@@ -63,11 +64,11 @@ export default class FileListItem extends React.Component {
   }
 
   render () {
-    const {file} = this.props;
+    const {children, thumbnailMode, path, downloadUrl, file, getThumbnailUrl} = this.props;
     const isService = UnifileService.isService(file);
-    this.allowDownload = !file.upload && this.props.path.length > 0 && !file.isDir && !isService;
-    this.allowDelete = !file.upload && this.props.path.length > 0 && !isService;
-    this.allowRename = !file.upload && this.props.path.length > 0 && !isService;
+    const allowDownload = !!downloadUrl;
+    const allowDelete = !file.upload && path && path.length > 0 && !isService;
+    const allowRename = !file.upload && path && path.length > 0 && !isService;
     const mime = file.mime ? file.mime.replace(/\//g, ' ') : '';
     const className = this.constructor.getClassName(file, isService, mime);
     return (
@@ -76,29 +77,27 @@ export default class FileListItem extends React.Component {
           `file-list-item${file.upload ? ` uploading progress-${file.upload.progress}` : ''}${file.isDir ? ' folder' : ''}`
         }
         style={
-          this.props.thumbnailMode ? file.isDir ? {
-            backgroundImage: `url("${UnifileService.getIconUrl([this.props.path[0]], '.folder')}")`,
-          } : {
-            backgroundImage: `url("${UnifileService.getIconUrl(this.props.path, file.name)}")`,
+          thumbnailMode ? {
+            backgroundImage: `url("${getThumbnailUrl(file)}")`,
           } : null
         }
       >
         {
-          this.props.thumbnailMode ? ''
+          thumbnailMode ? ''
           : <div className={className} />
         }
-        <label>{this.props.children}</label>
+        <label>{children}</label>
         <ul className="inline-button-bar">
           {
             file.isService ? <li className={ file.isLoggedIn ? 'enabled' : 'disabled' }
               onClick={() => file.isLoggedIn && this.logout()}>{this.LOGOUT_LABEL}</li> : ''
           }
           {
-            this.allowDownload
+            allowDownload
               ? (
                 <li><a
-                  className={this.allowDelete ? 'enabled' : 'disabled'}
-                  href={this.props.downloadUrl}
+                  className='enabled'
+                  href={downloadUrl}
                   target="_blank" rel="noopener noreferrer"
                 >{this.DOWNLOAD_LABEL}
                 </a></li>
@@ -106,13 +105,13 @@ export default class FileListItem extends React.Component {
               : ''
           }
           <li
-            className={this.allowDelete ? 'enabled' : 'disabled'}
-            onClick={() => this.allowDelete && this.delete()}
+            className={allowDelete ? 'enabled' : 'disabled'}
+            onClick={() => allowDelete && this.delete()}
           >{this.DELETE_LABEL}
           </li>
           <li
-            className={this.allowRename ? 'enabled' : 'disabled'}
-            onClick={() => this.allowRename && this.rename()}
+            className={allowRename ? 'enabled' : 'disabled'}
+            onClick={() => allowRename && this.rename()}
           >{this.RENAME_LABEL}
           </li>
         </ul>

@@ -1,0 +1,38 @@
+{
+  "search": {
+    "total": 2,
+    "total_pages": 1,
+    "results": [
+      {
+        "user": {
+          "name": "John Doe",
+          "links": { "html": "https://lexoyo.me" }
+        },
+        "id": 12345,
+        "uppdated_at": "2019-04-20T10:30:00",
+        "width": 3098,
+        "height": 3154,
+        "urls": {
+          "regular": "http://localhost:6805/ce/fs/get/Downloads/ben-white-qDY9ahp0Mto-unsplash.jpg",
+          "raw": "http://localhost:6805/ce/fs/get/Downloads/ben-white-qDY9ahp0Mto-unsplash.jpg?"
+        }
+      },
+      {
+        "user": {
+          "name": "Jane Doe",
+          "links": { "html": "https://lexoyo.me" }
+        },
+        "id": 67890,
+        "uppdated_at": "2015-04-20T10:30:00",
+        "width": 3098,
+        "height": 3154,
+        "urls": {
+          "regular": "http://localhost:6805/ce/fs/get/Downloads/ben-white-qDY9ahp0Mto-unsplash.jpg",
+          "raw": "http://localhost:6805/ce/fs/get/Downloads/ben-white-qDY9ahp0Mto-unsplash.jpg?"
+        }
+      }
+
+    ]
+  }
+}
+

@@ -1,4 +1,6 @@
 import "@babel/polyfill";
+import {ROOT_URL} from './ServiceUtils';
+
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
 
 const POLLING_FREQUENCY = 200;
@@ -14,17 +16,6 @@ const OK_STATUSES = [
 const serviceMap = new Map();
 
 export default class UnifileService {
-
-  /**
-   * Endpoint of the API is defined by the router
-   * It depends where the router is "attached"
-   * It can be found in ".." of the cloud-explorer.html
-   * /abc/def/cloud-explorer/cloud-explorer.html => /abc/def/
-   */
-  static ROOT_URL = `${window.location.href
-  .split('/')
-  .slice(0, -2)
-  .join('/')}/`;
 
   currentPath = [];
 
@@ -48,11 +39,11 @@ export default class UnifileService {
 
   static getIconUrl (path, name) {
     const nameWithSlash = path.length > 1 ? '/' + name : name;
-    return `${UnifileService.ROOT_URL}${path[0]}/icon/${this.getPath(path)}${nameWithSlash}`;
+    return `${ROOT_URL}${path[0]}/icon/${this.getPath(path)}${nameWithSlash}`;
   }
 
   static getUrl (path) {
-    return `${UnifileService.ROOT_URL}${path[0]}/get/${this.getPath(path)}`;
+    return `${ROOT_URL}${path[0]}/get/${this.getPath(path)}`;
   }
 
   static getServices () {
@@ -200,7 +191,7 @@ export default class UnifileService {
         // Open a blank window right away, before we know the URL, otherwise the browser blocks it
         const win = window.open();
         const req = new XMLHttpRequest();
-        req.open('POST', `${UnifileService.ROOT_URL}${serviceName}/authorize`);
+        req.open('POST', `${ROOT_URL}${serviceName}/authorize`);
         req.onload = () => {
           if (req.responseText) {
             win.location = req.responseText;
@@ -315,7 +306,7 @@ export default class UnifileService {
         progress(0);
       };
     }
-    const url = `${this.ROOT_URL}${route}`;
+    const url = `${ROOT_URL}${route}`;
     oReq.open(method, url);
     if (receiveBinary) {
       oReq.responseType = 'blob';
