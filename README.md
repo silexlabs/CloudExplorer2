@@ -7,8 +7,6 @@ Manage your users' cloud services from your application.
 
 ## Install
 
-[Image Magick](https://github.com/ImageMagick/ImageMagick) is required to resize images in thumbnail view.
-
 ```
 $ npm install --save cloud-explorer
 ```
