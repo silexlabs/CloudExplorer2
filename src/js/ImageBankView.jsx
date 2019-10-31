@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import WithCustomUi from './WithCustomUi'
+import MainView from './MainView'
 import {list, search, random} from './ImageBankService.js'
 import Files from './Files';
 import ImageBankButtonBar from './ImageBankButtonBar'
 
-export default function ImageBankExplorer(props) {
+export default function (props) {
   const [query, setQuery] = useState('')
   const [loadedData, setLoadedData] = useState({files: [], query: null, pending: false})
   if(loadedData.pending === false && query !== loadedData.query) {
@@ -39,7 +39,7 @@ export default function ImageBankExplorer(props) {
     }
   }
 
-  return <WithCustomUi
+  return <MainView
     buttonBar={<ImageBankButtonBar
       onChange={val => setQuery(val)}
       value={query}

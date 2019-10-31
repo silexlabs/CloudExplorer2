@@ -3,9 +3,12 @@ import KeyboardNav from './KeyboardNav';
 import ModalDialog from './ModalDialog';
 import React from 'react';
 
-// FIXME: do not need this
-let dialog
+const dialog = React.createRef()
 
+/**
+ * This component holds the layout of the main view in CE, plus some common logic
+ * It is instanciated by the view, e.g. CloudExplorerView and ImageBankView
+ */
 export default function({buttonBar, breadcrumbs, filesDropZone, filesComponent, files, onEnter, onSelection, loading, cached, onCancel, onPick, onSave, defaultFileName, inputName, path, pickFolder, selection }) {
   return (
     <div
@@ -33,8 +36,8 @@ export default function({buttonBar, breadcrumbs, filesDropZone, filesComponent, 
           files={files}
           focusElement={filesComponent}
           onCancel={() => {
-            if (dialog.isOpened()) {
-              dialog.cancel();
+            if (dialog.current.isOpened()) {
+              dialog.current.cancel();
             } else if (filesComponent.isInputMode()) {
               filesComponent.cancelInputMode();
             } else {
@@ -53,7 +56,7 @@ export default function({buttonBar, breadcrumbs, filesDropZone, filesComponent, 
 
       <div className="dialogs panel">
         <ModalDialog
-          ref={(c) => (dialog = c)}
+          ref={dialog}
         />
       </div>
     </div>);

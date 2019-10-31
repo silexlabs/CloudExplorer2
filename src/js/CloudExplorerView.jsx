@@ -8,12 +8,12 @@ import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
 import UnifileService from './UnifileService';
-import WithCustomUi from './WithCustomUi'
+import MainView from './MainView'
 
 /**
  * Class which binds the UI and the Unifile service all together
  */
-export default class CloudExplorer extends React.Component {
+export default class extends React.Component {
 
   static propTypes = {
     defaultFileName: PropTypes.string,
@@ -319,7 +319,7 @@ export default class CloudExplorer extends React.Component {
   }
 
   render () {
-    return <WithCustomUi
+    return <MainView
       buttonBar={<ButtonBar
         onCreateFolder={() => this.mkdir()}
         onReload={() => this.ls(true)}

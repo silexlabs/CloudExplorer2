@@ -1,10 +1,10 @@
-import CloudExplorer from './CloudExplorer';
+import CloudExplorerView from './CloudExplorerView';
 import Tabs from './Tabs';
 import React from 'react';
 import ReactDom from 'react-dom';
 import UnifileService from './UnifileService';
 import * as ImageBankService from './ImageBankService';
-import ImageBankExplorer from './ImageBankExplorer';
+import ImageBankView from './ImageBankView';
 
 const STORAGE_KEY_PATH = 'CloudExplorer.path';
 
@@ -224,7 +224,7 @@ class App extends React.Component {
         hide={this.getHideTabs()}
         elements={[{name: 'user-files', displayName: 'Your images'}].concat(this.state.imageBanks)}
         >
-        <CloudExplorer
+        <CloudExplorerView
           key="CloudExplorerComponentKey"
           defaultFileName={this.state.defaultFileName}
           extensions={this.state.extensions}
@@ -243,7 +243,7 @@ class App extends React.Component {
           thumbnailMode={this.state.thumbnailMode}
           onThumbnailMode={thumbnailMode => this.setState({thumbnailMode})}
         />
-        { this.state.imageBanks.map(bank => <ImageBankExplorer
+        { this.state.imageBanks.map(bank => <ImageBankView
             key={bank.name}
             bankName={bank.name}
             selection={this.state.selection}
