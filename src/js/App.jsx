@@ -14,12 +14,18 @@ const STORAGE_KEY_PATH = 'CloudExplorer.path';
 class App extends React.Component {
 
   static createBlob (path, file) {
-    return Object.assign({}, file, {
-      folder: UnifileService.getPath(path),
-      path: UnifileService.getPath(path.concat(file.name)),
-      service: path[0],
-      url: UnifileService.getUrl(path.concat(file.name))
-    });
+    if(path.length) {
+      return Object.assign({}, file, {
+        folder: UnifileService.getPath(path),
+        path: UnifileService.getPath(path.concat(file.name)),
+        service: path[0],
+        url: UnifileService.getUrl(path.concat(file.name))
+      });
+    }
+    else {
+      // case of an absolute URL (probably an image bank?
+      return Object.assign({}, file);
+    }
   }
 
   static fromBlobToPath (blob, folderPath = false) {
