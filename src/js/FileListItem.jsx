@@ -12,7 +12,8 @@ export default class FileListItem extends React.Component {
     onDelete: PropTypes.func.isRequired,
     onLogout: PropTypes.func.isRequired,
     onRename: PropTypes.func.isRequired,
-    path: PropTypes.arrayOf(PropTypes.string).isRequired
+    path: PropTypes.arrayOf(PropTypes.string).isRequired,
+    thumbnailMode: PropTypes.bool,
   }
 
   static getClassName (file, isService, mime) {
@@ -70,10 +71,22 @@ export default class FileListItem extends React.Component {
     const mime = file.mime ? file.mime.replace(/\//g, ' ') : '';
     const className = this.constructor.getClassName(file, isService, mime);
     return (
-      <section className={
-        `file-list-item${file.upload ? ` uploading progress-${file.upload.progress}` : ''}`
-      }>
-        <i className={className} />
+      <section
+        className={
+          `file-list-item${file.upload ? ` uploading progress-${file.upload.progress}` : ''}${file.isDir ? ' folder' : ''}`
+        }
+        style={
+          this.props.thumbnailMode ? file.isDir ? {
+            backgroundImage: `url("${UnifileService.getIconUrl([this.props.path[0]], '.folder')}")`,
+          } : {
+            backgroundImage: `url("${UnifileService.getIconUrl(this.props.path, file.name)}")`,
+          } : null
+        }
+      >
+        {
+          this.props.thumbnailMode ? ''
+          : <div className={className} />
+        }
         <label>{this.props.children}</label>
         <ul className="inline-button-bar">
           {

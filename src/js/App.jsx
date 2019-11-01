@@ -39,7 +39,8 @@ class App extends React.Component {
     onPick: null,
     path: [],
     pickFolder: false,
-    selection: []
+    selection: [],
+    thumbnailMode: false,
   }
 
   componentWillMount () {
@@ -103,6 +104,9 @@ class App extends React.Component {
    * API
    * //////////////////
    */
+  thumbnailMode(show) {
+    this.setState({ thumbnailMode: show });
+  }
   openFile (extensions = null) {
     return new Promise((resolve, reject) => {
       this.setState({
@@ -219,6 +223,8 @@ class App extends React.Component {
         pickFolder={this.state.pickFolder}
         ref={(c) => this.onCloudExplorerReady(c)}
         selection={this.state.selection}
+        thumbnailMode={this.state.thumbnailMode}
+        onThumbnailMode={thumbnailMode => this.setState({thumbnailMode})}
       />
     );
   }

@@ -25,7 +25,9 @@ export default class CloudExplorer extends React.Component {
     onSelection: PropTypes.func.isRequired,
     path: PropTypes.arrayOf(PropTypes.string).isRequired,
     pickFolder: PropTypes.bool.isRequired,
-    selection: PropTypes.arrayOf(PropTypes.object).isRequired
+    selection: PropTypes.arrayOf(PropTypes.object).isRequired,
+    thumbnailMode: PropTypes.bool,
+    onThumbnailMode: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -324,6 +326,8 @@ export default class CloudExplorer extends React.Component {
           <ButtonBar
             onCreateFolder={() => this.mkdir()}
             onReload={() => this.ls(true)}
+            onThumbnailMode={(thumbnailMode) => this.props.onThumbnailMode(thumbnailMode)}
+            thumbnailMode={this.props.thumbnailMode}
             path={this.props.path}
             selection={this.props.selection}
           />
@@ -359,6 +363,7 @@ export default class CloudExplorer extends React.Component {
             path={this.props.path}
             ref={(c) => (this.filesComponent = c)}
             selection={this.props.selection}
+            thumbnailMode={this.props.thumbnailMode}
           />
           <KeyboardNav
             files={this.state.files}

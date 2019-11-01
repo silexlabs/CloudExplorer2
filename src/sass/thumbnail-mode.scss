@@ -1,0 +1,47 @@
+#cloud-explorer .files.thumbnail-mode {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  &>li {
+    width: $thumbnailSize;
+    height: $thumbnailSize;
+  }
+  .file-list-item {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center;
+    &.folder {
+      background-size: 80%;
+    }
+    ul li, ul li a:link { color: white }
+    label, ul {
+      width: 100%;
+      text-align: center;
+      height: 26px;
+      line-height: 2;
+      flex-grow: initial;
+      font-weight: bold;
+    }
+    label {
+      display: block;
+      overflow: hidden;
+    }
+    &:hover {
+      label, ul {
+        background-color: rgba(0, 0, 0, .5);
+        color: white;
+      }
+    }
+  }
+  .inline-button-bar {
+    opacity: 1;
+    li {
+      margin: auto;
+    }
+  }
+
+}
+

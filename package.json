@@ -1,6 +1,6 @@
 {
   "name": "cloud-explorer",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "description": "",
   "main": "lib/router.js",
   "engines": {
@@ -26,15 +26,18 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "buffer-image-size": "^0.6.4",
     "cookie-parser": "^1.4.4",
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "express-session": "^1.16.1",
+    "file-icon-vectors": "^1.0.0",
     "font-awesome": "^4.7.0",
     "multer": "^1.4.1",
     "node_modules-path": "*",
     "npm-font-open-sans": "^1.1.0",
     "request": "^2.88.0",
+    "sharp": "^0.23.2",
     "unifile": "^2.0.7",
     "unifile-webdav": "1.1.x"
   },

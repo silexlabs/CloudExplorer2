@@ -17,6 +17,7 @@ export default class KeyboardNav extends React.Component {
     window.addEventListener('keydown', (event) => {
       switch (event.code) {
         case 'ArrowDown':
+        case 'ArrowRight':
           if (this.props.selection.length > 0) {
             const idx = this.props.files.findIndex((file) => file.name === this.props.selection[0].name);
             if (idx + 1 < this.props.files.length) {
@@ -27,6 +28,7 @@ export default class KeyboardNav extends React.Component {
           }
           break;
         case 'ArrowUp':
+        case 'ArrowLeft':
           if (this.props.selection.length > 0) {
             const idx = this.props.files.findIndex((file) => file.name === this.props.selection[0].name);
             if (idx - 1 >= 0) {
