@@ -8,15 +8,17 @@ export default function (props) {
   const [query, setQuery] = useState('')
   const [loadedData, setLoadedData] = useState({files: [], query: null, pending: false})
   if(loadedData.pending === false && query !== loadedData.query) {
-    function done(files) {
+    function done(files, numFiles) {
       setLoadedData({
         pending: false,
         query,
         files,
+        numFiles,
       })
     }
     function error(err) {
-      // TODO
+      // TODO: use notif of CE
+      console.error(err)
       alert(err)
       setLoadedData({
         pending: false,
@@ -29,12 +31,12 @@ export default function (props) {
     }))
     if(query) {
       search(props.bankName, query)
-        .then(json => done(json.results))
+        .then(json => done(json.results, json.total))
         .catch(err => error(err))
     }
     else {
       random(props.bankName)
-        .then(json => done(json))
+        .then(json => done(json.results, json.total))
         .catch(err => error(err))
     }
   }
@@ -43,7 +45,7 @@ export default function (props) {
     buttonBar={<ImageBankButtonBar
       onChange={val => setQuery(val)}
       value={query}
-      numResults={loadedData.files.length}
+      numResults={loadedData.numFiles || loadedData.files.length}
     />}
     filesComponent={<Files
       files={loadedData.files}

@@ -229,7 +229,7 @@ class App extends React.Component {
         hide={this.getHideTabs()}
         elements={[{name: 'user-files', displayName: 'Your images'}].concat(this.state.imageBanks)}
         >
-        <CloudExplorerView
+        {[<CloudExplorerView
           key="CloudExplorerComponentKey"
           defaultFileName={this.state.defaultFileName}
           extensions={this.state.extensions}
@@ -247,8 +247,8 @@ class App extends React.Component {
           selection={this.state.selection}
           thumbnailMode={this.state.thumbnailMode}
           onThumbnailMode={thumbnailMode => this.setState({thumbnailMode})}
-        />
-        { this.state.imageBanks.map(bank => <ImageBankView
+        />]
+        .concat(this.state.imageBanks.map(bank => <ImageBankView
             key={bank.name}
             bankName={bank.name}
             selection={this.state.selection}
@@ -257,6 +257,7 @@ class App extends React.Component {
             onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
             onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
           />)
+        )
         }
       </Tabs>
     );
