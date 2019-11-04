@@ -9,14 +9,15 @@ export default class Files extends React.Component {
   static propTypes = {
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
     getDownloadUrl: PropTypes.func.isRequired,
+    getThumbnailUrl: PropTypes.func.isRequired,
     multiple: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    onEnter: PropTypes.func.isRequired,
-    onLogout: PropTypes.func.isRequired,
-    onPick: PropTypes.func.isRequired,
-    onRename: PropTypes.func.isRequired,
-    path: PropTypes.arrayOf(PropTypes.string).isRequired,
+    onDelete: PropTypes.func,
+    onEnter: PropTypes.func,
+    onLogout: PropTypes.func,
+    onPick: PropTypes.func,
+    onRename: PropTypes.func,
+    path: PropTypes.arrayOf(PropTypes.string),
     selection: PropTypes.arrayOf(PropTypes.object).isRequired,
     thumbnailMode: PropTypes.bool,
   }
@@ -26,13 +27,10 @@ export default class Files extends React.Component {
   state = {
     createFolderMode: false,
     renameFileData: {},
-    renameFileMode: false
+    renameFileMode: false,
+    lastClickedEl: null,
+    lastClickedTime: Date.now(),
   }
-
-  lastClickedEl = null
-
-  lastClickedTime = Date.now();
-
 
   /*
    * Called directly by owner class
@@ -92,12 +90,11 @@ export default class Files extends React.Component {
 
   isDoubleClick (element) {
     const now = Date.now();
-    if (element === this.lastClickedEl && now - this.lastClickedTime < DBLCLICK_DELAY_MS) {
-      this.lastClickedEl = null;
+    if (element === this.state.lastClickedEl && now - this.state.lastClickedTime < DBLCLICK_DELAY_MS) {
+      this.setState({lastClickedEl: null});
       return true;
     }
-    this.lastClickedEl = element;
-    this.lastClickedTime = now;
+    this.setState({lastClickedEl: element, lastClickedTime: now});
     return false;
   }
 
@@ -141,7 +138,7 @@ export default class Files extends React.Component {
       ));
     }
     // Each file has the extension in its export default class name
-    const pathStr = this.props.path.join('/');
+    const pathStr = this.props.path ? this.props.path.join('/') : '';
     list = list.concat(this.props.files
     // Filter the uploading files to other folders
     .filter((file) => !file.upload || file.upload.path.join('/') === pathStr)
@@ -177,6 +174,7 @@ export default class Files extends React.Component {
             : (
               <FileListItem
                 downloadUrl={this.props.getDownloadUrl(file)}
+                getThumbnailUrl={file => this.props.getThumbnailUrl(file)}
                 file={file}
                 onDelete={() => this.props.onDelete(file)}
                 onRename={() => this.props.onRename(file)}

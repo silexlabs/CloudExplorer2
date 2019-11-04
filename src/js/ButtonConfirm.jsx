@@ -6,9 +6,9 @@ export default class ButtonConfirm extends React.Component {
     defaultFileName: PropTypes.string,
     inputName: PropTypes.bool,
     onCancel: PropTypes.func.isRequired,
-    onPick: PropTypes.func.isRequired,
+    onPick: PropTypes.func,
     onSave: PropTypes.func.isRequired,
-    path: PropTypes.arrayOf(PropTypes.string).isRequired,
+    path: PropTypes.arrayOf(PropTypes.string),
     pickFolder: PropTypes.bool.isRequired,
     selection: PropTypes.arrayOf(PropTypes.object).isRequired
   }
@@ -43,7 +43,7 @@ export default class ButtonConfirm extends React.Component {
     // Select folder with enter the folder and click ok
     return this.props.selection.length === 0 &&
       this.props.pickFolder &&
-      this.props.path.length > 0;
+      (!this.props.path && this.props.path.length > 0);
   }
 
   isInputNameValid () {

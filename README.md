@@ -7,8 +7,6 @@ Manage your users' cloud services from your application.
 
 ## Install
 
-[Image Magick](https://github.com/ImageMagick/ImageMagick) is required unless you set the env var `ENABLE_IMAGE_MAGICK=false`, which will disable the resize of images for thumbnails (in this case it is discouraged to use the thumbnail mode).
-
 ```
 $ npm install --save cloud-explorer
 ```
@@ -63,6 +61,15 @@ ce.openFile(['.jpg', '.jpeg', '.png', '.gif'])
 
 In order to know what are the possible options, please [read the code](./src/js/App.jsx)
 
+### Server side config
+
+When creating CE2 router, your app can pass it options, please see the example in `lib/index.js`. This is how you are supposed to enable or disable cloud services, or features.
+
+Also you can add custom services and image banks, for this you can use the methods of the Router class: `addService` and `addImageBank`.
+
+Notes:
+
+* if you enable only one service, CE2 will be in "single service" mode and the user will not be presented the list of services but directly enters the only service (if logged in).
 
 ## Dev setup
 
