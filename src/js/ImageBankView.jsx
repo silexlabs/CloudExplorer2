@@ -63,6 +63,7 @@ export default function (props) {
     onPick={(file) => props.onPick(file)}
     selection={props.selection}
     onSelection={(s) => props.onSelection(s)}
+    onCancel={(s) => props.onCancel(s)}
     />
 }
 
