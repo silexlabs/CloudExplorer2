@@ -37,7 +37,7 @@ export default class FileListItem extends React.Component {
 
   CONFIRMATION_FILENAME = 'This file is about to be deleted: ';
 
-  DOWNLOAD_LABEL = 'Download';
+  DOWNLOAD_LABEL = 'Preview';
 
   DELETE_LABEL = 'Delete';
 
