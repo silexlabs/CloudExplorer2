@@ -1,6 +1,6 @@
 {
   "name": "cloud-explorer",
-  "version": "2.0.18",
+  "version": "2.0.19",
   "description": "",
   "main": "lib/router.js",
   "engines": {
@@ -39,7 +39,7 @@
     "npm-font-open-sans": "^1.1.0",
     "request": "^2.88.0",
     "sharp": "^0.23.2",
-    "unifile": "^2.0.7",
+    "unifile": "^2.0.8",
     "unifile-webdav": "1.1.x",
     "unsplash-js": "^6.0.0"
   },
