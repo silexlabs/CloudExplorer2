@@ -58,6 +58,8 @@ export default class KeyboardNav extends React.Component {
           this.props.onEnter(file);
         } else if (this.props.selection.length > 0) {
           this.props.onPick(this.props.selection);
+        } else if (this.props.pickFolder) {
+          this.props.onPick(this.props.selection);
         }
         // Do not handle the key event (it may be used by save as dialog)
         return;

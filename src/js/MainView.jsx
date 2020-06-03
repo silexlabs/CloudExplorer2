@@ -9,7 +9,7 @@ const dialog = React.createRef()
  * This component holds the layout of the main view in CE, plus some common logic
  * It is instanciated by the view, e.g. CloudExplorerView and ImageBankView
  */
-export default function({buttonBar, breadcrumbs, filesDropZone, filesComponent, files, onEnter, onSelection, loading, cached, onCancel, onPick, onSave, defaultFileName, inputName, path, pickFolder, selection }) {
+export default function({cancelInputMode, isInputMode, buttonBar, breadcrumbs, filesDropZone, filesComponent, files, onEnter, onSelection, loading, cached, onCancel, onPick, onSave, defaultFileName, inputName, path, pickFolder, selection }) {
   return (
     <div
       className={'cloud-explorer-component' + (loading ? ' loading' : '') + (cached ? ' cached' : '')}
@@ -35,11 +35,13 @@ export default function({buttonBar, breadcrumbs, filesDropZone, filesComponent, 
         <KeyboardNav
           files={files}
           focusElement={filesComponent}
+          pickFolder={pickFolder}
+          selection={selection}
           onCancel={() => {
             if (dialog.current.isOpened()) {
               dialog.current.cancel();
-            } else if (filesComponent.isInputMode()) {
-              filesComponent.cancelInputMode();
+            } else if (isInputMode()) {
+              cancelInputMode();
             } else {
               onCancel();
             }

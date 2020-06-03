@@ -43,7 +43,8 @@ export default class ButtonConfirm extends React.Component {
     // Select folder with enter the folder and click ok
     return this.props.selection.length === 0 &&
       this.props.pickFolder &&
-      (!this.props.path && this.props.path.length > 0);
+      this.props.path &&
+      this.props.path.length > 0;
   }
 
   isInputNameValid () {

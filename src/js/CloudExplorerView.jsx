@@ -1,9 +1,7 @@
 import Breadcrumbs from './Breadcrumbs';
 import ButtonBar from './ButtonBar';
-import ButtonConfirm from './ButtonConfirm';
 import Files from './Files';
 import FilesDropZone from './FilesDropZone';
-import KeyboardNav from './KeyboardNav';
 import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -336,6 +334,8 @@ export default class extends React.Component {
         disabled={this.props.path.length === 0}
         onDrop={(files) => this.upload(files)}
       />}
+      cancelInputMode = {() => this.filesComponent.cancelInputMode()}
+      isInputMode = {() => this.filesComponent.isInputMode()}
       filesComponent={<Files
         files={this.state.files.concat(this.state.uploadingFiles)}
         getDownloadUrl={(file) => !file.upload && this.props.path.length > 0 && !file.isDir && !UnifileService.isService(file) ? UnifileService.getUrl(this.props.path.concat([file.name])) : null}

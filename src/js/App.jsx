@@ -12,6 +12,24 @@ const STORAGE_KEY_PATH = 'CloudExplorer.path';
  * Class in charge of the history and init of the main CloudExplorer component
  */
 class App extends React.Component {
+  static focusInput
+  static focus() {
+    if (!App.focusInput) {
+      App.focusInput = document.createElement('input');
+
+      // hide the focus input and attach it to the DOM
+      App.focusInput.style.left = '-1000px';
+      App.focusInput.style.position = 'absolute';
+      document.body.appendChild(App.focusInput);
+    }
+    // setTimeout because we might need to wait for a click to finish bubbling
+    // e.g. when edit text, the UI layer is hidden, click on the stage => focus on the stage iframe
+    setTimeout(() => {
+      App.focusInput.focus();
+      App.focusInput.blur();
+      document.getSelection().removeAllRanges();
+    }, 0);
+  }
 
   static createBlob (path, file) {
     if(file.url) {
@@ -120,6 +138,7 @@ class App extends React.Component {
   }
   openFile (extensions = null) {
     return new Promise((resolve, reject) => {
+      App.focus();
       this.setState({
         extensions,
         inputName: false,
@@ -136,6 +155,7 @@ class App extends React.Component {
 
   openFiles (extensions = null) {
     return new Promise((resolve, reject) => {
+      App.focus();
       this.setState({
         extensions,
         inputName: false,
@@ -152,6 +172,7 @@ class App extends React.Component {
 
   openFolder () {
     return new Promise((resolve, reject) => {
+      App.focus();
       this.setState({
         extensions: [],
         inputName: false,
@@ -188,6 +209,7 @@ class App extends React.Component {
 
   saveAs (defaultFileName, extensions = null) {
     return new Promise((resolve, reject) => {
+      App.focus();
       this.setState({
         defaultFileName,
         extensions,
