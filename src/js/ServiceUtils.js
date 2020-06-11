@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+import '@babel/polyfill';
 
 /**
  * Endpoint of the API is defined by the router
@@ -7,8 +7,8 @@ import "@babel/polyfill";
  * /abc/def/cloud-explorer/cloud-explorer.html => /abc/def/
  */
 export const ROOT_URL = `${window.location.href
-  .split('/')
-  .slice(0, -2)
-  .join('/')}/`;
+.split('/')
+.slice(0, -2)
+.join('/')}/`;
 
 

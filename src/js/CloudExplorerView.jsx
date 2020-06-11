@@ -6,7 +6,7 @@ import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
 import UnifileService from './UnifileService';
-import MainView from './MainView'
+import MainView from './MainView';
 
 /**
  * Class which binds the UI and the Unifile service all together
@@ -143,10 +143,10 @@ export default class extends React.Component {
             .then(() => this.ls());
           }, () => {
 
-          /*
-           * Cancel
-           * Go back to /
-           */
+            /*
+             * Cancel
+             * Go back to /
+             */
             this.cd([]);
           }
         );
@@ -338,8 +338,8 @@ export default class extends React.Component {
       isInputMode = {() => this.filesComponent.isInputMode()}
       filesComponent={<Files
         files={this.state.files.concat(this.state.uploadingFiles)}
-        getDownloadUrl={(file) => !file.upload && this.props.path.length > 0 && !file.isDir && !UnifileService.isService(file) ? UnifileService.getUrl(this.props.path.concat([file.name])) : null}
-        getThumbnailUrl={(file) => file.isDir ? UnifileService.getIconUrl([this.props.path[0]], '.folder') : UnifileService.getIconUrl(this.props.path, file.name) }
+        getDownloadUrl={(file) => (!file.upload && this.props.path.length > 0 && !file.isDir && !UnifileService.isService(file) ? UnifileService.getUrl(this.props.path.concat([file.name])) : null)}
+        getThumbnailUrl={(file) => (file.isDir ? UnifileService.getIconUrl([this.props.path[0]], '.folder') : UnifileService.getIconUrl(this.props.path, file.name)) }
         multiple={this.props.multiple}
         onChange={(s) => this.props.onSelection(s)}
         onDelete={(file) => this.delete(file)}
@@ -365,7 +365,7 @@ export default class extends React.Component {
       selection={this.props.selection}
       onSelection={(s) => this.props.onSelection(s)}
       onEnter={(folder) => this.cd([folder.name], true)}
-      />;
+    />;
   }
 }
 

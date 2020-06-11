@@ -11,8 +11,11 @@ export default class ButtonBar extends React.Component {
   }
 
   CREATE_BUTTON_LABEL = 'Create Folder';
+
   RELOAD_BUTTON_LABEL = 'Reload';
+
   THUMBS_LABEL = 'Icons';
+
   NO_THUMBS_LABEL = 'List';
 
   render () {

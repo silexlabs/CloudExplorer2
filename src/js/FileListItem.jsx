@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+import '@babel/polyfill';
 import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -66,7 +66,7 @@ export default class FileListItem extends React.Component {
   render () {
     const {children, thumbnailMode, path, downloadUrl, file, getThumbnailUrl} = this.props;
     const isService = UnifileService.isService(file);
-    const allowDownload = !!downloadUrl;
+    const allowDownload = Boolean(downloadUrl);
     const allowDelete = !file.upload && path && path.length > 0 && !isService;
     const allowRename = !file.upload && path && path.length > 0 && !isService;
     const mime = file.mime ? file.mime.replace(/\//g, ' ') : '';
@@ -84,7 +84,7 @@ export default class FileListItem extends React.Component {
       >
         {
           thumbnailMode ? ''
-          : <div className={className} />
+            : <div className={className} />
         }
         <label>{children}</label>
         <ul className="inline-button-bar">
@@ -96,7 +96,7 @@ export default class FileListItem extends React.Component {
             allowDownload
               ? (
                 <li><a
-                  className='enabled'
+                  className="enabled"
                   href={downloadUrl}
                   target="_blank" rel="noopener noreferrer"
                 >{this.DOWNLOAD_LABEL}

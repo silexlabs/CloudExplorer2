@@ -11,22 +11,23 @@ export default class KeyboardNav extends React.Component {
     onPick: PropTypes.func.isRequired,
     selection: PropTypes.arrayOf(PropTypes.object).isRequired
   }
-  componentDidMount() {
+
+  componentDidMount () {
     window.addEventListener('keydown', this.keyDownCbk, true);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     window.removeEventListener('keydown', this.keyDownCbk, true);
   }
 
   constructor () {
     super();
-    this.keyDownCbk = (event) => this.keyDown(event)
+    this.keyDownCbk = (event) => this.keyDown(event);
   }
 
-  keyDown(event) {
+  keyDown (event) {
     const sourceTagName = event.target.tagName.toLowerCase();
-    if(sourceTagName === 'input' || sourceTagName === 'textarea') {
+    if (sourceTagName === 'input' || sourceTagName === 'textarea') {
       return;
     }
     switch (event.code) {

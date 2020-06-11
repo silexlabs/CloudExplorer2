@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+import '@babel/polyfill';
 import {ROOT_URL} from './ServiceUtils';
 
 const STORAGE_KEY_LS_CACHE = 'CloudExplorer.lsCache';
@@ -38,7 +38,7 @@ export default class UnifileService {
   }
 
   static getIconUrl (path, name) {
-    const nameWithSlash = path.length > 1 ? '/' + name : name;
+    const nameWithSlash = path.length > 1 ? `/${name}` : name;
     return `${ROOT_URL}${path[0]}/icon/${this.getPath(path)}${nameWithSlash}`;
   }
 

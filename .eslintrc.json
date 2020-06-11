@@ -5,6 +5,8 @@
   },
   "extends": ["eslint:all"],
   "rules": {
+    "strict": 0,
+    "sort-keys": 0,
     "indent": ["error", 2, {
       "SwitchCase": 1,
       "MemberExpression": 0

@@ -94,7 +94,8 @@ export default class Files extends React.Component {
       this.setState({lastClickedEl: null});
       return true;
     }
-    this.setState({lastClickedEl: element, lastClickedTime: now});
+    this.setState({lastClickedEl: element,
+      lastClickedTime: now});
     return false;
   }
 
@@ -174,7 +175,7 @@ export default class Files extends React.Component {
             : (
               <FileListItem
                 downloadUrl={this.props.getDownloadUrl(file)}
-                getThumbnailUrl={file => this.props.getThumbnailUrl(file)}
+                getThumbnailUrl={(file) => this.props.getThumbnailUrl(file)}
                 file={file}
                 onDelete={() => this.props.onDelete(file)}
                 onRename={() => this.props.onRename(file)}

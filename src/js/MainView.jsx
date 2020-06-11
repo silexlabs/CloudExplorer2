@@ -3,16 +3,16 @@ import KeyboardNav from './KeyboardNav';
 import ModalDialog from './ModalDialog';
 import React from 'react';
 
-const dialog = React.createRef()
+const dialog = React.createRef();
 
 /**
  * This component holds the layout of the main view in CE, plus some common logic
  * It is instanciated by the view, e.g. CloudExplorerView and ImageBankView
  */
-export default function({cancelInputMode, isInputMode, buttonBar, breadcrumbs, filesDropZone, filesComponent, files, onEnter, onSelection, loading, cached, onCancel, onPick, onSave, defaultFileName, inputName, path, pickFolder, selection }) {
+export default function ({cancelInputMode, isInputMode, buttonBar, breadcrumbs, filesDropZone, filesComponent, files, onEnter, onSelection, loading, cached, onCancel, onPick, onSave, defaultFileName, inputName, path, pickFolder, selection}) {
   return (
     <div
-      className={'cloud-explorer-component' + (loading ? ' loading' : '') + (cached ? ' cached' : '')}
+      className={`cloud-explorer-component${loading ? ' loading' : ''}${cached ? ' cached' : ''}`}
     >
       <div className="panel top-button-bar">
         { buttonBar }
