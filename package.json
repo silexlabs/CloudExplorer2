@@ -39,7 +39,7 @@
     "npm-font-open-sans": "^1.1.0",
     "request": "^2.88.2",
     "sharp": "^0.26.2",
-    "unifile": "^2.0.10",
+    "unifile": "silexlabs/unifile#master",
     "unifile-webdav": "silexlabs/unifile-webdav#master",
     "unsplash-js": "^6.3.0"
   },
