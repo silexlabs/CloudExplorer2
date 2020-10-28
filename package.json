@@ -38,8 +38,8 @@
     "node_modules-path": "*",
     "npm-font-open-sans": "^1.1.0",
     "request": "^2.88.2",
-    "unifile": "2.0.13",
-    "unifile-webdav": "1.1.3",
+    "unifile": "2.0.14",
+    "unifile-webdav": "1.1.4",
     "unsplash-js": "^6.3.0"
   },
   "optionalDependencies": {
