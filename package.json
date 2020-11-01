@@ -23,7 +23,7 @@
     "watch": "live-reload dist/ --port 35729 & watch 'npm run build:js' src/js & watch 'npm run build:sass' src/sass"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "buffer-image-size": "^0.6.4",
