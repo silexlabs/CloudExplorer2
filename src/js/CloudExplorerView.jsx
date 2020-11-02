@@ -5,7 +5,6 @@ import FilesDropZone from './FilesDropZone';
 import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import UnifileService from './UnifileService';
 import MainView from './MainView';
 
 /**
@@ -37,7 +36,6 @@ export default class extends React.Component {
 
   constructor (props) {
     super(props);
-    this.unifile = new UnifileService(this.props.path);
     this.state = JSON.parse(JSON.stringify(this.INITIAL_STATE));
   }
 
@@ -59,12 +57,13 @@ export default class extends React.Component {
      * The props because we called onCd
      */
     if (newProps.path.join('/') !== this.props.path.join('/')) this.initInputProps(newProps, this.props);
-    this.unifile.setExtensions(newProps.extensions);
+    this.props.unifile.setExtensions(newProps.extensions);
   }
 
   initInputProps (newProps, oldProps) {
     this.setState({loading: true});
-    this.unifile.cd(newProps.path)
+    console.log('=====', this.props.unifile)
+    this.props.unifile.cd(newProps.path)
     .then(() => {
       this.ls();
     })
@@ -138,7 +137,7 @@ export default class extends React.Component {
             </section>
           ), () => {
           // Ok, to restart the service must do this.cd() must know the service name.
-            this.unifile.auth(this.props.path[0])
+            this.props.unifile.auth(this.props.path[0])
             .catch(() => this.cd([]))
             .then(() => this.ls());
           }, () => {
@@ -172,15 +171,15 @@ export default class extends React.Component {
    */
 
   ls (disableCache = false) {
-    const hasCache = disableCache ? false : this.unifile.lsHasCache(this.props.path);
-    const cache = this.unifile.lsGetCache(this.props.path);
+    const hasCache = disableCache ? false : this.props.unifile.lsHasCache(this.props.path);
+    const cache = this.props.unifile.lsGetCache(this.props.path);
     this.setState({
       cached: hasCache,
       files: hasCache ? cache : this.state.files,
       loading: true
     }, () => {
       const {path} = this.props;
-      this.unifile.ls(path).then((files) => {
+      this.props.unifile.ls(path).then((files) => {
 
         /*
          * Single service mode: at init, when there is only 1 service and the
@@ -189,7 +188,7 @@ export default class extends React.Component {
          * user files, and the user has logged in their system
          */
         const singleServiceMode = !this.state.initDone && files.length === 1 &&
-          UnifileService.isService(files[0]) &&
+          this.props.unifile.isService(files[0]) &&
           files[0].isLoggedIn === true;
         // Check that we did not CD during loading
         if (this.props.path === path) {
@@ -200,7 +199,7 @@ export default class extends React.Component {
           }, () => {
             if (singleServiceMode) {
               // Enter the only service since we are logged in
-              this.unifile.cd([files[0].name])
+              this.props.unifile.cd([files[0].name])
               .then((filePath) => {
                 this.props.onCd(filePath);
               });
@@ -217,9 +216,9 @@ export default class extends React.Component {
     const files = file ? [file] : this.props.selection;
     const batch = files.map((f) => ({
       name: f.isDir ? 'rmdir' : 'unlink',
-      path: UnifileService.getPath(this.props.path.concat([f.name]))
+      path: this.props.unifile.getPath(this.props.path.concat([f.name]))
     }));
-    return this.unifile.delete(this.props.path, batch)
+    return this.props.unifile.delete(this.props.path, batch)
     .then(() => {
       this.ls();
     })
@@ -234,7 +233,7 @@ export default class extends React.Component {
     this.props.onSelection([]);
     this.filesComponent.getNewDirName().then((name) => {
       this.setState({loading: true}, () => {
-        this.unifile.mkdir(name, true)
+        this.props.unifile.mkdir(name, true)
         .then(() => this.ls(true))
         .catch((e) => this.onUnifileError(e));
       });
@@ -246,7 +245,7 @@ export default class extends React.Component {
     this.filesComponent.getNewName(name).then((newName) => {
       if (newName !== name) {
         this.setState({loading: true}, () => {
-          this.unifile.rename(name, newName)
+          this.props.unifile.rename(name, newName)
           .then(() => {
             this.ls();
           })
@@ -257,7 +256,7 @@ export default class extends React.Component {
   }
 
   logout (service) {
-    return this.unifile.logout(service)
+    return this.props.unifile.logout(service)
     .then(() => this.ls());
   }
 
@@ -285,7 +284,7 @@ export default class extends React.Component {
       };
       return file;
     });
-    this.unifile.upload(this.props.path, uploads, (progress) => {
+    this.props.unifile.upload(this.props.path, uploads, (progress) => {
       // TODO: upload progress
       console.log('TODO: upload progress', progress);
     })
@@ -337,9 +336,10 @@ export default class extends React.Component {
       cancelInputMode = {() => this.filesComponent.cancelInputMode()}
       isInputMode = {() => this.filesComponent.isInputMode()}
       filesComponent={<Files
+        unifile={this.props.unifile}
         files={this.state.files.concat(this.state.uploadingFiles)}
-        getDownloadUrl={(file) => (!file.upload && this.props.path.length > 0 && !file.isDir && !UnifileService.isService(file) ? UnifileService.getUrl(this.props.path.concat([file.name])) : null)}
-        getThumbnailUrl={(file) => (file.isDir ? UnifileService.getIconUrl([this.props.path[0]], '.folder') : UnifileService.getIconUrl(this.props.path, file.name)) }
+        getDownloadUrl={(file) => (!file.upload && this.props.path.length > 0 && !file.isDir && !this.props.unifile.isService(file) ? this.props.unifile.getUrl(this.props.path.concat([file.name])) : null)}
+        getThumbnailUrl={(file) => (file.isDir ? this.props.unifile.getIconUrl([this.props.path[0]], '.folder') : this.props.unifile.getIconUrl(this.props.path, file.name)) }
         multiple={this.props.multiple}
         onChange={(s) => this.props.onSelection(s)}
         onDelete={(file) => this.delete(file)}

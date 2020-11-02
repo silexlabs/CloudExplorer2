@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import UnifileService from './UnifileService';
 
 export default class KeyboardNav extends React.Component {
   static propTypes = {
@@ -55,7 +54,7 @@ export default class KeyboardNav extends React.Component {
         break;
       case 'Enter': {
         const [file] = this.props.selection;
-        if (file && (file.isDir || UnifileService.isService(file))) {
+        if (file && (file.isDir || this.props.unifile.isService(file))) {
           this.props.onEnter(file);
         } else if (this.props.selection.length > 0) {
           this.props.onPick(this.props.selection);

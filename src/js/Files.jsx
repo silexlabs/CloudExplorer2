@@ -1,7 +1,6 @@
 import FileListItem from './FileListItem';
 import PropTypes from 'prop-types';
 import React from 'react';
-import UnifileService from './UnifileService';
 
 const DBLCLICK_DELAY_MS = 300;
 
@@ -103,7 +102,7 @@ export default class Files extends React.Component {
     e.stopPropagation();
     const multiple = e.ctrlKey || e.shiftKey;
     if (this.isDoubleClick(file)) {
-      if (file.isDir || UnifileService.isService(file)) {
+      if (file.isDir || this.props.unifile.isService(file)) {
         this.props.onEnter(file);
       } else {
         this.props.onPick(this.props.selection);
@@ -174,6 +173,7 @@ export default class Files extends React.Component {
             )
             : (
               <FileListItem
+                unifile={this.props.unifile}
                 downloadUrl={this.props.getDownloadUrl(file)}
                 getThumbnailUrl={(file) => this.props.getThumbnailUrl(file)}
                 file={file}

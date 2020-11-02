@@ -2,7 +2,8 @@ import CloudExplorerView from './CloudExplorerView';
 import Tabs from './Tabs';
 import React from 'react';
 import ReactDom from 'react-dom';
-import UnifileService from './UnifileService';
+import BeakerService from './BeakerService';
+import DefaultUnifileService from './UnifileService';
 import * as ImageBankService from './ImageBankService';
 import ImageBankView from './ImageBankView';
 
@@ -41,10 +42,10 @@ class App extends React.Component {
       return {...file};
     }
     return {...file,
-      folder: UnifileService.getPath(path),
-      path: UnifileService.getPath(path.concat(file.name)),
+      folder: this.state.unifile.getPath(path),
+      path: this.state.unifile.getPath(path.concat(file.name)),
       service: path[0],
-      url: UnifileService.getUrl(path.concat(file.name))};
+      url: this.state.unifile.getUrl(path.concat(file.name))};
 
   }
 
@@ -62,6 +63,7 @@ class App extends React.Component {
   }
 
   state = {
+    unifile: new BeakerService([]),
     imageBanks: [],
     extensions: [],
     onCancel: null,
@@ -115,7 +117,7 @@ class App extends React.Component {
   }
 
   read (blob) {
-    return this.cloudExplorer.unifile.read(this.constructor.fromBlobToPath(blob));
+    return this.state.unifile.read(this.constructor.fromBlobToPath(blob));
   }
 
   write (data, blob) {
@@ -128,7 +130,7 @@ class App extends React.Component {
 
       throw new Error('Invalid data. You must provide a String or a File');
     });
-    return this.cloudExplorer.unifile.upload(this.constructor.fromBlobToPath(blob, true), content);
+    return this.state.unifile.upload(this.constructor.fromBlobToPath(blob, true), content);
   }
 
   /*
@@ -239,12 +241,12 @@ class App extends React.Component {
   }
 
   getServices () {
-    return UnifileService.getServices();
+    return this.state.unifile.getServices();
   }
 
   // The auth method has to be called on a click or keydown in order not to be blocked by the browser
   auth (serviceName) {
-    return this.cloudExplorer.unifile.auth(serviceName);
+    return this.state.unifile.auth(serviceName);
   }
 
   getHideTabs () {
@@ -262,6 +264,7 @@ class App extends React.Component {
       >
         {[
           <CloudExplorerView
+            unifile={this.state.unifile}
             key="CloudExplorerComponentKey"
             defaultFileName={this.state.defaultFileName}
             extensions={this.state.extensions}
