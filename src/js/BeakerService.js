@@ -2,11 +2,19 @@ import '@babel/polyfill';
 
 import UnifileService from './UnifileService';
 
+function getCurrentDriveFromUrl() {
+  return window.location.search
+    .substr(1)
+    .split('&')
+    .map(str => str.split('='))
+    .filter(([key, value]) => key === 'currentDrive')
+    .map(([key, value]) => value)[0]
+}
+
 export default class extends UnifileService {
   isBeaker = typeof beaker !== 'undefined';
   currentDrive = window.location.protocol === 'hyper:' ?
-    window.location.hostname : null;
-  currentDrive = null;
+    window.location.hostname : getCurrentDriveFromUrl();
   checkBeakerMissing (path) {
     if (!this.isBeaker &&
       path.length &&
