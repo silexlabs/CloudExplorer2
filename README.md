@@ -100,3 +100,20 @@ Please feel free to ask in the issues, and contribute docs in the wiki.
 
 For now, the best way to know the API is to [take a look at the `App` class which exposes all CE methods here](https://github.com/silexlabs/CloudExplorer2/blob/master/src/js/App.jsx#L106).
 
+## Env vars
+
+CE is configured with environment variables:
+
+* PORT
+* SERVER_URL
+* DROPBOX_APP_ID
+* DROBOX_APP_SECRET
+* DROPBOX_APP_REDIRECT
+* GITHUB_APP_ID
+* GITHUB_APP_SECRET
+* GITHUB_APP_REDIRECT
+* UNSPLASH_ACCESS_KEY
+* UNSPLASH_APP_NAME
+* UNSPLASH_OFFLINE_TEST_PATH
+* ENABLE_HYPERDRIVE
+
