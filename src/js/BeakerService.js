@@ -1,45 +1,49 @@
 import '@babel/polyfill';
 
-import DefaultUnifileService from './UnifileService';
+import UnifileService from './UnifileService';
 
-// e.g. hyper://23549cb9935...7408604ec6a817006f53251/
-//const HYPERDRIVE_URL = window.HYPERDRIVE_URL
-const HYPERDRIVE_URL = 'hyper://23549cb9935fd7794f06e7a720b57ca03fdc8d0da7408604ec6a817006f53251/'
-
-export default class BeakerService extends DefaultUnifileService {
-  getHyperdrivePath(path) {
-    console.log('getHyperdrivePath', {path})
-    return path.join('/')
+export default class extends UnifileService {
+  isBeaker = typeof beaker !== 'undefined';
+  currentDrive = window.location.protocol === 'hyper:' ?
+    window.location.hostname : null;
+  currentDrive = null;
+  checkBeakerMissing (path) {
+    if (!this.isBeaker &&
+      path.length &&
+      path[0] === 'hyperdrive')
+      throw new Error('You need Beaker browser to browse hyperdrives');
+  }
+  async getHyperdrivePath (path) {
+    if (!this.currentDrive) this.currentDrive = (await beaker.shell.selectDriveDialog({
+      title: 'Select Your Website',
+      buttonLabel: 'Select',
+      writable: true,
+    })).split('/')[2];
+    return 'hyper://' + this.currentDrive + '/' + path.slice(1).join('/');
   }
   getUrl (path) {
-    return this.getHyperdrivePath(path);
+    return 'hyper://' + this.currentDrive + '/' + path.slice(1).join('/');
   }
 
-  getServices () {
-    console.log('getServices')
-    return [{
-      displayName: 'hyperdrive',
-      isDir: true,
-      isService: true,
-      mime: 'application/json',
-      name: HYPERDRIVE_URL,
-      isLoggedIn: true,
-    }];
-  }
+  async read (path) {
+    this.checkBeakerMissing(path)
+    if (!this.isBeaker) return super.read(path);
 
-  read (path) {
-    return Promise.reject('TODO read');
+    return beaker
+      .hyperdrive
+      .readFile(await this.getHyperdrivePath(path), 'binary');
   }
 
   async ls (path = null) {
-    console.log('ls', path)
+    this.checkBeakerMissing(path)
+    if (!this.isBeaker) return super.ls(path)
+
     if(path.length) {
       const files = await beaker
       .hyperdrive
-      .readdir(this.getHyperdrivePath(path), {
+      .readdir(await this.getHyperdrivePath(path), {
         includeStats: true,
       });
-      console.log({files})
       return files.map(file => ({
         name: file.name,
         isDir: file.stat.isDirectory(),
@@ -52,27 +56,55 @@ export default class BeakerService extends DefaultUnifileService {
   }
 
   async mkdir (path, relative = false) {
+    this.checkBeakerMissing(path)
+    if (!this.isBeaker) return super.mkdir(path, relative)
+
     const absPath = relative ? this.currentPath.concat(path) : path;
-    console.log('mkdir', absPath)
     return beaker
     .hyperdrive
-    .mkdir(this.getHyperdrivePath(absPath));
+    .mkdir(await this.getHyperdrivePath(absPath));
   }
 
-  rename (name, newName) {
-    return Promise.reject('TODO rename');
+  async rename (name, newName) {
+    this.checkBeakerMissing(this.currentPath)
+    if (!this.isBeaker) return super.rename(name, newName)
+
+    return beaker
+    .hyperdrive
+    .rename(
+      await this.getHyperdrivePath(this.currentPath.concat(name)),
+      await this.getHyperdrivePath(this.currentPath.concat(newName))
+    );
   }
 
   async cd (path) {
+    this.checkBeakerMissing(path)
+    if (!this.isBeaker) return super.cd(path)
+
     this.currentPath = path;
     return this.currentPath;
   }
 
-  upload (path, files, progress = null) {
-    return Promise.reject('TODO upload')
+  async upload (path, files, progress = null) {
+    this.checkBeakerMissing(path)
+    if (!this.isBeaker) return super.upload(path, files, progress);
+
+    return Promise.all(files.map(async file => beaker
+      .hyperdrive
+      .writeFile(await this.getHyperdrivePath(path.concat(file.name)), await file.arrayBuffer())
+    ));
   }
 
-  delete (path, files) {
-    return Promise.reject('TODO delete')
+  async delete (path, files) {
+    this.checkBeakerMissing(path)
+    if (!this.isBeaker) return super.delete(path, files);
+
+    return Promise.all(files.map(async file => file.name === 'rmdir' ? beaker
+        .hyperdrive
+        .rmdir(await this.getHyperdrivePath(['hyperdrive'].concat(file.path.split('/'))))
+      : beaker
+        .hyperdrive
+        .unlink(await this.getHyperdrivePath(['hyperdrive'].concat(file.path.split('/'))))
+    ))
   }
 }

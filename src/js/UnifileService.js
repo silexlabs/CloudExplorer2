@@ -15,7 +15,7 @@ const OK_STATUSES = [
 
 const serviceMap = new Map();
 
-export default class DefaultUnifileService {
+export default class {
 
   currentPath = [];
 

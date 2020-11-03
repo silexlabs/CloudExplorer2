@@ -13,6 +13,7 @@ import MainView from './MainView';
 export default class extends React.Component {
 
   static propTypes = {
+    unifile: PropTypes.object.isRequired,
     defaultFileName: PropTypes.string,
     inputName: PropTypes.bool,
     multiple: PropTypes.bool,
@@ -62,7 +63,6 @@ export default class extends React.Component {
 
   initInputProps (newProps, oldProps) {
     this.setState({loading: true});
-    console.log('=====', this.props.unifile)
     this.props.unifile.cd(newProps.path)
     .then(() => {
       this.ls();
@@ -286,7 +286,6 @@ export default class extends React.Component {
     });
     this.props.unifile.upload(this.props.path, uploads, (progress) => {
       // TODO: upload progress
-      console.log('TODO: upload progress', progress);
     })
     .then(() => {
       this.ls();

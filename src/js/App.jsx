@@ -3,7 +3,6 @@ import Tabs from './Tabs';
 import React from 'react';
 import ReactDom from 'react-dom';
 import BeakerService from './BeakerService';
-import DefaultUnifileService from './UnifileService';
 import * as ImageBankService from './ImageBankService';
 import ImageBankView from './ImageBankView';
 
