@@ -2,7 +2,6 @@ import '@babel/polyfill';
 import ModalDialog from './ModalDialog';
 import PropTypes from 'prop-types';
 import React from 'react';
-import UnifileService from './UnifileService';
 
 export default class FileListItem extends React.Component {
   static propTypes = {
@@ -65,7 +64,7 @@ export default class FileListItem extends React.Component {
 
   render () {
     const {children, thumbnailMode, path, downloadUrl, file, getThumbnailUrl} = this.props;
-    const isService = UnifileService.isService(file);
+    const isService = this.props.unifile.isService(file);
     const allowDownload = Boolean(downloadUrl);
     const allowDelete = !file.upload && path && path.length > 0 && !isService;
     const allowRename = !file.upload && path && path.length > 0 && !isService;

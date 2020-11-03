@@ -15,7 +15,7 @@ const OK_STATUSES = [
 
 const serviceMap = new Map();
 
-export default class UnifileService {
+export default class {
 
   currentPath = [];
 
@@ -29,24 +29,24 @@ export default class UnifileService {
     this.extensions = extensions;
   }
 
-  static getStorageKey (path) {
+  getStorageKey (path) {
     return `${STORAGE_KEY_LS_CACHE}('${path.join('/')}')`;
   }
 
-  static getPath (path) {
+  getPath (path) {
     return path.slice(1).join('/');
   }
 
-  static getIconUrl (path, name) {
+  getIconUrl (path, name) {
     const nameWithSlash = path.length > 1 ? `/${name}` : name;
     return `${ROOT_URL}${path[0]}/icon/${this.getPath(path)}${nameWithSlash}`;
   }
 
-  static getUrl (path) {
+  getUrl (path) {
     return `${ROOT_URL}${path[0]}/get/${this.getPath(path)}`;
   }
 
-  static getServices () {
+  getServices () {
     return new Promise((resolve, reject) => {
       this.call('services', (services) => {
         services.forEach((service) => {
@@ -57,14 +57,14 @@ export default class UnifileService {
     });
   }
 
-  static getServiceByName (name) {
+  getServiceByName (name) {
     return serviceMap.get(name);
   }
 
   read (path) {
     return new Promise((resolve, reject, progress = null) => {
-      this.constructor.call(
-        `${path[0]}/get/${this.constructor.getPath(path)}`,
+      this.call(
+        `${path[0]}/get/${this.getPath(path)}`,
         (res) => resolve(res), (e) => reject(e), 'GET', '', progress, false
       );
     });
@@ -76,13 +76,13 @@ export default class UnifileService {
       if (pathToLs.length > 0) {
         const filters = this.extensions ? `?extensions=${this.extensions.join(',')}` : '';
 
-        this.constructor.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}${filters}`, (res) => {
-          sessionStorage.setItem(this.constructor.getStorageKey(path), JSON.stringify(res));
+        this.call(`${pathToLs[0]}/ls/${pathToLs.slice(1).join('/')}${filters}`, (res) => {
+          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
           resolve(res);
         }, (e) => reject(e));
       } else {
-        (this.constructor.getServices().then((res) => {
-          sessionStorage.setItem(this.constructor.getStorageKey(path), JSON.stringify(res));
+        (this.getServices().then((res) => {
+          sessionStorage.setItem(this.getStorageKey(path), JSON.stringify(res));
           resolve(res);
         })
         .catch((e) => {
@@ -93,12 +93,12 @@ export default class UnifileService {
   }
 
   lsHasCache (path = null) {
-    return Boolean(sessionStorage.getItem(this.constructor.getStorageKey(path)));
+    return Boolean(sessionStorage.getItem(this.getStorageKey(path)));
   }
 
   lsGetCache (path = null) {
     try {
-      const cached = sessionStorage.getItem(this.constructor.getStorageKey(path));
+      const cached = sessionStorage.getItem(this.getStorageKey(path));
       if (cached) return JSON.parse(cached);
       return [];
     } catch (e) {
@@ -109,7 +109,7 @@ export default class UnifileService {
   mkdir (path, relative = false) {
     return new Promise((resolve, reject) => {
       const absPath = relative ? this.currentPath.concat(path) : path;
-      this.constructor.call(
+      this.call(
         `${absPath[0]}/mkdir/${absPath.slice(1).join('/')}`,
         (res) => resolve(res), (e) => reject(e), 'PUT'
       );
@@ -120,7 +120,7 @@ export default class UnifileService {
     return new Promise((resolve, reject) => {
       const absPath = this.currentPath.concat([name]);
       const absNewPath = this.currentPath.slice(1).concat([newName]);
-      this.constructor.call(
+      this.call(
         `${absPath[0]}/mv/${absPath.slice(1).join('/')}`,
         resolve, reject,
         'PATCH',
@@ -149,8 +149,8 @@ export default class UnifileService {
 
   upload (path, files, progress = null) {
     return new Promise((resolve, reject) => {
-      this.constructor.call(
-        `${path[0]}/upload/${this.constructor.getPath(path)}`,
+      this.call(
+        `${path[0]}/upload/${this.getPath(path)}`,
         resolve,
         reject,
         'POST',
@@ -164,13 +164,13 @@ export default class UnifileService {
 
   delete (path, files) {
     return new Promise((resolve, reject) => {
-      this.constructor.call(`${path[0]}/rm/`, resolve, reject, 'DELETE', JSON.stringify(files));
+      this.call(`${path[0]}/rm/`, resolve, reject, 'DELETE', JSON.stringify(files));
     });
   }
 
   logout (service) {
     return new Promise((resolve, reject) => {
-      this.constructor.call(
+      this.call(
         `${service}/logout/`,
         resolve,
         reject,
@@ -183,7 +183,7 @@ export default class UnifileService {
   // The auth method has to be called on a click or keydown in order not to be blocked by the browser
   auth (serviceName) {
     return new Promise((resolve, reject) => {
-      const service = this.constructor.getServiceByName(serviceName);
+      const service = this.getServiceByName(serviceName);
       // Here we may not have the service info yet, e.g. if we did not ls '/'
       if (service && service.isLoggedIn) {
         this.authEnded(serviceName, resolve, reject);
@@ -237,7 +237,7 @@ export default class UnifileService {
     }
   }
 
-  static getJsonBody (oReq) {
+  getJsonBody (oReq) {
     if (oReq.status === EMPTY_STATUS) {
       return null;
     }
@@ -250,7 +250,7 @@ export default class UnifileService {
   }
 
   /* eslint max-params: ["off"]*/
-  static call (
+  call (
     route, cbk, err,
     method = 'GET',
     body = '',
@@ -259,11 +259,11 @@ export default class UnifileService {
     sendBinary = false
   ) {
     const oReq = new XMLHttpRequest();
-    oReq.onload = function onload () {
+    oReq.onload = () => {
       if (OK_STATUSES.includes(oReq.status)) {
         const contentType = oReq.getResponseHeader('Content-Type');
         if (contentType && contentType.indexOf('json') >= 0) {
-          const res = UnifileService.getJsonBody(oReq);
+          const res = this.getJsonBody(oReq);
           if (res !== null) {
             cbk(res);
           }
@@ -281,14 +281,14 @@ export default class UnifileService {
         }
       } else {
         // Unifile should set the error object in the response body
-        const e = UnifileService.getJsonBody(oReq) || {
+        const e = this.getJsonBody(oReq) || {
           code: oReq.status,
           message: `${oReq.responseText} (${oReq.statusText})`,
         };
         err(e);
       }
     };
-    oReq.onerror = function onerror (e) {
+    oReq.onerror = (e) => {
       err(e);
     };
     const loadedValue = 100;
@@ -325,7 +325,7 @@ export default class UnifileService {
     }
   }
 
-  static isService (file) {
+  isService (file) {
     return typeof file.isService !== 'undefined';
   }
 }

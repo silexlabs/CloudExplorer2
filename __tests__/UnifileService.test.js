@@ -4,11 +4,11 @@ jest.dontMock('react-addons-test-utils');
 
 jest.unmock('../src/js/UnifileService');
 
-const UnifileService = require('../src/js/UnifileService').default;
+const DefaultUnifileService = require('../src/js/UnifileService').default;
 
 const OK_STATUS = 200;
 
-describe('UnifileService', () => {
+describe('DefaultUnifileService', () => {
   it('ls success', async () => {
     const jsonObject = [
       {
@@ -40,7 +40,7 @@ describe('UnifileService', () => {
       if (header.toLowerCase() === 'content-type') return 'application/json';
       return '';
     });
-    const srv = new UnifileService('http://localhost:8080/dist/');
+    const srv = new DefaultUnifileService('http://localhost:8080/dist/');
     await srv.ls(['ftp'])
     .catch((e) => {
       fail(`There has been an error: ${e.message}`);
@@ -53,7 +53,7 @@ describe('UnifileService', () => {
     XMLHttpRequest.prototype.open = jest.fn(function open () {
       this.onerror({});
     });
-    const srv = new UnifileService('http://localhost:8080/dist/');
+    const srv = new DefaultUnifileService('http://localhost:8080/dist/');
     await srv.ls('ftp')
     .then(() => fail('There should have been an error'))
     .catch((e) => expect(e).not.toBe(null));
