@@ -35,7 +35,7 @@ class App extends React.Component {
     }, 0);
   }
 
-  static createBlob (path, file) {
+  createBlob (path, file) {
     if (file.url) {
       // Case of an absolute URL (probably an image bank?
       return {...file};
@@ -150,7 +150,7 @@ class App extends React.Component {
         multiple: false,
         onCancel: () => resolve(null),
         onError: (e) => reject(e),
-        onPick: (files) => resolve(this.constructor.createBlob(this.state.path, files[0])),
+        onPick: (files) => resolve(this.createBlob(this.state.path, files[0])),
         onSave: null,
         pickFolder: false,
         selection: []
@@ -167,7 +167,7 @@ class App extends React.Component {
         multiple: true,
         onCancel: () => resolve(null),
         onError: (e) => reject(e),
-        onPick: (files) => resolve(files.map((file) => this.constructor.createBlob(this.state.path, file))),
+        onPick: (files) => resolve(files.map((file) => this.createBlob(this.state.path, file))),
         onSave: null,
         pickFolder: false,
         selection: []
@@ -187,18 +187,18 @@ class App extends React.Component {
         onPick: (files) => {
           if (files.length) {
             // Case of a selected folder in the current path
-            resolve(this.constructor.createBlob(this.state.path, files[0]));
+            resolve(this.createBlob(this.state.path, files[0]));
           } else if (this.state.path.length > 1) {
             // The user pressed "ok" to select the current folder
             const endOffset = -1;
-            resolve(this.constructor.createBlob(this.state.path.slice(0, endOffset), {
+            resolve(this.createBlob(this.state.path.slice(0, endOffset), {
               isDir: true,
               mime: 'application/octet-stream',
               name: this.state.path[this.state.path.length - 1]
             }));
           } else {
             // Same case but for the / folder (root)
-            resolve(this.constructor.createBlob(this.state.path, {
+            resolve(this.createBlob(this.state.path, {
               isDir: true,
               mime: 'application/octet-stream',
               name: ''
@@ -223,7 +223,7 @@ class App extends React.Component {
         onCancel: () => resolve(null),
         onError: (e) => reject(e),
         onPick: null,
-        onSave: (fileName) => resolve(this.constructor.createBlob(this.state.path, {name: fileName})),
+        onSave: (fileName) => resolve(this.createBlob(this.state.path, {name: fileName})),
         pickFolder: false,
         selection: []
       }, () => this.cloudExplorer.ls());
