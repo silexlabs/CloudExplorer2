@@ -316,6 +316,7 @@ export default class extends React.Component {
 
   render () {
     return <MainView
+      unifile={this.props.unifile}
       buttonBar={<ButtonBar
         onCreateFolder={() => this.mkdir()}
         onReload={() => this.ls(true)}

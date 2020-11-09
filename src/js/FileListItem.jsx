@@ -5,6 +5,7 @@ import React from 'react';
 
 export default class FileListItem extends React.Component {
   static propTypes = {
+    unifile: PropTypes.object.isRequired,
     children: PropTypes.string.isRequired,
     downloadUrl: PropTypes.string,
     file: PropTypes.shape({name: PropTypes.string.isRequired}).isRequired,

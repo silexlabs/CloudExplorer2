@@ -4,6 +4,8 @@ import React from 'react';
 export default class KeyboardNav extends React.Component {
   static propTypes = {
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
+    unifile: PropTypes.object.isRequired,
+    onCancel: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     onEnter: PropTypes.func.isRequired,

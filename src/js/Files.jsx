@@ -7,6 +7,7 @@ const DBLCLICK_DELAY_MS = 300;
 export default class Files extends React.Component {
   static propTypes = {
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
+    unifile: PropTypes.object.isRequired,
     getDownloadUrl: PropTypes.func.isRequired,
     getThumbnailUrl: PropTypes.func.isRequired,
     multiple: PropTypes.bool,
