@@ -30,6 +30,8 @@ export default class extends UnifileService {
     return 'hyper://' + this.currentDrive + '/' + path.slice(1).join('/');
   }
   getUrl (path) {
+    this.checkBeakerMissing(path)
+    if (!this.isBeaker) return super.getUrl(path);
     return 'hyper://' + this.currentDrive + '/' + path.slice(1).join('/');
   }
 
