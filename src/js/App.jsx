@@ -284,6 +284,7 @@ class App extends React.Component {
           />
         ]
         .concat(this.state.imageBanks.map((bank) => <ImageBankView
+          unifile={this.state.unifile}
           key={bank.name}
           bankName={bank.name}
           selection={this.state.selection}

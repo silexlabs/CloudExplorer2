@@ -54,6 +54,7 @@ export default function (props) {
       numResults={loadedData.numFiles || loadedData.files.length}
     />}
     filesComponent={<Files
+      unifile={props.unifile}
       files={loadedData.files}
       getDownloadUrl={(file) => file.urls.big}
       getThumbnailUrl={(file) => file.urls.small}
