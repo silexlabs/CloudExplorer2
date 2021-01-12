@@ -38,7 +38,7 @@
     "node_modules-path": "*",
     "npm-font-open-sans": "^1.1.0",
     "request": "^2.88.2",
-    "unifile": "2.0.16",
+    "unifile": "2.0.17",
     "unifile-webdav": "1.1.4",
     "unsplash-js": "^7.0.2"
   },
