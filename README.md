@@ -13,7 +13,7 @@ $ npm install --save cloud-explorer
 
 ## Use
 
-Here is an example on how to use Cloud Explorer's router to expose an API used by the front end to list files, read and write - [see this file for a complete example](https://github.com/silexlabs/CloudExplorer2/blob/master/lib/index.js)
+Here is an example on how to use Cloud Explorer's router to expose an API used by the front end to list files, read and write - [see this file for a complete example](https://github.com/silexlabs/CloudExplorer2/blob/main/lib/index.js)
 
 ```js
 // before this create an express application
@@ -98,7 +98,7 @@ This is what is done on heroku here: [a live demo](https://cloud-explorer2.herok
 
 Please feel free to ask in the issues, and contribute docs in the wiki.
 
-For now, the best way to know the API is to [take a look at the `App` class which exposes all CE methods here](https://github.com/silexlabs/CloudExplorer2/blob/master/src/js/App.jsx#L106).
+For now, the best way to know the API is to [take a look at the `App` class which exposes all CE methods here](https://github.com/silexlabs/CloudExplorer2/blob/main/src/js/App.jsx#L106).
 
 ## Env vars
 
