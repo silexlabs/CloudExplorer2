@@ -9,6 +9,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "prepare": "npm run build",
+    "release": "",
     "start": "node lib/index.js",
     "test": "jest",
     "test:watch": "npm test -- --watch",
