@@ -50,6 +50,7 @@ export default class FilesDropZone extends React.Component {
         onClick={() => this.input.click()}
         ref={(c) => (this.div = c)}
       >
+        <div className="fa fa-upload fa-4x" style={{display: "block", padding: "10px"}}></div>
         <input
           disabled={this.props.disabled}
           multiple

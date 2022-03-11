@@ -9,6 +9,12 @@ import Tabs from './Tabs';
 
 const STORAGE_KEY_PATH = 'CloudExplorer.path';
 
+// Titles
+const TITLE_OPEN_FILE = 'Select a file';
+const TITLE_OPEN_FILES = 'Select file(s)';
+const TITLE_OPEN_FOLDER = 'Select a folder';
+const TITLE_SAVE_AS = 'Save as...';
+
 /**
  * Class in charge of the history and init of the main CloudExplorer component
  */
@@ -83,6 +89,7 @@ class App extends React.Component {
     pickFolder: false,
     selection: [],
     thumbnailMode: false,
+    title: '',
   }
 
   onChange (path) {
@@ -163,7 +170,8 @@ class App extends React.Component {
         onPick: (files) => resolve(this.createBlob(this.state.path, files[0])),
         onSave: null,
         pickFolder: false,
-        selection: []
+        selection: [],
+        title: TITLE_OPEN_FILE,
       }, () => this.cloudExplorer.ls());
     });
   }
@@ -180,7 +188,8 @@ class App extends React.Component {
         onPick: (files) => resolve(files.map((file) => this.createBlob(this.state.path, file))),
         onSave: null,
         pickFolder: false,
-        selection: []
+        selection: [],
+        title: TITLE_OPEN_FILES,
       }, () => this.cloudExplorer.ls());
     });
   }
@@ -217,7 +226,8 @@ class App extends React.Component {
         },
         onSave: null,
         pickFolder: true,
-        selection: []
+        selection: [],
+        title: TITLE_OPEN_FOLDER,
       }, () => this.cloudExplorer.ls());
     });
   }
@@ -235,7 +245,8 @@ class App extends React.Component {
         onPick: null,
         onSave: (fileName) => resolve(this.createBlob(this.state.path, {name: fileName})),
         pickFolder: false,
-        selection: []
+        selection: [],
+        title: TITLE_SAVE_AS,
       }, () => this.cloudExplorer.ls());
     });
   }
@@ -267,36 +278,38 @@ class App extends React.Component {
 
   render () {
     return (
-      <Tabs
-        hide={this.getHideTabs()}
-        elements={[
-          {name: 'user-files',
-            displayName: 'Your images'}
-        ].concat(this.state.imageBanks)}
-      >
+      <main>
+        <h1>{ this.state.title }</h1>
+        <Tabs
+          hide={this.getHideTabs()}
+          elements={[
+            {name: 'user-files',
+              displayName: 'Your images'}
+          ].concat(this.state.imageBanks)}
+        >
         {[
           <CloudExplorerView
-            unifile={this.state.unifile}
-            key="CloudExplorerComponentKey"
-            defaultFileName={this.state.defaultFileName}
-            extensions={this.state.extensions}
-            inputName={this.state.inputName}
-            multiple={this.state.multiple}
-            onCancel={() => (this.state.onCancel ? this.state.onCancel() : '')}
-            onCd={(path) => this.onChange(path)}
-            onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
-            onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
-            onSave={(fileName) => (this.state.onSave ? this.state.onSave(fileName) : '')}
-            onSelection={(selection) => this.onSelection(selection)}
-            path={this.state.path}
-            pickFolder={this.state.pickFolder}
-            ref={(c) => this.onCloudExplorerReady(c)}
-            selection={this.state.selection}
-            thumbnailMode={this.state.thumbnailMode}
-            onThumbnailMode={(thumbnailMode) => this.setState({thumbnailMode})}
+          unifile={this.state.unifile}
+          key="CloudExplorerComponentKey"
+          defaultFileName={this.state.defaultFileName}
+          extensions={this.state.extensions}
+          inputName={this.state.inputName}
+          multiple={this.state.multiple}
+          onCancel={() => (this.state.onCancel ? this.state.onCancel() : '')}
+          onCd={(path) => this.onChange(path)}
+          onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
+          onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
+          onSave={(fileName) => (this.state.onSave ? this.state.onSave(fileName) : '')}
+          onSelection={(selection) => this.onSelection(selection)}
+          path={this.state.path}
+          pickFolder={this.state.pickFolder}
+          ref={(c) => this.onCloudExplorerReady(c)}
+          selection={this.state.selection}
+          thumbnailMode={this.state.thumbnailMode}
+          onThumbnailMode={(thumbnailMode) => this.setState({thumbnailMode})}
           />
         ]
-        .concat(this.state.imageBanks.map((bank) => <ImageBankView
+          .concat(this.state.imageBanks.map((bank) => <ImageBankView
           unifile={this.state.unifile}
           key={bank.name}
           bankName={bank.name}
@@ -305,9 +318,10 @@ class App extends React.Component {
           onCancel={() => (this.state.onCancel ? this.state.onCancel() : '')}
           onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
           onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
-        />))
+          />))
         }
-      </Tabs>
+        </Tabs>
+      </main>
     );
   }
 }

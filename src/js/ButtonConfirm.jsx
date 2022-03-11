@@ -58,8 +58,10 @@ export default class ButtonConfirm extends React.Component {
       <section className="button-confirm button-bar">
         {
           this.props.inputName ? (
-            <div>
+            <div className='file-name'>
+              <label htmlFor='button-confirm'>File name</label>
               <input
+                id='button-confirm'
                 autoFocus
                 defaultValue={this.props.defaultFileName}
                 onChange={(e) => {
