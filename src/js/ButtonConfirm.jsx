@@ -23,12 +23,6 @@ export default class ButtonConfirm extends React.Component {
     this.input = {};
   }
 
-  componentWillReceiveProps (newProps) {
-    if (this.input && newProps.defaultFileName !== this.props.defaultFileName) {
-      this.input.value = newProps.defaultFileName;
-    }
-  }
-
   OK_LABEL = 'Ok';
 
   CANCEL_LABEL = 'Cancel';

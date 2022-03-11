@@ -42,38 +42,9 @@ export default class extends React.Component {
 
   /*
    * /////////////////////////////////////////
-   * React component's methods
+   * Constants
    * /////////////////////////////////////////
    */
-
-  componentDidMount () {
-    this.initInputProps(this.props);
-  }
-
-  componentWillReceiveProps (newProps) {
-
-    /*
-     * Check if the new props are different from the state
-     * This will be false when the parent component changes
-     * The props because we called onCd
-     */
-    if (newProps.path.join('/') !== this.props.path.join('/')) this.initInputProps(newProps, this.props);
-    this.props.unifile.setExtensions(newProps.extensions);
-  }
-
-  initInputProps (newProps, oldProps) {
-    this.setState({loading: true});
-    this.props.unifile.cd(newProps.path)
-    .then(() => {
-      this.ls();
-    })
-    .catch((e) => {
-      if (oldProps && oldProps.path && oldProps.path.length !== 0) {
-        this.props.onCd(oldProps.path);
-      }
-      this.onUnifileError(e);
-    });
-  }
 
   ERROR_MESSAGE = 'An error occured';
 

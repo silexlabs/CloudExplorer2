@@ -288,7 +288,6 @@ ul, li {
 .panel {
 	padding:0;
 	clear:right;
-	zoom:1;
 }
 
 input, button {
@@ -399,7 +398,6 @@ button:hover {
 	// box-shadow: 0 0 .5em $dark;
 	clear:both;
 	overflow:auto;
-	zoom:1;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

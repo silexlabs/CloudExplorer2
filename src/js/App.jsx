@@ -1,10 +1,11 @@
-import CloudExplorerView from './CloudExplorerView';
-import Tabs from './Tabs';
 import React from 'react';
 import ReactDom from 'react-dom';
+
 import BeakerService from './BeakerService';
+import CloudExplorerView from './CloudExplorerView';
 import * as ImageBankService from './ImageBankService';
 import ImageBankView from './ImageBankView';
+import Tabs from './Tabs';
 
 const STORAGE_KEY_PATH = 'CloudExplorer.path';
 
@@ -59,6 +60,15 @@ class App extends React.Component {
   constructor () {
     super();
     window.ce = this;
+    // get the list of image banks
+    this.getImageBanks().then((imageBanks) => {
+      this.setState({imageBanks});
+    });
+    // start with the path in local storage
+    const path = localStorage.getItem(STORAGE_KEY_PATH);
+    if (path) {
+      this.state.path = JSON.parse(path);
+    }
   }
 
   state = {
@@ -75,17 +85,24 @@ class App extends React.Component {
     thumbnailMode: false,
   }
 
-  componentWillMount () {
-    this.loadHistory();
-    this.getImageBanks().then((imageBanks) => this.setState({imageBanks}));
-  }
-
   onChange (path) {
     if (path !== this.state.path) {
+      // store the old path in case of error
+      const oldPath = this.state.path;
+      // apply the new path
       this.setState({
         path,
         selection: []
-      });
+      }, () => {
+        this.state.unifile.cd(path)
+        .then(() => {
+          this.cloudExplorer.ls()
+        })
+        .catch((e) => {
+          this.state.onError(e);
+          this.setState({ path: oldPath });
+        });
+      })
     }
     localStorage.setItem(STORAGE_KEY_PATH, JSON.stringify(path));
   }
@@ -104,13 +121,6 @@ class App extends React.Component {
    * Class methods
    * //////////////////
    */
-  hash = null;
-
-  loadHistory () {
-    const path = localStorage.getItem(STORAGE_KEY_PATH);
-    if (path && path !== this.state.path) this.setState({path: JSON.parse(path)});
-  }
-
   onCloudExplorerReady (cloudExplorer) {
     this.cloudExplorer = cloudExplorer || this.cloudExplorer;
   }
@@ -231,6 +241,9 @@ class App extends React.Component {
   }
 
   reload (extensions) {
+    // update extension filters (file ext)
+    this.state.unifile.setExtensions(extensions);
+    // store it in state
     this.setState({extensions}, () => this.cloudExplorer.ls());
     return Promise.resolve();
   }

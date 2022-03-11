@@ -190,28 +190,32 @@ export default class {
       } else {
         // Open a blank window right away, before we know the URL, otherwise the browser blocks it
         const win = window.open();
-        const req = new XMLHttpRequest();
-        req.open('POST', `${ROOT_URL}${serviceName}/authorize`);
-        req.onload = () => {
-          if (req.responseText) {
-            win.location = req.responseText;
-            win.addEventListener('unload', () => {
-              win.onunload = null;
-              this.startPollingAuthWin({
-                reject,
-                resolve,
-                serviceName,
-                win
+        if (win) {
+          const req = new XMLHttpRequest();
+          req.open('POST', `${ROOT_URL}${serviceName}/authorize`);
+          req.onload = () => {
+            if (req.responseText) {
+              win.location = req.responseText;
+              win.addEventListener('unload', () => {
+                win.onunload = null;
+                this.startPollingAuthWin({
+                  reject,
+                  resolve,
+                  serviceName,
+                  win
+                });
               });
-            });
-          } else {
-            this.authEnded(serviceName, resolve, reject);
-            win.close();
-          }
-        };
-        req.onerror = reject;
-        req.ontimeout = () => reject(new Error('Auth request timed out'));
-        req.send();
+            } else {
+              this.authEnded(serviceName, resolve, reject);
+              win.close();
+            }
+          };
+          req.onerror = reject;
+          req.ontimeout = () => reject(new Error('Auth request timed out'));
+          req.send();
+        } else {
+          console.warn('Popup blocked by the browser, please authorise and try again');
+        }
       }
     });
   }
