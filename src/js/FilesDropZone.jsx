@@ -45,22 +45,22 @@ export default class FilesDropZone extends React.Component {
 
   render () {
     return (
-      <div
-        className={`upload button${this.props.disabled ? ' disabled' : ''}`}
-        onClick={() => this.input.click()}
-        ref={(c) => (this.div = c)}
+        <div
+          className={`upload button${this.props.disabled ? ' disabled' : ''}`}
+          onClick={() => this.input.click()}
+          ref={(c) => (this.div = c)}
       >
-        <div className="fa fa-upload fa-4x" style={{display: "block", padding: "10px"}}></div>
-        <input
-          disabled={this.props.disabled}
-          multiple
-          onChange={(e) => this.onDrop(e.target.files)}
-          ref={(c) => (this.input = c)}
-          style={{display: 'none'}}
-          type="file"
+            <div className="fa fa-upload fa-4x" style={{display: "block", padding: "10px"}}></div>
+            <input
+              disabled={this.props.disabled}
+              multiple
+              onChange={(e) => this.onDrop(e.target.files)}
+              ref={(c) => (this.input = c)}
+              style={{display: 'none'}}
+              type="file"
         />
-        {this.DROP_LABEL}
-      </div>
+            {this.DROP_LABEL}
+        </div>
     );
   }
 }

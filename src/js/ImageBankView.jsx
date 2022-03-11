@@ -4,7 +4,10 @@ import {list, random, search} from './ImageBankService.js';
 import Files from './Files';
 import ImageBankButtonBar from './ImageBankButtonBar';
 
-export default function (props) {
+const getDownloadUrl = (file) => file.urls.big;
+const getThumbnailUrl = (file) => file.urls.small;
+
+export default function ImageBankView(props) {
   const [
     query,
     setQuery
@@ -49,28 +52,28 @@ export default function (props) {
 
   return <MainView
     buttonBar={<ImageBankButtonBar
-      onChange={(val) => setQuery(val)}
+      onChange={setQuery}
       value={query}
       numResults={loadedData.numFiles || loadedData.files.length}
     />}
     filesComponent={<Files
       unifile={props.unifile}
       files={loadedData.files}
-      getDownloadUrl={(file) => file.urls.big}
-      getThumbnailUrl={(file) => file.urls.small}
+      getDownloadUrl={getDownloadUrl}
+      getThumbnailUrl={getThumbnailUrl}
       multiple={false}
-      onPick={(file) => props.onPick(file)}
+      onPick={props.onPick}
       selection={props.selection}
-      onChange={(s) => props.onSelection(s)}
+      onChange={props.onSelection}
       thumbnailMode={true}
     />}
     loading={loadedData.pending}
     files={loadedData.files}
     pickFolder={false}
-    onPick={(file) => props.onPick(file)}
+    onPick={props.onPick}
     selection={props.selection}
-    onSelection={(s) => props.onSelection(s)}
-    onCancel={(s) => props.onCancel(s)}
+    onSelection={props.onSelection}
+    onCancel={props.onCancel}
   />;
 }
 

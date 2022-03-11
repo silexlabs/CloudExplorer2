@@ -47,10 +47,10 @@ export default class FileListItem extends React.Component {
 
   delete () {
     ModalDialog.getInstance().confirm(
-      <section>
-        <h2>{this.CONFIRMATION_MESSAGE}</h2>
-        <p>{this.CONFIRMATION_FILENAME}</p><p><strong>{ this.props.file.name }</strong></p>
-      </section>,
+        <section>
+            <h2>{this.CONFIRMATION_MESSAGE}</h2>
+            <p>{this.CONFIRMATION_FILENAME}</p><p><strong>{ this.props.file.name }</strong></p>
+        </section>,
       this.props.onDelete
     );
   }
@@ -72,49 +72,49 @@ export default class FileListItem extends React.Component {
     const mime = file.mime ? file.mime.replace(/\//g, ' ') : '';
     const className = this.constructor.getClassName(file, isService, mime);
     return (
-      <section
-        className={
+        <section
+          className={
           `file-list-item${file.upload ? ` uploading progress-${file.upload.progress}` : ''}${file.isDir ? ' folder' : ''}`
         }
-        style={
+          style={
           thumbnailMode ? {
             backgroundImage: `url("${getThumbnailUrl(file)}")`,
           } : null
         }
       >
-        {
+            {
           thumbnailMode ? ''
             : <div className={className} />
         }
-        <label>{children}</label>
-        <ul className="inline-button-bar">
-          {
+            <label>{children}</label>
+            <ul className="inline-button-bar">
+                {
             file.isService ? <li className={ file.isLoggedIn ? 'enabled' : 'disabled' }
               onClick={() => file.isLoggedIn && this.logout()}>{this.LOGOUT_LABEL}</li> : ''
           }
-          {
+                {
             allowDownload
               ? (
-                <li><a
-                  className="enabled"
-                  href={downloadUrl}
-                  target="_blank" rel="noopener noreferrer"
+                  <li><a
+                    className="enabled"
+                    href={downloadUrl}
+                    target="_blank" rel="noopener noreferrer"
                 >{this.DOWNLOAD_LABEL}
-                </a></li>
+                  </a></li>
               )
               : ''
           }
-          <li
-            className={allowDelete ? 'enabled' : 'disabled'}
-            onClick={() => allowDelete && this.delete()}
+                <li
+                  className={allowDelete ? 'enabled' : 'disabled'}
+                  onClick={() => allowDelete && this.delete()}
           >{this.DELETE_LABEL}
-          </li>
-          <li
-            className={allowRename ? 'enabled' : 'disabled'}
-            onClick={() => allowRename && this.rename()}
+                </li>
+                <li
+                  className={allowRename ? 'enabled' : 'disabled'}
+                  onClick={() => allowRename && this.rename()}
           >{this.RENAME_LABEL}
-          </li>
-        </ul>
-      </section>);
+                </li>
+            </ul>
+        </section>);
   }
 }

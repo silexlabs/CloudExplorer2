@@ -119,23 +119,23 @@ export default class Files extends React.Component {
     if (this.state.createFolderMode) {
 
       list.push((
-        <li
-          className="selected folder"
-          key="newFolder"
+          <li
+            className="selected folder"
+            key="newFolder"
         >
-          <input
-            autoFocus
-            className="file-name-input"
-            onBlur={(e) => this.onGetNewFolderName(e.target.value)}
-            onKeyPress={(e) => {
+              <input
+                autoFocus
+                className="file-name-input"
+                onBlur={(e) => this.onGetNewFolderName(e.target.value)}
+                onKeyPress={(e) => {
               if (e.key === 'Enter') {
                 this.onGetNewFolderName(e.target.value);
               }
             }}
-            placeholder="New Folder Name"
-            type="text"
+                placeholder="New Folder Name"
+                type="text"
           />
-        </li>
+          </li>
       ));
     }
     // Each file has the extension in its export default class name
@@ -145,49 +145,49 @@ export default class Files extends React.Component {
     .filter((file) => !file.upload || file.upload.path.join('/') === pathStr)
     // Build the <ul> list
     .map((file) => ((
-      <li
-        className={this.props.selection.find((selected) => selected.name === file.name) ? 'selected' : ''}
-        key={file.name + (file.upload ? '-uploading' : '')}
-        onClick={(e) => this.select(e, file)}
+        <li
+          className={this.props.selection.find((selected) => selected.name === file.name) ? 'selected' : ''}
+          key={file.name + (file.upload ? '-uploading' : '')}
+          onClick={(e) => this.select(e, file)}
       >
-        {
+            {
           this.state.renameFileMode && file.name === this.state.renameFileData.name
             ? (
-              <input
-                autoFocus
-                className="file-name-input"
-                onBlur={(e) => this.onGetNewFileName(e.target.value)}
-                onChange={(e) => this.setState({
+                <input
+                  autoFocus
+                  className="file-name-input"
+                  onBlur={(e) => this.onGetNewFileName(e.target.value)}
+                  onChange={(e) => this.setState({
                   renameFileData: {
                     name: file.name,
                     newName: e.target.value
                   }
                 })}
-                onKeyPress={(e) => {
+                  onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     this.onGetNewFileName(e.target.value);
                   }
                 }}
-                type="text"
-                value={this.state.renameFileData.newName}
+                  type="text"
+                  value={this.state.renameFileData.newName}
               />
             )
             : (
-              <FileListItem
-                unifile={this.props.unifile}
-                downloadUrl={this.props.getDownloadUrl(file)}
-                getThumbnailUrl={(file) => this.props.getThumbnailUrl(file)}
-                file={file}
-                onDelete={() => this.props.onDelete(file)}
-                onRename={() => this.props.onRename(file)}
-                onLogout={(service) => this.props.onLogout(service)}
-                path={this.props.path}
-                thumbnailMode={this.props.thumbnailMode}
+                <FileListItem
+                  unifile={this.props.unifile}
+                  downloadUrl={this.props.getDownloadUrl(file)}
+                  getThumbnailUrl={(file) => this.props.getThumbnailUrl(file)}
+                  file={file}
+                  onDelete={() => this.props.onDelete(file)}
+                  onRename={() => this.props.onRename(file)}
+                  onLogout={(service) => this.props.onLogout(service)}
+                  path={this.props.path}
+                  thumbnailMode={this.props.thumbnailMode}
               >{file.displayName || file.name}
-              </FileListItem>
+                </FileListItem>
             )
         }
-      </li>
+        </li>
     ))));
     return <section><ul className={`files${this.props.thumbnailMode ? ' thumbnail-mode' : ''}`}>{list}</ul></section>;
   }

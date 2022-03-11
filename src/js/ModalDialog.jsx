@@ -53,7 +53,7 @@ export default class ModalDialog extends React.Component {
     });
   }
 
-  ok () {
+  ok = () => {
     this.setState({mode: 'hidden'});
     if (this.cbk) {
       this.cbk(this.state.inputText);
@@ -61,7 +61,7 @@ export default class ModalDialog extends React.Component {
     this.cbk = null;
   }
 
-  cancel () {
+  cancel = () => {
     this.setState({mode: 'hidden'});
     if (this.cancelCbk) {
       this.cancelCbk();
@@ -74,47 +74,51 @@ export default class ModalDialog extends React.Component {
     return this.state.mode !== 'hidden';
   }
 
+  onChange = (e) => {
+    this.setState({inputText: e.target.value});
+  }
+
   render () {
     if (this.state.mode !== 'hidden') {
       let markup = null;
       if (this.state.mode === 'prompt') {
         markup = (
-          <input
-            onChange={(e) => this.setState({inputText: e.target.value})}
-            value={this.state.inputText}
+            <input
+              onChange={onChange}
+              value={this.state.inputText}
           />
         );
       }
       return (
-        <section className="modal-dialog">
-          <div className="dialog-bg" />
-          <div className="dialog-content">
-            {this.state.message}
-            {markup}
-            <section className="button-bar">
-              <ul>
-                <li
-                  className="enabled"
-                  onClick={() => this.ok()}
+          <section className="modal-dialog">
+              <div className="dialog-bg" />
+              <div className="dialog-content">
+                  {this.state.message}
+                  {markup}
+                  <section className="button-bar">
+                      <ul>
+                          <li
+                            className="enabled"
+                            onClick={this.ok}
                 >
-                  <span className="button-icon fa fa-check fa-1x" />
-                  <span>{this.OK_LABEL}</span>
-                </li >
-                { this.state.mode === 'alert'
+                              <span className="button-icon fa fa-check fa-1x" />
+                              <span>{this.OK_LABEL}</span>
+                          </li >
+                          { this.state.mode === 'alert'
                   ? ''
                   : (
-                    <li
-                      className="enabled"
-                      onClick={() => this.cancel()}
+                      <li
+                        className="enabled"
+                        onClick={this.cancel}
                     >
-                      <span className="button-icon fa fa-ban fa-1x" />
-                      <span>{this.CANCEL_LABEL}</span>
-                    </li >
+                          <span className="button-icon fa fa-ban fa-1x" />
+                          <span>{this.CANCEL_LABEL}</span>
+                      </li >
                   )}
-              </ul>
-            </section>
-          </div>
-        </section>
+                      </ul>
+                  </section>
+              </div>
+          </section>
       );
     }
     return null;

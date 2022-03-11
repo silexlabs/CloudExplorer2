@@ -55,16 +55,16 @@ export default class ButtonConfirm extends React.Component {
       this.isInputNameValid();
 
     return (
-      <section className="button-confirm button-bar">
-        {
+        <section className="button-confirm button-bar">
+            {
           this.props.inputName ? (
-            <div className='file-name'>
-              <label htmlFor='button-confirm'>File name</label>
-              <input
-                id='button-confirm'
-                autoFocus
-                defaultValue={this.props.defaultFileName}
-                onChange={(e) => {
+              <div className='file-name'>
+                  <label htmlFor='button-confirm'>File name</label>
+                  <input
+                    id='button-confirm'
+                    autoFocus
+                    defaultValue={this.props.defaultFileName}
+                    onChange={(e) => {
                   if (e.target.value.length > 0) {
                     this.pickBtn.classList.add('enabled');
                     this.pickBtn.classList.remove('disabled');
@@ -73,24 +73,24 @@ export default class ButtonConfirm extends React.Component {
                     this.pickBtn.classList.add('disabled');
                   }
                 }}
-                onKeyPress={(e) => {
+                    onKeyPress={(e) => {
                   if (e.key === 'Enter') this.props.onSave(e.target.value);
                 }}
-                placeholder="File name"
-                ref={(c) => {
+                    placeholder="File name"
+                    ref={(c) => {
                   this.input = c;
                 }}
-                type="text"
+                    type="text"
               />
-            </div>)
+              </div>)
             : <div />
         }
-        <ul>
-          <li
-            className={
+            <ul>
+                <li
+                  className={
               this.allowPick || (this.props.inputName && this.input.value.length) ? 'enabled' : 'disabled'
             }
-            onClick={() => {
+                  onClick={() => {
 
               /*
                * Pick the selection or the current folder
@@ -101,21 +101,21 @@ export default class ButtonConfirm extends React.Component {
                 this.props.onPick(this.props.selection);
               }
             }}
-            ref={(c) => {
+                  ref={(c) => {
               this.pickBtn = c;
             }}
           >
-            <span className="button-icon fa fa-check fa-1x" />
-            <span>{this.OK_LABEL}</span>
-          </li>
-          <li
-            className="enabled"
-            onClick={() => this.props.onCancel()}
+                    <span className="button-icon fa fa-check fa-1x" />
+                    <span>{this.OK_LABEL}</span>
+                </li>
+                <li
+                  className="enabled"
+                  onClick={() => this.props.onCancel()}
           >
-            <span className="button-icon fa fa-ban fa-1x" />
-            <span>{this.CANCEL_LABEL}</span>
-          </li>
-        </ul>
-      </section>);
+                    <span className="button-icon fa fa-ban fa-1x" />
+                    <span>{this.CANCEL_LABEL}</span>
+                </li>
+            </ul>
+        </section>);
   }
 }

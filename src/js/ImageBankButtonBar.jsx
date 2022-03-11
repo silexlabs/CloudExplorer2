@@ -7,9 +7,9 @@ export default function (props) {
     onChange={(e) => props.onChange(e.target.value)}
     value={props.value}
   ></input>
-    <span>
-    {props.numResults} image{props.numResults > 1 ? 's' : ''}
-  </span>
+      <span>
+          {props.numResults} image{props.numResults > 1 ? 's' : ''}
+      </span>
   </section>;
 }
 

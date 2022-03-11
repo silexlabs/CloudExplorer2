@@ -278,55 +278,55 @@ class App extends React.Component {
 
   render () {
     return (
-      <main>
-        <h1>{ this.state.title }</h1>
-        <Tabs
-          hide={this.getHideTabs()}
-          elements={[
+        <main>
+            <h1>{ this.state.title }</h1>
+            <Tabs
+              hide={this.getHideTabs()}
+              elements={[
             {name: 'user-files',
               displayName: 'Your images'}
           ].concat(this.state.imageBanks)}
         >
-        {[
-          <CloudExplorerView
-          unifile={this.state.unifile}
-          key="CloudExplorerComponentKey"
-          defaultFileName={this.state.defaultFileName}
-          extensions={this.state.extensions}
-          inputName={this.state.inputName}
-          multiple={this.state.multiple}
-          onCancel={() => (this.state.onCancel ? this.state.onCancel() : '')}
-          onCd={(path) => this.onChange(path)}
-          onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
-          onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
-          onSave={(fileName) => (this.state.onSave ? this.state.onSave(fileName) : '')}
-          onSelection={(selection) => this.onSelection(selection)}
-          path={this.state.path}
-          pickFolder={this.state.pickFolder}
-          ref={(c) => this.onCloudExplorerReady(c)}
-          selection={this.state.selection}
-          thumbnailMode={this.state.thumbnailMode}
-          onThumbnailMode={(thumbnailMode) => this.setState({thumbnailMode})}
+                {[
+                    <CloudExplorerView
+                      unifile={this.state.unifile}
+                      key="CloudExplorerComponentKey"
+                      defaultFileName={this.state.defaultFileName}
+                      extensions={this.state.extensions}
+                      inputName={this.state.inputName}
+                      multiple={this.state.multiple}
+                      onCancel={() => (this.state.onCancel ? this.state.onCancel() : '')}
+                      onCd={(path) => this.onChange(path)}
+                      onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
+                      onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
+                      onSave={(fileName) => (this.state.onSave ? this.state.onSave(fileName) : '')}
+                      onSelection={(selection) => this.onSelection(selection)}
+                      path={this.state.path}
+                      pickFolder={this.state.pickFolder}
+                      ref={(c) => this.onCloudExplorerReady(c)}
+                      selection={this.state.selection}
+                      thumbnailMode={this.state.thumbnailMode}
+                      onThumbnailMode={(thumbnailMode) => this.setState({thumbnailMode})}
           />
         ]
           .concat(this.state.imageBanks.map((bank) => <ImageBankView
-          unifile={this.state.unifile}
-          key={bank.name}
-          bankName={bank.name}
-          selection={this.state.selection}
-          onSelection={(selection) => this.onSelection(selection)}
-          onCancel={() => (this.state.onCancel ? this.state.onCancel() : '')}
-          onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
-          onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
+            unifile={this.state.unifile}
+            key={bank.name}
+            bankName={bank.name}
+            selection={this.state.selection}
+            onSelection={(selection) => this.onSelection(selection)}
+            onCancel={() => (this.state.onCancel ? this.state.onCancel() : '')}
+            onPick={(selection) => (this.state.onPick ? this.state.onPick(selection) : '')}
+            onError={(e) => (this.state.onError ? this.state.onError(e) : '')}
           />))
         }
-        </Tabs>
-      </main>
+            </Tabs>
+        </main>
     );
   }
 }
 
 ReactDom.render(
-  <App />,
+    <App />,
   document.getElementById('cloud-explorer')
 );

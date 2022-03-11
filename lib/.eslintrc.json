@@ -8,6 +8,6 @@
   "extends": ["plugin:node/recommended"],
   "rules": {
     "node/exports-style": ["error"],
-    "no-process-env": ["warn"]
+    "no-process-env": 0
   }
 }

@@ -102,10 +102,10 @@ export default class extends React.Component {
       case httpForbiddenCode:
         ModalDialog.getInstance().confirm(
           (
-            <section>
-              <h2>{this.LOGGEDOUT_ERROR_MESSAGE}</h2>
-              <p>{ this.LOGGEDOUT_DETAILS }</p>
-            </section>
+              <section>
+                  <h2>{this.LOGGEDOUT_ERROR_MESSAGE}</h2>
+                  <p>{ this.LOGGEDOUT_DETAILS }</p>
+              </section>
           ), () => {
           // Ok, to restart the service must do this.cd() must know the service name.
             this.props.unifile.auth(this.props.path[0])
@@ -125,10 +125,10 @@ export default class extends React.Component {
         // Display a modal with an error message
         const finalMessage = message || e.message || 'Unknown error';
         ModalDialog.getInstance().alert((
-          <section>
-            <h2>{this.ERROR_MESSAGE}</h2>
-            <p>{this.ERROR_DETAILS}</p><strong>{ finalMessage }</strong>
-          </section>
+            <section>
+                <h2>{this.ERROR_MESSAGE}</h2>
+                <p>{this.ERROR_DETAILS}</p><strong>{ finalMessage }</strong>
+            </section>
         ));
       }
     }
@@ -265,17 +265,17 @@ export default class extends React.Component {
       console.error('Error uploading file', e);
       this.onUnifileError(
         null, (
-          <div>
-            <p>{this.UPLOAD_ERROR_MESSAGE}</p>
-            <ul>{
+            <div>
+                <p>{this.UPLOAD_ERROR_MESSAGE}</p>
+                <ul>{
               uploads.map((f) => (
-                <li key={f.name}>
-                  {this.BULLET_POINT}{f.name}
-                </li>
+                  <li key={f.name}>
+                      {this.BULLET_POINT}{f.name}
+                  </li>
               ))}
-            </ul>
-            <p>{ e ? e.message || e.code : '' }</p>
-          </div>
+                </ul>
+                <p>{ e ? e.message || e.code : '' }</p>
+            </div>
         )
       );
     })

@@ -14,28 +14,28 @@ export default class Breadcrumbs extends React.Component {
   render () {
     let idx = 1;
     const markup = this.props.path.map((folderName) => (
-      <li
-        className="folder"
-        data-idx={idx}
-        key={idx++}
-        onClick={(e) => this.goto(parseInt(e.target.getAttribute('data-idx'), 10))}
+        <li
+          className="folder"
+          data-idx={idx}
+          key={idx++}
+          onClick={(e) => this.goto(parseInt(e.target.getAttribute('data-idx'), 10))}
       >
-        <i className="icon" />
-        {folderName}
-      </li>
+            <i className="icon" />
+            {folderName}
+        </li>
     ));
     return (
-      <section>
-        <ul className="breadcrumbs">
-          <li
-            className="home"
-            onClick={() => this.goto(0)}
+        <section>
+            <ul className="breadcrumbs">
+                <li
+                  className="home"
+                  onClick={() => this.goto(0)}
           >
-            <i className="icon" />
-          </li>
-          {markup}
-        </ul>
-      </section>
+                    <i className="icon" />
+                </li>
+                {markup}
+            </ul>
+        </section>
     );
   }
 }
