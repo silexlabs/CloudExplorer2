@@ -7,7 +7,7 @@
     "node": ">=8.16.3 <=12.22.10"
   },
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "prepare": "npm run build",
     "release": "",
     "start": "node lib/index.js",
