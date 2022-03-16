@@ -252,9 +252,6 @@ class App extends React.Component {
   }
 
   reload (extensions) {
-    // update extension filters (file ext)
-    this.state.unifile.setExtensions(extensions);
-    // store it in state
     this.setState({extensions}, () => this.cloudExplorer.ls());
     return Promise.resolve();
   }
@@ -277,6 +274,9 @@ class App extends React.Component {
   }
 
   render () {
+    // update extension filters (file ext)
+    this.state.unifile.setExtensions(this.state.extensions);
+    // render the UI
     return (
         <main>
             <h1>{ this.state.title }</h1>
