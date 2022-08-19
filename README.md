@@ -104,16 +104,19 @@ For now, the best way to know the API is to [take a look at the `App` class whic
 
 CE is configured with environment variables:
 
-* PORT
-* SERVER_URL
-* DROPBOX_APP_ID
-* DROBOX_APP_SECRET
-* DROPBOX_APP_REDIRECT
-* GITHUB_APP_ID
-* GITHUB_APP_SECRET
-* GITHUB_APP_REDIRECT
-* UNSPLASH_ACCESS_KEY
-* UNSPLASH_APP_NAME
-* UNSPLASH_OFFLINE_TEST_PATH
-* ENABLE_HYPERDRIVE
+| Name | Default | Description |
+| -- | -- | -- |
+| PORT | 6805 | |
+| SERVER_PATH | '' | Example: '/a-path' |
+| SERVER_URL | http://localhost:${port}${rootPath} | |
+| DROPBOX_APP_ID | undefined | |
+| DROBOX_APP_SECRET | undefined | |
+| DROPBOX_APP_REDIRECT | undefined | |
+| GITHUB_APP_ID | undefined | |
+| GITHUB_APP_SECRET | undefined | |
+| GITHUB_APP_REDIRECT | undefined | |
+| UNSPLASH_ACCESS_KEY | undefined | |
+| UNSPLASH_APP_NAME | undefined | |
+| UNSPLASH_OFFLINE_TEST_PATH | undefined | |
+| ENABLE_HYPERDRIVE | undefined | "true" or anything else |
 
