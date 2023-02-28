@@ -1,5 +1,5 @@
 node_modules
-dist/cloud-explorer.js
+dist/cloud-explorer.js*
 dist/style.css
 dist/fonts
 *.sw*
