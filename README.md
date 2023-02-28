@@ -35,7 +35,6 @@ app.use('/ce', router);
 
 There is also an [example of use in Silex website builder here](https://github.com/silexlabs/Silex/blob/develop/dist/server/CloudExplorerRouter.js).
 
-
 ### Client side
 
 For a complete example see the dist folder.
@@ -70,6 +69,29 @@ Also you can add custom services and image banks, for this you can use the metho
 Notes:
 
 * if you enable only one service, CE2 will be in "single service" mode and the user will not be presented the list of services but directly enters the only service (if logged in).
+
+### API
+
+You can use only CE2 API, it makes Dropbox, FTP, SFTP, Webdav protocols accessible over HTTPS
+
+| Method | Path | Params | Description |
+| -- | -- | -- | -- |
+| GET | `/services` |  | List all installed services (Dropbox, FTP...) |
+| POST | `/:connector/authorize` | Connector name (dropbox, ftp, sftp, webdav...) | Get the URL to redirecto the user to for oauth flow |
+| POST | `/:connector/logout` | Connector name | Logout |
+| GET | `/\/(.*)\/ls\/(.*)/` | Connector name, path | List folder |
+| TODO  |  |  |  |
+| TODO  |  |  |  |
+| TODO  |  |  |  |
+| TODO  |  |  |  |
+| TODO  |  |  |  |
+| TODO  |  |  |  |
+| TODO  |  |  |  |
+
+#### Cookies or headers
+
+Authentication uses cookie session or can be set from headers. The headers starting with `UNIFILE_` are recognized and expected to be `UNIFILE_{connector}_{key}_{value}`, e.g. `curl 'http://localhost:6805/ce/ftp/ls/' -H 'UNIFILE_FTP_HOST: localhost' -H 'UNIFILE_FTP_TOKEN: demo' -H 'UNIFILE_FTP_PORT: 21' -H 'UNIFILE_FTP_USER: demo'`
+
 
 ## Dev setup
 
