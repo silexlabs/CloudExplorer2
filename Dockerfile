@@ -27,5 +27,6 @@ WORKDIR /cloud-explorer
 # With npm
 # Running install with --unsafe-perm option becaus when running as root, npm won't run any scripts.
 RUN npm install --unsafe-perm
-RUN npm run build
+# Already in postinstall: RUN npm run build
+RUN npm run build:prod
 CMD ["npm", "start"]
