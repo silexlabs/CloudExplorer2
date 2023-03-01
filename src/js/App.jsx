@@ -71,10 +71,8 @@ class App extends React.Component {
       this.setState({imageBanks});
     });
     // start with the path in local storage
-    const path = localStorage.getItem(STORAGE_KEY_PATH);
-    if (path) {
-      this.state.path = JSON.parse(path);
-    }
+    const path = localStorage.getItem(STORAGE_KEY_PATH) ?? '[]';
+    this.state.path = JSON.parse(path);
   }
 
   state = {
