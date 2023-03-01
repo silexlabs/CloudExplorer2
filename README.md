@@ -35,6 +35,8 @@ app.use('/ce', router);
 
 There is also an [example of use in Silex website builder here](https://github.com/silexlabs/Silex/blob/develop/dist/server/CloudExplorerRouter.js).
 
+And here is an easy way to run a local ftp for tests: `npx ftp-srv ftp://0.0.0.0:2121 --root .`
+
 ### Client side
 
 For a complete example see the dist folder.
