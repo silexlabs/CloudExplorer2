@@ -1,6 +1,8 @@
 version: "3.9"
 services:
   cloud-explorer:
-    image: silexlabs/cloud-explorer:latest
+    build: .
     ports:
       - "6805"
+
+
