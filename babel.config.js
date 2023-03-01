@@ -3,13 +3,11 @@ module.exports = function (api) {
   return {
     presets: [
       ["@babel/preset-env", {
-        "debug":true,
-        "useBuiltIns": "entry",
+        "debug": false,
+        "useBuiltIns": false,
         },
-      ], [
-        "@babel/preset-react",
-        {},
       ],
+      ["@babel/preset-react", {}],
     ],
     plugins: [
       "@babel/plugin-proposal-class-properties"
