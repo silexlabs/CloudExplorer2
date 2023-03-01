@@ -76,19 +76,25 @@ Notes:
 
 You can use only CE2 API, it makes Dropbox, FTP, SFTP, Webdav protocols accessible over HTTPS
 
-| Method | Path | Params | Description |
-| -- | -- | -- | -- |
-| GET | `/services` |  | List all installed services (Dropbox, FTP...) |
-| POST | `/:connector/authorize` | Connector name (dropbox, ftp, sftp, webdav...) | Get the URL to redirecto the user to for oauth flow |
-| POST | `/:connector/logout` | Connector name | Logout |
-| GET | `/\/(.*)\/ls\/(.*)/` | Connector name, path | List folder |
-| TODO  |  |  |  |
-| TODO  |  |  |  |
-| TODO  |  |  |  |
-| TODO  |  |  |  |
-| TODO  |  |  |  |
-| TODO  |  |  |  |
-| TODO  |  |  |  |
+| Method | Path | Params | Description | Example |
+| -- | -- | -- | -- | -- |
+| GET | `/services` |  | List all installed services (Dropbox, FTP...) | `curl 'http://localhost:6805/ce/services'` returns `[{"isDir":true,"isService":true,"mime":"application/json","name":"github","isLoggedIn":false,"isOAuth":true,"displayName":"GitHub","icon":"../assets/github.png","description":"Edit files from your GitHub repository."},{"isDir":true,"isService":true,"mime":"application/json","name":"dropbox","isLoggedIn":false,"isOAuth":true,"displayName":"Dropbox","icon":"../assets/dropbox.png","description":"Edit files from your Dropbox."},{"isDir":true,"isService":true,"mime":"application/json","name":"ftp","isLoggedIn":false,"isOAuth":false,"displayName":"FTP","icon":"../assets/ftp.png","description":"Edit files on a web FTP server."},{"isDir":true,"isService":true,"mime":"application/json","name":"fs","isLoggedIn":true,"isOAuth":false,"username":"lexoyo","displayName":"Your Computer","icon":"","description":"Edit files on your local drive."}]` |
+| POST | `/:connector/authorize` | Connector name (dropbox, ftp, sftp, webdav...) | Get the URL to redirecto the user to for oauth flow | `` |
+| POST | `/:connector/logout` | Connector name | Logout | `` |
+| GET | `/\/(.*)\/ls\/(.*)/` | Connector name, path | List folder content | `curl 'http://localhost:6805/ce/ftp/ls/' -H 'UNIFILE_FTP_HOST: localhost' -H 'UNIFILE_FTP_TOKEN: demo' -H 'UNIFILE_FTP_PORT: 2121' -H 'UNIFILE_FTP_USER: demo'` returns `[{"size":0,"modified":"2001-03-01T12:30:00.000Z","name":"upload","isDir":true,"mime":"application/directory"},{"size":0,"modified":"2022-12-01T23:00:00.000Z","name":"download","isDir":true,"mime":"application/directory"}]` |
+| GET  | `/\/(.*)\/get\/(.*)/` | Connector name, path | Get the content of a file | `curl 'http://localhost:6805/ce/ftp/get/path/to/test.png' -H 'UNIFILE_FTP_HOST: localhost' -H 'UNIFILE_FTP_TOKEN: demo' -H 'UNIFILE_FTP_PORT: 2121' -H 'UNIFILE_FTP_USER: demo'
+` returns the content of test.png |
+| POST  | `/\/(.*)\/upload\/(.*)/` | Connector name, path | Upload file(s) to the server | `curl 'http://localhost:6805/ce/ftp/upload/' -X POST -H 'UNIFILE_FTP_HOST: localhost' -H 'UNIFILE_FTP_PASSWORD: demo' -H 'UNIFILE_FTP_TOKEN: nothing' -H 'UNIFILE_FTP_PORT: 2121' -H 'UNIFILE_FTP_USER: demo'  -H 'Content-Type: multipart/form-data; boundary=---------------------------2814941533969992343925519265' --data-binary $'-----------------------------2814941533969992343925519265\r\nContent-Disposition: form-data; name="content"; filename="croix.svg"\r\nContent-Type: image/svg+xml\r\n\r\n-----------------------------2814941533969992343925519265--\r\n'` |
+| DELETE | `/\/(.*)\/rm\//` | Connector name, files to delete | Delete file(s) | `curl 'http://localhost:6805/ce/ftp/rm/' -X DELETE -H 'Content-Type: application/json' -H 'UNIFILE_FTP_HOST: localhost' -H 'UNIFILE_FTP_PASSWORD: demo' -H 'UNIFILE_FTP_TOKEN: nothing' -H 'UNIFILE_FTP_PORT: 2121' -H 'UNIFILE_FTP_USER: demo' --data-binary '[{"name":"unlink","path":"tmp/croix.svg"}]'` |
+| PUT  |  |  | mkdir |  |
+| GET  | `\/(.*)\/stat\/(.*)/` |  |  |  |
+| TODO  |  |  |  |  |
+| TODO  |  |  |  |  |
+| TODO  |  |  |  |  |
+| TODO  |  |  |  |  |
+| TODO  |  |  |  |  |
+| TODO  |  |  |  |  |
+| TODO  |  |  |  |  |
 
 #### Cookies or headers
 
