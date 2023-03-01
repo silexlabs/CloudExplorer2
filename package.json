@@ -1,6 +1,6 @@
 {
   "name": "cloud-explorer",
-  "version": "2.1.18",
+  "version": "2.1.19",
   "description": "",
   "main": "lib/router.js",
   "engines": {
