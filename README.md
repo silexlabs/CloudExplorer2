@@ -4,6 +4,7 @@ Manage your users' cloud services from your application.
 
 ![screenshot from 2017-10-04 11-09-53](https://user-images.githubusercontent.com/715377/31186578-a357a146-a8f4-11e7-8650-f95d16f643b0.png)
 
+There is [a live demo here](https://demo.cloud-explorer.org/ce/cloud-explorer/)
 
 ## Install
 
@@ -121,8 +122,6 @@ $ npm start
 ```
 
 And then access the demo app on `http://localhost:6805/ce/cloud-explorer/`
-
-This is what is done on heroku here: [a live demo](https://cloud-explorer2.herokuapp.com/ce/cloud-explorer/)
 
 ## Docs
 
