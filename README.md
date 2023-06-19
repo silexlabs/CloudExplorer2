@@ -102,6 +102,8 @@ You can use only CE2 API, it makes Dropbox, FTP, SFTP, Webdav protocols accessib
 Authentication uses cookie session or can be set from headers. The headers starting with `UNIFILE_` are recognized and expected to be `UNIFILE_{connector}_{key}_{value}`, e.g. `curl 'http://localhost:6805/ce/ftp/ls/' -H 'UNIFILE_FTP_HOST: localhost' -H 'UNIFILE_FTP_TOKEN: demo' -H 'UNIFILE_FTP_PORT: 21' -H 'UNIFILE_FTP_USER: demo'`
 
 
+WARNING: you need to allow underscores (`_`) in headers if you are using nginx or apache servers
+
 ## Dev setup
 
 To contribute to Cloud Explorer, clone this repo and build:
